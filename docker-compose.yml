@@ -1,3 +1,23 @@
 services:
-  sqlite:
+  backend:
+    build: ./backend
+    image: t_backend
+    container_name: backend
+    networks: 
+      - ft-transcendence
+  frontend:
+    build: ./frontend
+    image: t_frontend
+    container_name: frontend
+    networks: 
+      - ft-transcendence
+  database:
+    build: ./db
+    image: t_db
+    container_name: database
+    networks: 
+      - ft-transcendence
+
+networks:
+  - ft-transcendence
   
