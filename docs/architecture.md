@@ -1,7 +1,7 @@
 ## File structure
 
 Estructure inicial de archivos, para que todo el mundo sepa donde poner las cosas.
-
+```
 ft_transcendence/
 │
 ├── docker-compose.yml
@@ -49,3 +49,4 @@ ft_transcendence/
     ├── architecture.md
     ├── api-contracts.md
     └── team-plan.md
+```
