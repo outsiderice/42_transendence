@@ -2,14 +2,9 @@
 
 // Require the framework and instantiate it
 
-// ESM
 import Fastify from 'fastify'
 
 const fastify = Fastify({
-  logger: true
-})
-// CommonJs
-const fastify = require('fastify')({
   logger: true
 })
 

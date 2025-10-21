@@ -7,7 +7,7 @@ services:
       - ./backend:/app
       - ./db:/app/db  # probably change later
     ports:
-      - "3000:3000"   # change later
+      - "3000:3000"   # change later?
     networks:
       - ft-transcendence
   frontend:
