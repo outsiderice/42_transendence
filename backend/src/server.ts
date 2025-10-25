@@ -1,11 +1,13 @@
-import fastify from 'fastify';
+import Fastify from 'fastify';
+import {usersRoutes} from './modules/users/usersRoutes';
 
-const app = fastify();
+const app = Fastify({logger : true});
 
-app.get('/', async () => {
-  return { hello: 'wor' };
-});
 
-app.listen({ port: 3000 }).then(() => {
+const start = async () => {
+  await usersRoutes(app);
+  await app.listen({ port: 3000 }).then(() => {
     console.log('Server is running on http://localhost:3000');
-});
+  });
+};
+start();
