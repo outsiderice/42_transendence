@@ -10,14 +10,14 @@ services:
       - "3000:3000"   # change later?
     networks:
       - ft-transcendence
-  frontend:
-    build: ./frontend
-    image: t_frontend
-    container_name: frontend
-    ports:
-      - "8080:80"   # change later
-    networks: 
-      - ft-transcendence
+#  frontend:
+#    build: ./frontend
+#    image: t_frontend
+#    container_name: frontend
+#    ports:
+#      - "8080:80"   # change later
+#    networks: 
+#      - ft-transcendence
 #  database:
 #    build: ./db
 #    image: t_db
