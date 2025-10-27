@@ -5,6 +5,7 @@ services:
     container_name: backend
     volumes:
       - ./backend:/app
+      - /app/node_modules
       - ./db:/app/db  # probably change later
     ports:
       - "3000:3000"   # change later?
