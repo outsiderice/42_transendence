@@ -9,6 +9,9 @@ services:
       - ./db:/app/db  # probably change later
     ports:
       - "3000:3000"   # change later?
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
     networks:
       - ft-transcendence
 #  frontend:

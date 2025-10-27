@@ -3,8 +3,10 @@ import {usersRoutes} from './modules/users/usersRoutes';
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 
-const app = Fastify({logger : true});
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '127.0.0.1';
 
+const app = Fastify({logger : true});
 
 const start = async () => {
   await app.register(Swagger, {
@@ -24,7 +26,7 @@ await app.register(SwaggerUI, {
     },
   });
   await usersRoutes(app);
-  await app.listen({ port: 3000, host: '0.0.0.0' }).then(() => {
+  await app.listen({ port: PORT, host: HOST }).then(() => {
     console.log('Server is running on http://localhost:3000');
   });
   
