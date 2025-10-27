@@ -1,6 +1,7 @@
-## File structure
+## Estrucutra de carpetas
 
 Estructure inicial de archivos, para que todo el mundo sepa donde poner las cosas.
+
 ```
 ft_transcendence/
 │
