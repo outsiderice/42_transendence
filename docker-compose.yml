@@ -4,9 +4,8 @@ services:
     image: t_backend
     container_name: backend
     volumes:
-      - ./backend:/app
       - /app/node_modules
-      - ./db:/app/db  # probably change later
+      - ./db:/app/db
     ports:
       - "3000:3000"   # change later?
     environment:
@@ -24,12 +23,6 @@ services:
       - /app/node_modules
     networks: 
       - ft-transcendence
-#  database:
-#    build: ./db
-#    image: t_db
-#    container_name: database
-#    networks: 
-#      - ft-transcendence
 
 networks:
   ft-transcendence:
