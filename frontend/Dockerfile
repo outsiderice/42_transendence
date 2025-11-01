@@ -6,10 +6,6 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN npm install typescript --save-dev
-
-RUN npx tsc --init
-
 COPY . .
 
 EXPOSE 8080
