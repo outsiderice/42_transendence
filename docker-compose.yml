@@ -18,7 +18,7 @@ services:
     image: t_frontend
     container_name: frontend
     ports:
-      - "8080:80"   # change later
+      - "8080:8080"   # change later
     volumes:
       - /app/node_modules
     networks: 
