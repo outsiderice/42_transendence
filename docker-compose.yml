@@ -17,10 +17,13 @@ services:
     build: ./frontend
     image: t_frontend
     container_name: frontend
-    ports:
-      - "8080:8080"   # change later
     volumes:
       - /app/node_modules
+    ports:
+      - "8080:8080"   # change later
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
     networks: 
       - ft-transcendence
 
