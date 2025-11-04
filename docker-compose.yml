@@ -1,3 +1,34 @@
 services:
-  sqlite:
+  backend:
+    build: ./backend
+    image: t_backend
+    container_name: backend
+    volumes:
+      - /app/node_modules
+      - ./db:/app/db
+    ports:
+      - "3000:3000"   # change later?
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+    networks:
+      - ft-transcendence
+  frontend:
+    build: ./frontend
+    image: t_frontend
+    container_name: frontend
+    volumes:
+      - /app/node_modules
+    ports:
+      - "8080:8080"   # change later
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+      BACKEND_GATEWAY: backend
+    networks: 
+      - ft-transcendence
+
+networks:
+  ft-transcendence:
+    driver: bridge
   
