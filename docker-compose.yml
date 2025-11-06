@@ -39,8 +39,6 @@ services:
       GATEWAY: backend
     networks: 
       - ft-transcendence
-    depends_on:
-      - backend
     develop:
       watch:
         - action: sync
@@ -57,4 +55,3 @@ services:
 networks:
   ft-transcendence:
     driver: bridge
-  
