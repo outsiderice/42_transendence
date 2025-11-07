@@ -4,7 +4,6 @@ services:
     image: t_backend
     container_name: backend
     volumes:
-#      - /app/node_modules
       - ./db:/app/db
     ports:
       - "3000:3000"   # change later?
@@ -29,8 +28,6 @@ services:
     build: ./frontend
     image: t_frontend
     container_name: frontend
-#    volumes:
-#      - /app/node_modules
     ports:
       - "8080:8080"   # change later
     environment:
