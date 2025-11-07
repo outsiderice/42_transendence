@@ -4,9 +4,7 @@ services:
     image: t_backend
     container_name: backend
     volumes:
-      - ./backend:/app
-      - /app/node_modules
-      - ./db:/app/db  # probably change later
+      - ./db:/app/db
     ports:
       - "3000:3000"   # change later?
     environment:
@@ -14,24 +12,43 @@ services:
       HOST: 0.0.0.0
     networks:
       - ft-transcendence
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - node_modules/
+            - "*.log"
+            - .dockerignore
+            - Dockerfile
+        - action: rebuild
+          path: ./backend/package.json
   frontend:
     build: ./frontend
     image: t_frontend
     container_name: frontend
     ports:
-      - "8080:80"   # change later
-    volumes:
-      - /app/node_modules
+      - "8080:8080"   # change later
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+      GATEWAY: backend
     networks: 
       - ft-transcendence
-#  database:
-#    build: ./db
-#    image: t_db
-#    container_name: database
-#    networks: 
-#      - ft-transcendence
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules/
+            - "*.log"
+            - .dockerignore
+            - Dockerfile
+        - action: rebuild
+          path: ./frontend/package.json
 
 networks:
   ft-transcendence:
     driver: bridge
-  

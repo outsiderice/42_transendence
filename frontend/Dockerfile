@@ -6,10 +6,8 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN npm install typescript --save-dev
-
 COPY . .
 
 EXPOSE 8080
 
-CMD ["npx", "tsc"]
+CMD ["npm", "run", "dev", "--", "--host"]

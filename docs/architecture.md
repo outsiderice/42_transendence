@@ -3,51 +3,53 @@
 Estructure inicial de archivos, para que todo el mundo sepa donde poner las cosas.
 
 ```
-ft_transcendence/
-│
-├── docker-compose.yml
-├── .env
-├── README.md
-│
-├── backend/
-│   ├── src/
-│   │   ├── modules/
-│   │   │   ├── auth/
-│   │   │   │   ├── auth.routes.ts
-│   │   │   │   ├── auth.service.ts
-│   │   │   │   └── auth.controller.ts
-│   │   │   ├── game/
-│   │   │   │   ├── game.routes.ts
-│   │   │   │   ├── game.logic.ts
-│   │   │   │   └── ai/
-│   │   │   │       └── ai.bot.ts
-│   │   │   ├── chat/
-│   │   │   │   ├── chat.routes.ts
-│   │   │   │   └── chat.gateway.ts
-│   │   │   └── users/
-│   │   │       ├── users.routes.ts
-│   │   │       └── users.service.ts
-│   │   ├── server.ts
-│   │   └── config/
-│   │       ├── db.ts
-│   │       └── websocket.ts
-│   ├── package.json
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── services/      # API wrappers (Axios/fetch)
-│   │   └── styles/
-│   ├── package.json
-│   └── Dockerfile
-│
-├── db/
-│   └── data.db            # SQLite file (volume-mounted)
-│
-└── docs/
-    ├── architecture.md
-    ├── api-contracts.md
-    └── team-plan.md
+└── 42_transendence
+    ├── backend
+    │   ├── Dockerfile
+    │   ├── package.json
+    │   ├── package-lock.json
+    │   ├── src
+    │   │   ├── config
+    │   │   │   ├── db.ts
+    │   │   │   ├── fastify-swagger.d.ts
+    │   │   │   └── websocket.ts
+    │   │   ├── modules
+    │   │   │   ├── auth
+    │   │   │   │   ├── auth.controller.ts
+    │   │   │   │   ├── auth.routes.ts
+    │   │   │   │   └── auth.service.ts
+    │   │   │   ├── chat
+    │   │   │   │   ├── chat.gateway.ts
+    │   │   │   │   └── chat.routes.ts
+    │   │   │   ├── game
+    │   │   │   │   ├── ai
+    │   │   │   │   │   └── ai.bot.ts
+    │   │   │   │   ├── game.logic.ts
+    │   │   │   │   └── game.routes.ts
+    │   │   │   └── users
+    │   │   │       ├── usersControllers.ts
+    │   │   │       └── usersRoutes.ts
+    │   │   └── server.ts
+    │   └── tsconfig.json
+    ├── db
+    │   └── data.db
+    ├── docker-compose.yml
+    ├── docs
+    │   ├── api-contracts.md
+    │   └── architecture.md
+    └── frontend
+        ├── Dockerfile
+        ├── index.html
+        ├── package.json
+        ├── package-lock.json
+        ├── public
+        │   └── vite.svg
+        ├── src
+        │   ├── counter.ts
+        │   ├── main.ts
+        │   ├── style.css
+        │   └── typescript.svg
+        ├── tsconfig.json
+        └── vite.config.ts
+
 ```
