@@ -1,6 +1,8 @@
-const GATEWAY = 'https://gloomy-werewolf-r56p66rw5pqcgpg-3000.app.github.dev/';
+const gateway = Number(process.env.GATEWAY);
 
-const fetchPromise = fetch(GATEWAY);
+console.log(gateway);
+
+const fetchPromise = fetch(gateway);
 
 console.log('prueba');
 
