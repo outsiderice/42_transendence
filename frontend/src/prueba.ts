@@ -1,8 +1,11 @@
-const gateway = Number(process.env.GATEWAY);
+const { env } = require('node:process');
+
+const gateway = process.env.GATEWAY;
 
 console.log(gateway);
 
 const fetchPromise = fetch(gateway);
+//const fetchPromise = fetch('localhost:3000');
 
 console.log('prueba');
 

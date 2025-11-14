@@ -33,7 +33,7 @@ services:
     environment:
       PORT: 8080
       HOST: 0.0.0.0
-      GATEWAY: backend
+      GATEWAY: "localhost:3000"
     networks: 
       - ft-transcendence
     develop:
