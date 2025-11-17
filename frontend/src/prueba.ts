@@ -1,4 +1,4 @@
-const { env } = require('node:process');
+require('dotenv').config();
 
 const gateway = process.env.GATEWAY;
 

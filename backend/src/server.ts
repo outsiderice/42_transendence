@@ -3,8 +3,10 @@ import {usersRoutes} from './modules/users/usersRoutes';
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 
-const PORT = Number(process.env.PORT) || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
+require('dotenv').config();
+
+const PORT = Number(process.env.PORT);
+const HOST = process.env.HOST;
 
 const app = Fastify({logger : true});
 
