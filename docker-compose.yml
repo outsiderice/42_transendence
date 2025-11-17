@@ -8,8 +8,8 @@ services:
     ports:
       - "3000:3000"   # change later?
     environment:
-      PORT: 3000
-      HOST: 0.0.0.0
+      - PORT=${BACKEND_PORT}
+      - HOST=${BACKEND_HOST}
     networks:
       - ft-transcendence
     develop:
@@ -31,9 +31,9 @@ services:
     ports:
       - "8080:8080"   # change later
     environment:
-      PORT: 8080
-      HOST: 0.0.0.0
-      GATEWAY: "localhost:3000"
+      - PORT=${FRONTEND_PORT}
+      - HOST=${FRONTEND_HOST}
+      - GATEWAY=${GATEWAY_URL}
     networks: 
       - ft-transcendence
     develop:
