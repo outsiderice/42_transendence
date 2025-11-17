@@ -1,11 +1,6 @@
-require('dotenv').config();
-
-const gateway = process.env.GATEWAY;
-
-console.log(gateway);
+const gateway = import.meta.env.GATEWAY_URL;
 
 const fetchPromise = fetch(gateway);
-//const fetchPromise = fetch('localhost:3000');
 
 console.log('prueba');
 
