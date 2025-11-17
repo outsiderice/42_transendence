@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm install dotenv
+
 EXPOSE 8080
 
 CMD ["npm", "run", "dev", "--", "--host"]
