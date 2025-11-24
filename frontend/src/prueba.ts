@@ -1,6 +1,8 @@
+//Prueba de como hacer llamadas a backend.
+
 const gateway = import.meta.env.GATEWAY_URL;
 
-const fetchPromise = fetch(gateway);
+const fetchPromise = fetch(gateway + '/moco');
 
 console.log('prueba');
 
