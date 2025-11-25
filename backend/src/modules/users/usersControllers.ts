@@ -5,7 +5,7 @@ export const usersController = (req: FastifyRequest, res: FastifyReply) => {
 
 };
 
-export const usersController2 = (req: FastifyRequest<Params: <{Params: {id: number}}>, res: FastifyReply) => {
+export const usersController2 = (req: FastifyRequest<{Params: {id: number}}>, res: FastifyReply) => {
   
   const params = req.params;
 
