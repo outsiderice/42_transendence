@@ -19,7 +19,7 @@ export const usersRoutes = (app: FastifyInstance) => {
     handler: usersController3}
   );
 
-  app.setErrorHandler((error: Error, req: FastifyRequest, res:FasfyReply) => {
+  app.setErrorHandler((error: Error, req: FastifyRequest, res: FasfyReply) => {
     console.error(error)
 
     return res.status(409).send({ok: false});
