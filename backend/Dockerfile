@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "--watch", "--import", "tsx", "src/server.ts"]
+CMD ["npx", "tsx", "watch", "src/server.ts"]
+
