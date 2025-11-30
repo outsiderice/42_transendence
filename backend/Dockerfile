@@ -8,8 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm install dotenv
-
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npx", "tsx", "watch", "src/server.ts"]
+
