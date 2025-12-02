@@ -1,4 +1,4 @@
-import {FastifyInstance} from 'fastify';
+import {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify';
 import {usersController, usersController2, usersController3} from './usersControllers';
 
 export const usersRoutes = (app: FastifyInstance) => {
@@ -19,7 +19,7 @@ export const usersRoutes = (app: FastifyInstance) => {
     handler: usersController3}
   );
 
-  app.setErrorHandler((error: Error, req: FastifyRequest, res: FasfyReply) => {
+  app.setErrorHandler((error: Error, req: FastifyRequest, res: FastifyReply) => {
     console.error(error)
 
     return res.status(409).send({ok: false});
