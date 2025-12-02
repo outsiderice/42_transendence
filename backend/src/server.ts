@@ -1,8 +1,11 @@
+import dotenv from 'dotenv';
 import Fastify from 'fastify';
 import {usersRoutes} from './modules/users/usersRoutes';
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
-import 'dotenv/config';
+
+dotenv.config({ path: '../.env' });
+
 
 const PORT = Number(process.env.PORT);
 const HOST = process.env.HOST;
