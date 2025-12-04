@@ -1,15 +1,44 @@
 services:
+  db:
+    build: ./db
+    image: t_db
+    container_name: db-service
+    volumes:
+      - ./db/data:/app/data
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_SERVICE_PORT=${DB_SERVICE_PORT}
+      - DB_SERVICE_HOST=${DB_SERVICE_HOST}
+      - DB_PATH=/app/data/app.db
+    networks:
+      - ft-transcendence
+    develop:
+      watch:
+        - action: sync
+          path: ./db
+          target: /app
+          ignore:
+            - node_modules/
+            - "*.log"
+            - .dockerignore
+            - Dockerfile
+            - data/
+        - action: rebuild
+          path: ./db/package.json
+
   backend:
     build: ./backend
     image: t_backend
     container_name: backend
-    volumes:
-      - ./db:/app/db
     ports:
       - "3000:3000"   # change later?
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
+      - DB_SERVICE_URL=http://db-service:3001
+    depends_on:
+      - db
     networks:
       - ft-transcendence
     develop:
