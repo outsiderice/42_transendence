@@ -3,7 +3,7 @@ export class Ball {
 	x: number;
 	y: number;
 
-	//size
+	//ball size
 	radius: number;
 
 	//movement
@@ -11,18 +11,27 @@ export class Ball {
 	speedY: number;
 
 	constructor() {
-		this.x = 400;
-		this.y = 300;
+		this.x = 0;
+		this.y = 0;
 		this.radius = 10;
 
 		//initial movement
 		this.speedY = 4;
 		this.speedX = 4;
 	}
+	reset(side: "left" | "right"): void {
+
+	}
+	update(): void {
+		this.x += this.speedX;
+		this.y += this.speedY;
+	}
+
+	bounceX(): void {
+		this.s
+	}
+
+	bounceY(): void {
+		
+	}
 }
-
-// class methods
-
-update()
-draw()
-reset()

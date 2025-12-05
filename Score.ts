@@ -27,6 +27,4 @@ export class Score {
 			return "left";
 		return "right";
 	}
-
-	// draw method
 }
