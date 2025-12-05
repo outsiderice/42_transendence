@@ -1,8 +1,12 @@
-import { defineConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig} from 'vite'
+import tailwindcss from '@tailwindcss/vite';
+import 'dotenv/config';
 
-const PORT = Number(process.env.VITE_PORT) || 8080;
-const HOST = process.env.VITE_HOST || '0.0.0.0';
+
+const PORT = Number(process.env.VITE_PORT);
+const HOST = process.env.VITE_HOST;
+
+console.log(PORT);
 
 export default defineConfig({
   plugins: [
