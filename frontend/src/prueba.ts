@@ -2,12 +2,8 @@
 
 const gateway = import.meta.env.VITE_GATEWAY_URL;
 
-const fetchPromise = fetch(gateway + '/moco');
-
 console.log(gateway);
 
-fetchPromise
+fetch(`${gateway}users`)
   .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-  });
+  .then((data) => console.log(data));
