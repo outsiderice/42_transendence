@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "ES6",            // ES modules for browser
+    "target": "ES6",            // modern JS
+    "strict": true,
+    "esModuleInterop": true,    // allows default import from CommonJS
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node"  // resolves imports like Node
+  },
+  "include": ["src/**/*"]
+}

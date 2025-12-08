@@ -9,11 +9,12 @@ export class Score {
 		this.maxScore = 10;
 	}
 
+	getLeftScore(): number {
+		return (this.leftScore);
+	}
 
-	isMaxScoreReached(): boolean {
-    	if (this.leftScore === this.maxScore || this.rightScore === this.maxScore)
-			return true;
-		return false;
+	getRightScore(): number {
+		return (this.rightScore);
 	}
 
 	addPoint(side: "left" | "right"): void {
@@ -22,6 +23,13 @@ export class Score {
 		else if (side === "right")
 			this.rightScore++;
 	}
+
+	isMaxScoreReached(): boolean {
+    	if (this.leftScore === this.maxScore || this.rightScore === this.maxScore)
+			return true;
+		return false;
+	}
+	
 	whoWon(): string {
 		if (this.leftScore === this.maxScore)
 			return "left";
