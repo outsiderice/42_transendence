@@ -77,21 +77,22 @@ export	class Pong {
 		});
 	}
 
-	handlePaddleBallContact(paddle: Platform): void {
+	handlePaddleBallContact(paddle: Platform, side: "left" | "right" ): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
 		const	botPaddle = paddle.getY() - paddle.getPadelHeight()/2;
-		const	topBall = this.ball.getY();
-		const	botBall = this.ball.getX();
+		const	topBall = this.ball.getY() + this.ball.getRadius();
+		const	botBall = this.ball.getY() - this.ball.getRadius();
 
-		if (ballY - this.ball.getRadius() < paddleY + paddle.getPadelHei || ballY + this.ball.getRadius() >= paddleY - paddle.getPadelHeight()/2 )
-
+		// primero comprobar la x y una vez este cerca, comprobar el speed y la y
+		// mirar cada parte de bola entre en el rango de height de paddle
+		
 	}
 
 	
 
 	handleBallContacts(): void {
-		this.handlePaddleBallContact(this.leftPaddle);
-		this.handlePaddleBallContact(this.rightPaddle);
+		this.handlePaddleBallContact(this.leftPaddle, "left");
+		this.handlePaddleBallContact(this.rightPaddle, "right");
 
 	}
 
