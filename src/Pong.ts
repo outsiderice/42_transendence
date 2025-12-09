@@ -77,8 +77,27 @@ export	class Pong {
 		});
 	}
 
+	handlePaddleBallContact(paddle: Platform): void {
+		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
+		const	botPaddle = paddle.getY() - paddle.getPadelHeight()/2;
+		const	topBall = this.ball.getY();
+		const	botBall = this.ball.getX();
+
+		if (ballY - this.ball.getRadius() < paddleY + paddle.getPadelHei || ballY + this.ball.getRadius() >= paddleY - paddle.getPadelHeight()/2 )
+
+	}
+
+	
+
+	handleBallContacts(): void {
+		this.handlePaddleBallContact(this.leftPaddle);
+		this.handlePaddleBallContact(this.rightPaddle);
+
+	}
+
 	update() {
-		this.ball.update( - this.height/2, this.height/2, - this.width/2, this.width/2);
+		this.ball.update( - this.height/2, this.height/2);
+		this.handleBallContacts();
 		this.leftPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle);
 		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}

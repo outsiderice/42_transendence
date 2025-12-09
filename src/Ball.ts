@@ -58,17 +58,10 @@ export class Ball {
 		return (this.speedX)
 	}
 
-	update( minY: number, maxY: number, minX:number, maxX:number): void {
+	update( minY: number, maxY: number): void {
 		this.x += this.speedX;
 		this.y += this.speedY;
-		if (this.x > maxX) {
-			this.x = maxX;
-			this.bounceY();
-		}
-		else if (this.x < minX ) {
-			this.x = minX;
-			this.bounceY();
-		}
+		
 		if (this.y > maxY) {
 			this.y = maxY;
 			this.bounceX();
@@ -85,7 +78,8 @@ export class Ball {
 	}
 
 	//paddle -- angle change can be added for more fun
-	bounceY(): void {
-		this.speedX *= -1;
+	bounce(speedX: number, speedY:number): void {
+		this.speedX = speedX;
+		this.speedY = speedY;
 	}
 }
