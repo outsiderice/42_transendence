@@ -72,10 +72,11 @@ export	class Pong {
 		});
 	}
 
-	// update() {
+	update() {
 	//	this.ball.update(true);
-	//	this.leftPaddle.update();
-	//	this.rightPaddle.update(); }
+		this.leftPaddle.update();
+		this.rightPaddle.update(); 
+	}
 
 	// Platform
 
@@ -130,7 +131,7 @@ export	class Pong {
 	}
 
 	private gameLoop = () => {
-    	//this.update();
+    	this.update();
     	this.draw();
     	requestAnimationFrame(this.gameLoop);
 	}
