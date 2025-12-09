@@ -5,7 +5,7 @@ import { Ball } from "./Ball";
 export	class Pong {
 	// field
 	height: number;
-	heightLimit: number;
+	heightLimitPaddle: number;
 	width: number;
 
 	paddleMargin: number = 10;
@@ -37,7 +37,7 @@ export	class Pong {
 		this.ball = new Ball(0, 0, 5);
 		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 10, 50, 5);
 		this.rightPaddle = new Platform(this.paddlePosX, 0, 10, 50, 5);
-		this.heightLimit = this.height/2 - this.leftPaddle.getPadelHeight()/2;
+		this.heightLimitPaddle = this.height/2 - this.leftPaddle.getPadelHeight()/2;
 		this.score = new Score();
 
 	}
@@ -78,10 +78,9 @@ export	class Pong {
 	}
 
 	update() {
-	//	this.ball.update(true);
-		
-		this.leftPaddle.update(this.heightLimit, - this.heightLimit);
-		this.rightPaddle.update(this.heightLimit, - this.heightLimit); 
+		this.ball.update( - this.height/2, this.height/2, - this.width/2, this.width/2);
+		this.leftPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle);
+		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}
 
 	// Platform

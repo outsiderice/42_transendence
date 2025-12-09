@@ -21,13 +21,8 @@ export class Ball {
 		this.radius = radius;
 
 		//initial movement - random in future needed for x and y
-		this.speedY = 4;
+		this.speedY = 7;
 		this.speedX = 4;
-
-		//this.minY = - halfFieldHeight + this.radius;
-		//this.maxY = - this.minY;
-		//this.minX = - halfFieldWidth + this.radius;
-		//this.maxX = - this.minX;
 	}
 
 	//nuevo saque
@@ -63,29 +58,26 @@ export class Ball {
 		return (this.speedX)
 	}
 
-	/*update(): void {
-		if (this.x + this.speedX > this.maxX) {
-
+	update( minY: number, maxY: number, minX:number, maxX:number): void {
+		this.x += this.speedX;
+		this.y += this.speedY;
+		if (this.x > maxX) {
+			this.x = maxX;
+			this.bounceY();
 		}
-		else if (this.x + this.speedX < this.minX ) {
-
+		else if (this.x < minX ) {
+			this.x = minX;
+			this.bounceY();
 		}
-		else {
-			this.x += this.speedX;
+		if (this.y > maxY) {
+			this.y = maxY;
+			this.bounceX();
 		}
-
-		if (this.y + this.speedY > this.maxY) {
-
-		}
-		else if (this.y + this.speedY < this.minY ) {
-
-		}
-		else {
-			this.y += this.speedY;
-		}
-
-		
-	}*/
+		else if (this.y < minY ) {
+			this.y = minY;
+			this.bounceX();
+		}	
+	}
 
 	// horizontal walls
 	bounceX(): void {
