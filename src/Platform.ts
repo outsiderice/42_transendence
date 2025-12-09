@@ -46,25 +46,18 @@ export class Platform {
 	setY(num: number): void {
 		this.y = num;
 	}
-	update(): void{
+	update(maxY: number, minY: number): void{
 		if (this.moveUp){
 			this.y += this.padelSpeed
-			console.log("he entrado pero:", this.y);
+			if (this.y > maxY) {
+				this.y = maxY;
+			}
 		}
 		if (this.moveDown){
 			this.y -= this.padelSpeed
+			if (this.y < minY) {
+				this.y = minY;
+			}
 		}
 	}
-	/*moveUp() {
-		this.y += this.padelSpeed;
-		if (this.y > this.maxY) {
-			this.y = this.maxY;
-		}
-	}
-	moveDowm(){
-		this.y -= this.padelSpeed;
-		if (this.y < this.minY) {
-			this.y = this.minY;
-		}
-	}*/
 }

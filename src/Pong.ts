@@ -5,7 +5,9 @@ import { Ball } from "./Ball";
 export	class Pong {
 	// field
 	height: number;
+	heightLimit: number;
 	width: number;
+
 	paddleMargin: number = 10;
 	paddlePosX: number;
 	private canvas: HTMLCanvasElement;
@@ -20,6 +22,7 @@ export	class Pong {
 		this.canvas = document.createElement("canvas");
 		this.canvas.width = width;
 		this.canvas.height = height;
+		
 		document.body.appendChild(this.canvas);
 
 		const context = this.canvas.getContext("2d");
@@ -27,12 +30,14 @@ export	class Pong {
     	this.ctx = context;
 		
 		this.height = height;
+		
 		this.width = width;
 		this.paddlePosX = this.width / 2 - this.paddleMargin;
 		
 		this.ball = new Ball(0, 0, 5);
 		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 10, 50, 5);
 		this.rightPaddle = new Platform(this.paddlePosX, 0, 10, 50, 5);
+		this.heightLimit = this.height/2 - this.leftPaddle.getPadelHeight()/2;
 		this.score = new Score();
 
 	}
@@ -74,8 +79,9 @@ export	class Pong {
 
 	update() {
 	//	this.ball.update(true);
-		this.leftPaddle.update();
-		this.rightPaddle.update(); 
+		
+		this.leftPaddle.update(this.heightLimit, - this.heightLimit);
+		this.rightPaddle.update(this.heightLimit, - this.heightLimit); 
 	}
 
 	// Platform
