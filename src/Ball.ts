@@ -3,11 +3,6 @@ export class Ball {
 	private x: number;
 	private y: number;
 
-	//private	minY: number;
-	//private maxY: number;
-	//private minX: number;
-	//private	maxX: number;
-
 	//ball size
 	private radius: number;
 

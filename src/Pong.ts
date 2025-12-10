@@ -90,11 +90,8 @@ export	class Pong {
 		if (leftBall <= rightPaddle  && leftPaddle <= rightBall) {
 			if (topBall >= botPaddle && botBall <= topPaddle) {
 				this.ball.bounce(this.ball.getSpeedX() * (-1), this.ball.getSpeedY());
-
 			}
-
-		}
-		
+		}	
 	}
 
 	handleScore() {
@@ -108,7 +105,6 @@ export	class Pong {
 			this.score.addPoint("right");
 			this.ball.reset();
 		}
-		
 	}
 
 	handleBallContacts(): void {
@@ -118,9 +114,21 @@ export	class Pong {
 
 	}
 
+	// need proper signal handling
+	endGame(): boolean {
+		if (this.score.isMaxScoreReached()) {
+			return (true);
+		}
+		return (false);
+	}
+
 	update() {
 		this.ball.update( - this.height/2, this.height/2);
 		this.handleBallContacts();
+		if (this.endGame()) {
+			//parar el juego
+			console.log(this.score.whoWon());
+		}
 		this.leftPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle);
 		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}
