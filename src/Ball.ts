@@ -26,8 +26,12 @@ export class Ball {
 	}
 
 	//nuevo saque
-	reset(side: "left" | "right"): void {
-
+	reset(): void {
+		//poner randomizer
+		this.x = 0; 
+		this.y = 0; // randowm in future
+		this.speedY = 7;
+		this.speedX = 4;
 	}
 
 	setX(pos: number): void {

@@ -97,11 +97,24 @@ export	class Pong {
 		
 	}
 
-	
+	handleScore() {
+		const	ballX = this.ball.getX();
+
+		if (ballX > this.width/2) {
+			this.score.addPoint("left");
+			this.ball.reset();
+		}
+		else if (ballX < - this.width/2) {
+			this.score.addPoint("right");
+			this.ball.reset();
+		}
+		
+	}
 
 	handleBallContacts(): void {
 		this.handlePaddleBallContact(this.leftPaddle);
 		this.handlePaddleBallContact(this.rightPaddle);
+		this.handleScore();
 
 	}
 
