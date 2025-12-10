@@ -77,22 +77,31 @@ export	class Pong {
 		});
 	}
 
-	handlePaddleBallContact(paddle: Platform, side: "left" | "right" ): void {
+	handlePaddleBallContact(paddle: Platform): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
 		const	botPaddle = paddle.getY() - paddle.getPadelHeight()/2;
 		const	topBall = this.ball.getY() + this.ball.getRadius();
 		const	botBall = this.ball.getY() - this.ball.getRadius();
+		const	leftPaddle = paddle.getX() - paddle.getPadelWidth()/2;
+		const	rightPaddle = paddle.getX() + paddle.getPadelWidth()/2;
+		const	leftBall = this.ball.getX() - this.ball.getRadius();
+		const	rightBall = this.ball.getX() + this.ball.getRadius();
 
-		// primero comprobar la x y una vez este cerca, comprobar el speed y la y
-		// mirar cada parte de bola entre en el rango de height de paddle
+		if (leftBall <= rightPaddle  && leftPaddle <= rightBall) {
+			if (topBall >= botPaddle && botBall <= topPaddle) {
+				this.ball.bounce(this.ball.getSpeedX() * (-1), this.ball.getSpeedY());
+
+			}
+
+		}
 		
 	}
 
 	
 
 	handleBallContacts(): void {
-		this.handlePaddleBallContact(this.leftPaddle, "left");
-		this.handlePaddleBallContact(this.rightPaddle, "right");
+		this.handlePaddleBallContact(this.leftPaddle);
+		this.handlePaddleBallContact(this.rightPaddle);
 
 	}
 
