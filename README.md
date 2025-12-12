@@ -1,5 +1,5 @@
 *This project has been created as part
-of the 42 curriculum by amagnell, andmart2, kkoval, josorteg and tatahere*
+of the 42 curriculum by amagnell, andmart2, josorteg, kkoval and tatahere*
 
 ## Description
 
@@ -12,7 +12,8 @@ of the 42 curriculum by amagnell, andmart2, kkoval, josorteg and tatahere*
 ## Technical Stack
 
 ## Database Schema
-
+![alt text](docs/db_schema.png)
+Our initial design of the database.
 ## Features List
 
 ## Modules
@@ -20,4 +21,6 @@ of the 42 curriculum by amagnell, andmart2, kkoval, josorteg and tatahere*
 ## Individual Contributions
 
 ## Resources
+
+### AI usage
 
