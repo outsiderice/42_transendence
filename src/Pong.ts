@@ -8,10 +8,11 @@ export	class Pong {
 	heightLimitPaddle: number;
 	width: number;
 
-	paddleMargin: number = 10;
+	paddleMargin: number = 20;
 	paddlePosX: number;
 	private canvas: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
+
 	// Game elements
 	ball: Ball;
 	leftPaddle: Platform;
@@ -77,7 +78,7 @@ export	class Pong {
 		});
 	}
 
-	handlePaddleBallContact(paddle: Platform): void {
+	handlePaddleBallContact(paddle: Platform ): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
 		const	botPaddle = paddle.getY() - paddle.getPadelHeight()/2;
 		const	topBall = this.ball.getY() + this.ball.getRadius();
@@ -89,7 +90,9 @@ export	class Pong {
 
 		if (leftBall <= rightPaddle  && leftPaddle <= rightBall) {
 			if (topBall >= botPaddle && botBall <= topPaddle) {
-				this.ball.bounce(this.ball.getSpeedX() * (-1), this.ball.getSpeedY());
+				const	newSpeedX = this.ball.getX() - paddle.getX();
+				const	newSpeedY = this.ball.getY() - paddle.getY();
+				this.ball.bounce(newSpeedX, newSpeedY);
 			}
 		}	
 	}
@@ -111,7 +114,6 @@ export	class Pong {
 		this.handlePaddleBallContact(this.leftPaddle);
 		this.handlePaddleBallContact(this.rightPaddle);
 		this.handleScore();
-
 	}
 
 	// need proper signal handling
@@ -133,9 +135,6 @@ export	class Pong {
 		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}
 
-	// Platform
-
-	// Ball
 	private draw(): void {
 		// Clear the canvas
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

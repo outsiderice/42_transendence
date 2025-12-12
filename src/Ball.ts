@@ -7,6 +7,9 @@ export class Ball {
 	private radius: number;
 
 	//movement
+	private	speed: number;
+
+	// it is not an actual speed, but a direction to go
 	private	speedX: number;
 	private	speedY: number;
 
@@ -16,6 +19,7 @@ export class Ball {
 		this.radius = radius;
 
 		//initial movement - random in future needed for x and y
+		this.speed = 30;
 		this.speedY = 7;
 		this.speedX = 4;
 	}
@@ -25,6 +29,7 @@ export class Ball {
 		//poner randomizer
 		this.x = 0; 
 		this.y = 0; // randowm in future
+		this.speed = 30;
 		this.speedY = 7;
 		this.speedX = 4;
 	}
@@ -49,6 +54,18 @@ export class Ball {
 		return (this.radius);
 	}
 
+	setSpeed(speed: number) {
+		this.speed = speed;
+	}
+
+	setSpeedY(speed: number) {
+		this.speedY = speed;
+	}
+
+	setSpeedX(speed: number) {
+		this.speedX = speed;
+	}
+
 	getSpeedY(): number {
 		return (this.speedY);
 	}
@@ -58,8 +75,12 @@ export class Ball {
 	}
 
 	update( minY: number, maxY: number): void {
-		this.x += this.speedX;
-		this.y += this.speedY;
+		// this calculates hipotenusa (norm for vectors) h^2 = x^2 + y^2 then requires square root
+		const	norm = Math.sqrt(this.speedX * this.speedX + this.speedY * this.speedY);
+		// this rescales, we dont want the ball to go speedx and speedy, but in their direction * by speed
+		// and / by norm to normalize the vector to 1
+		this.x += this.speedX * Math.sqrt(this.speed) / norm;
+		this.y += this.speedY * Math.sqrt(this.speed) / norm;
 		
 		if (this.y > maxY) {
 			this.y = maxY;
