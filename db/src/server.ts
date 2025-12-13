@@ -2,8 +2,7 @@ import Fastify from 'fastify';
 import 'dotenv/config';
 import Swagger from '@fastify/swagger';
 import SwaggerUI from '@fastify/swagger-ui';
-import { initializeDatabase } from './config/sqlite';
-import { prisma } from './config/prisma';
+//import { initializeDatabase } from './config/sqlite';
 import { usersRoutes } from './modules/users/users.routes';
 
 const PORT = Number(process.env.DB_SERVICE_PORT) || 3001;
@@ -13,9 +12,7 @@ const app = Fastify({ logger: true });
 
 const start = async () => {
   try {
-    // Inicializar base de datos
-    initializeDatabase();
-
+    
     // Registrar Swagger
     await app.register(Swagger, {
       openapi: {

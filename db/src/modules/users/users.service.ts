@@ -1,104 +1,27 @@
-import { db } from '../../config/sqlite';
-
-export interface User {
-  id?: number;
-  username: string;
-  email: string;
-  password: string;
-  nickname?: string;
-  avatar?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+import { prisma } from "../../config/prisma";
+import { CreateUserInput, UpdateUserInput } from "./users.types";
 
 export class UsersService {
-  // CREATE
-  static createUser(user: User): User {
-    const stmt = db.prepare(`
-      INSERT INTO users (username, email, password, nickname, avatar)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-
-    const result = stmt.run(
-      user.username,
-      user.email,
-      user.password,
-      user.nickname || null,
-      user.avatar || null
-    );
-
-    return {
-      id: Number(result.lastInsertRowid),
-      ...user,
-    };
+  static async createUser(data: CreateUserInput) {
+    return prisma.user.create({ data });
   }
-
-  // READ ONE
-  static getUserById(id: number): User | undefined {
-    const stmt = db.prepare('SELECT * FROM users WHERE id = ?');
-    return stmt.get(id) as User | undefined;
+  static async getUserById(Id: number) {
+    return prisma.user.findUnique({ where: { Id } });
   }
-
-  // READ ONE BY USERNAME
-  static getUserByUsername(username: string): User | undefined {
-    const stmt = db.prepare('SELECT * FROM users WHERE username = ?');
-    return stmt.get(username) as User | undefined;
+  static async getUserByUsername(Username: string) {
+    return prisma.user.findUnique({ where: { Username } });
   }
-
-  // READ ONE BY EMAIL
-  static getUserByEmail(email: string): User | undefined {
-    const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
-    return stmt.get(email) as User | undefined;
+  static async getUserByEmail(Email: string) {
+    return prisma.user.findUnique({ where: { Email } });
   }
-
-  // READ ALL
-  static getAllUsers(): User[] {
-    const stmt = db.prepare('SELECT * FROM users');
-    return stmt.all() as User[];
+  static async getAllUsers() {
+    return prisma.user.findMany();
   }
-
-  // UPDATE
-  static updateUser(id: number, updates: Partial<User>): User | undefined {
-    const fields: string[] = [];
-    const values: unknown[] = [];
-
-    if (updates.username !== undefined) {
-      fields.push('username = ?');
-      values.push(updates.username);
-    }
-    if (updates.email !== undefined) {
-      fields.push('email = ?');
-      values.push(updates.email);
-    }
-    if (updates.password !== undefined) {
-      fields.push('password = ?');
-      values.push(updates.password);
-    }
-    if (updates.nickname !== undefined) {
-      fields.push('nickname = ?');
-      values.push(updates.nickname);
-    }
-    if (updates.avatar !== undefined) {
-      fields.push('avatar = ?');
-      values.push(updates.avatar);
-    }
-
-    if (fields.length === 0) return this.getUserById(id);
-
-    fields.push('updated_at = CURRENT_TIMESTAMP');
-    values.push(id);
-
-    const query = `UPDATE users SET ${fields.join(', ')} WHERE id = ?`;
-    const stmt = db.prepare(query);
-    stmt.run(...values);
-
-    return this.getUserById(id);
+  static async updateUser(Id: number, updates: UpdateUserInput) {
+    return prisma.user.update({ where: { Id }, data: updates });
   }
-
-  // DELETE
-  static deleteUser(id: number): boolean {
-    const stmt = db.prepare('DELETE FROM users WHERE id = ?');
-    const result = stmt.run(id);
-    return (result.changes as number) > 0;
+  static async deleteUser(Id: number) {
+    await prisma.user.delete({ where: { Id } });
+    return true;
   }
 }

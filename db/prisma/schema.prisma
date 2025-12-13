@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  
 }
 
 datasource db {
@@ -16,7 +16,7 @@ model User {
   Password      String 
   Email         String @unique
   Nickname      String @unique
-  Avatar        Boolean
+  Avatar        String?
   Created_At    DateTime @default(now())
 
   // Relations//
