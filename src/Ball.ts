@@ -8,10 +8,10 @@ export class Ball {
 
 	//movement
 	private	speed: number;
-
 	// it is not an actual speed, but a direction to go
 	private	speedX: number;
 	private	speedY: number;
+	private maxSpeedRatio: number = 1;
 
 	constructor(x: number, y: number, radius: number) {
 		this.x = x;
@@ -20,7 +20,7 @@ export class Ball {
 
 		//initial movement - random in future needed for x and y
 		this.speed = 30;
-		this.speedY = 7;
+		this.speedY = 7;//Math.random();
 		this.speedX = 4;
 	}
 
@@ -97,8 +97,20 @@ export class Ball {
 		this.speedY *= -1;
 	}
 
+	absoluteValue(num: number): number{
+		if (num > 0)
+			return num;
+		return -num;
+	}
+
+
 	//paddle -- angle change can be added for more fun
 	bounce(speedX: number, speedY:number): void {
+		// if targent is bigger than permitted (in this case 1, which is 45 degrees)
+		if (this.absoluteValue(speedY / speedX) > this.maxSpeedRatio){
+			speedY = speedY / this.absoluteValue(speedY) * this.absoluteValue(speedX);
+			speedY *= this.maxSpeedRatio;
+		}
 		this.speedX = speedX;
 		this.speedY = speedY;
 	}
