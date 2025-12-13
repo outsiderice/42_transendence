@@ -19,13 +19,12 @@ export	class Pong {
 	rightPaddle: Platform;
 	score: Score;
 
-	constructor (width: number, height: number) {
-		this.canvas = document.createElement("canvas");
-		this.canvas.width = width;
-		this.canvas.height = height;
-		
-		document.body.appendChild(this.canvas);
-
+	constructor (width: number, height: number, canvas: HTMLCanvasElement) {
+		//this.canvas = document.createElement("canvas");
+		//this.canvas.width = width;
+		//this.canvas.height = height;
+		//document.body.appendChild(this.canvas);
+		this.canvas = canvas;
 		const context = this.canvas.getContext("2d");
     	if (!context) throw new Error("Canvas not supported");
     	this.ctx = context;
