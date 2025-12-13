@@ -3,6 +3,7 @@ import 'dotenv/config';
 import Swagger from '@fastify/swagger';
 import SwaggerUI from '@fastify/swagger-ui';
 import { initializeDatabase } from './config/sqlite';
+import { prisma } from './config/prisma';
 import { usersRoutes } from './modules/users/users.routes';
 
 const PORT = Number(process.env.DB_SERVICE_PORT) || 3001;
