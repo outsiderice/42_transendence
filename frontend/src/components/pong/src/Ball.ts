@@ -19,7 +19,7 @@ export class Ball {
 		this.radius = radius;
 
 		//initial movement - random in future needed for x and y
-		this.speed = 30;
+		this.speed = 20;
 		this.speedY = 7;//Math.random();
 		this.speedX = 4;
 	}
@@ -29,7 +29,7 @@ export class Ball {
 		//poner randomizer
 		this.x = 0; 
 		this.y = 0; // randowm in future
-		this.speed = 30;
+		this.speed = 20;
 		this.speedY = 7;
 		this.speedX = 4;
 	}
