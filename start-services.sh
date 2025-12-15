@@ -8,13 +8,9 @@ set -e
 echo "================================================"
 echo "Iniciando servicios de 42_transendence"
 echo "================================================"
-echo ""
-
-echo "📦 Construyendo imágenes Docker..."
-docker-compose build
 
 echo ""
-echo "🚀 Levantando servicios..."
+echo "🚀 Construyendo y Levantando servicios..."
 docker-compose watch
 
 echo ""
