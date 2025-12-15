@@ -15,7 +15,7 @@ docker-compose build
 
 echo ""
 echo "🚀 Levantando servicios..."
-docker-compose up
+docker-compose watch
 
 echo ""
 echo "================================================"
