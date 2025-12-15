@@ -55,28 +55,24 @@ services:
           path: ./backend/package.json
   frontend:
     build: ./frontend
-    image: t_frontend
-    container_name: frontend
     ports:
-      - "8080:8080"   # change later
-    environment:
-      - PORT=${FRONTEND_PORT}
-      - HOST=${FRONTEND_HOST}
-      - GATEWAY=${GATEWAY_URL}
-    networks: 
-      - ft-transcendence
+      - "5173:5173"
     develop:
       watch:
-        - action: sync
-          path: ./frontend
+        - path: ./frontend
           target: /app
-          ignore:
+          action: sync
+          ignore: 
             - node_modules/
             - "*.log"
             - .dockerignore
             - Dockerfile
-        - action: rebuild
-          path: ./frontend/package.json
+        - path: ./frontend/package.json
+          target: /app/package.json
+          action: restart
+        - path: ./frontend/vite.config.js
+          target: /app/vite.config.js
+          action: restart
 
 networks:
   ft-transcendence:
