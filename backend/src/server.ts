@@ -5,10 +5,19 @@ import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import 'dotenv/config';
 
+import cors from "@fastify/cors";
+
+
+
 const PORT = Number(process.env.PORT);
 const HOST = process.env.HOST;
 
 const app = Fastify({ logger: true });
+
+app.register(cors, {
+  origin: true,       // cambiar a nuestro dominio cuando pasemos a produccion
+  credentials: true,
+});
 
 const start = async () => {
   await app.register(Swagger, {
