@@ -6,26 +6,21 @@ Architecture: MPA (Multiple-Page Application)
 API Style: 
 Auth: JWT
 
-## Page routes (HTML)
-
 ## Page Routes (HTML)
 
-| Screen (Figma) | Method | Path | Auth | Notes |
-|---------------|--------|------|------|------|
-| Home page | GET | / | No | Landing page |
-| Terms of service | GET | /terms | No | |
-| Private policy  | GET | /privacy_policy | No | |
-| Sign in | GET | /sign_in | No | |
-| Sign up | GET | /sign_up | No | |
-| Play local | GET | /play_local | No | |
-| User home | GET | /dashboard | Required | Redirect if unauth |
-| Play online | GET | /play_online | No | |
-| Edit profile | GET | /settings | Required | |
-| Users | GET | /users | Required | |
-| Friends | GET | /users/id: | Required | your own friends |
-| Username | GET | /users/id: | Required | |
-| Achievements | GET | /users/id: | Required | |
-
+| Screen (check figma)  | Method | Path                      | Auth     | Notes                                 |
+| -----------------     | ------ | ------------------------- | -------- | --------------------------------------|
+| Home                  | GET    | `/`                       | No       |                                       |
+| Terms of Service      | GET    | `/terms`                  | No       |                                       |
+| Privacy Policy        | GET    | `/privacy-policy`         | No       |                                       |
+| Sign In               | GET    | `/sign-in`                | No       |                                       |
+| Sign Up               | GET    | `/sign-up`                | No       |                                       |
+| Play Local            | GET    | `/play-local`             | No       |                                       |
+| Play Online           | GET    | `/play-online`            | No       |                                       |
+| User home             | GET    | `/dashboard`              | Required | Redirect if unauthenticated           |
+| Edit Profile          | GET    | `/settings`               | Required |                                       |
+| Users                 | GET    | `/users`                  | Required | User list, can filter to just friends |
+| User Profile          | GET    | `/users/:id`              | Required | Public profile                        |
 
 
 ## API endpoints (JSON)
