@@ -25,22 +25,63 @@ Auth: JWT
 
 ## API endpoints (JSON)
 
-POST when signing in
-POST when registering
-POST when logging out
+### Auth
+| Method | Path                 | Description |
+| ------ | -------------------- | ----------- |
+| POST   | `/api/auth/login`    | Sign in     |
+| POST   | `/api/auth/register` | Register    |
+| POST   | `/api/auth/logout`   | Log out     |
 
-PUT (or POST?) when changing things in your profile
+### Profile changes
+| Method            | Path      | Description                                 |
+| -----------       | --------- | ---------------------------------------     |
+| GET               | `/api/me` | Get own profile: avatar, nickname, email    |
+| PATCH/PUT         | `/api/me` | Update profile, from any field to all       |
 
-POST when adding a friend
-DELETE friendship when unfriending another user
+> Major: A public API to interact with the database with a secured API key, rate
+limiting, documentation, and at least 5 endpoints:
+◦ GET /api/{something}
+◦ POST /api/{something}
+◦ PUT /api/{something}
+◦ DELETE /api/{something}
 
-GET list of users (paginado o no?), username and avatars, and status (tambien usar para solo lista de amigos?)
+Subject module specifies PUT but it makes more sense to use PATCH in this case. Consult with team. Look up PUT with partial update.
 
-GET avatar, nickname, username, is friend?
-    list of achievements ?
-    list of games ?
+### Users
+| Method | Path         | Description   |
+| ------ | ------------ | -----------   |
+| GET    | `/api/users` | List of users |
 
-GET avatar, nickname, email, password
+Response fields:
+- avatar
+- nickname
+- username
+- online status
+
+Use queries for:
+- Listing only friends
+- Backend pagination
+
+We considered both frontend limiting and backend pagination but in the end we chose pagination as it seems more scalable and a better practice.
+
+| Method | Path             | Description           |
+| ------ | ---------------- | ----------------      |
+| GET    | `/api/users/:id` | Single user profile   |
+
+Response fields:
+- avatar
+- nickname
+- username
+- achievements
+- games
+- isFriend
+- isSelf
+
+### Friends
+| Method | Description     |
+| ------ | --------------- |
+| POST   | Add a friend    |
+| DELETE | Remove a friend |
 
 ## Estrucutra de carpetas
 
