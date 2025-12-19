@@ -1,9 +1,13 @@
 ## General
 
 Frontend: Vue
+
 Backend: Fastify
+
 Architecture: MPA (Multiple-Page Application)
-API Style: 
+
+API Style: REST
+
 Auth: JWT
 
 ## Page Routes (HTML)
