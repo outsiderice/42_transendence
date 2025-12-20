@@ -3,5 +3,5 @@ import something from '../components/something.vue'
 </script>
 
 <template>
-	<h3> home </h3>
+	<h3> 401 not authorized </h3>
 </template>
