@@ -18,6 +18,21 @@ Our initial design of the database.
 
 ## Modules
 
+| Module                                                             | Points  |
+| ------------------------------------------------------------------ | ------- |
+| Use a framework for both the frontend and backend                  | 2       |
+| Implement real-time features using WebSockets or similar technology| 2       |
+| A public API to interact with the database with a secured API key  | 2       |
+| Use an ORM for the database                                        | 1       |
+| Standard user management and authentication                        | 2       |
+| Game statistics and match history                                  | 1       |
+| Implement remote authentication with OAuth 2.0.                    | 1       |
+| Implement a complete 2FA                                           | 1       |
+| Implement a web-based game where users can play against each other | 2       |
+| Remote players                                                     | 2       |
+| A gamification system                                              | 1       |
+| **TOTAL**                                                          | **17**  |
+
 ## Individual Contributions
 
 ## Resources
