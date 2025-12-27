@@ -10,6 +10,16 @@ const router = createRouter({
       component: HomeView,
     },
 	{
+      path: '/terms_of_service',
+      name: 'terms of service',
+      component: () => import('../views/TermsOfService.vue'),
+    },
+	{
+      path: '/privacy_policy',
+      name: 'privacy policy',
+      component: () => import('../views/PrivacyPolicy.vue'),
+    },
+	{
       path: '/404',
       name: '404',
       component: () => import('../views/404.vue'),

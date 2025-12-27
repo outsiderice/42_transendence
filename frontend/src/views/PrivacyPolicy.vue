@@ -2,5 +2,5 @@
 </script>
 
 <template>
-	<h3> home </h3>
+	<h3> Privacy policy </h3>
 </template>
