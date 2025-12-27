@@ -24,6 +24,7 @@ Our initial design of the database.
 | Implement real-time features using WebSockets or similar technology| 2       |
 | A public API to interact with the database with a secured API key  | 2       |
 | Use an ORM for the database                                        | 1       |
+| Custom-made design system with reusable components                 | 1       |
 | Standard user management and authentication                        | 2       |
 | Game statistics and match history                                  | 1       |
 | Implement remote authentication with OAuth 2.0.                    | 1       |
@@ -31,7 +32,7 @@ Our initial design of the database.
 | Implement a web-based game where users can play against each other | 2       |
 | Remote players                                                     | 2       |
 | A gamification system                                              | 1       |
-| **TOTAL**                                                          | **17**  |
+| **TOTAL**                                                          | **18**  |
 
 ## Individual Contributions
 
