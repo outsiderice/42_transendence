@@ -4,7 +4,7 @@ of the 42 curriculum by amagnell, andmart2, josorteg, kkoval and tatahere*
 ## Description
 Our ft_transendence consists of a web application where users can play pong against another user locally, without registering, or also remotely if they're signed in. 
 
-With registration users are also able to have a personalized display name and avatar, friend other registered users and look at their game history and statistics.
+With registration users are able to have a personalized display name and avatar, friend other registered users, and look at their game history and statistics.
 
 ## Instructions
 Prerequisites:
