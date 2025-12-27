@@ -92,53 +92,75 @@ Response fields:
 Estructura inicial de archivos, para que todo el mundo sepa donde poner las cosas.
 
 ```
-└── 42_transendence
-    ├── backend
-    │   ├── Dockerfile
-    │   ├── package.json
-    │   ├── package-lock.json
-    │   ├── src
-    │   │   ├── config
-    │   │   │   ├── db.ts
-    │   │   │   ├── fastify-swagger.d.ts
-    │   │   │   └── websocket.ts
-    │   │   ├── modules
-    │   │   │   ├── auth
-    │   │   │   │   ├── auth.controller.ts
-    │   │   │   │   ├── auth.routes.ts
-    │   │   │   │   └── auth.service.ts
-    │   │   │   ├── chat
-    │   │   │   │   ├── chat.gateway.ts
-    │   │   │   │   └── chat.routes.ts
-    │   │   │   ├── game
-    │   │   │   │   ├── ai
-    │   │   │   │   │   └── ai.bot.ts
-    │   │   │   │   ├── game.logic.ts
-    │   │   │   │   └── game.routes.ts
-    │   │   │   └── users
-    │   │   │       ├── usersControllers.ts
-    │   │   │       └── usersRoutes.ts
-    │   │   └── server.ts
-    │   └── tsconfig.json
-    ├── db
-    │   └── data.db
-    ├── docker-compose.yml
-    ├── docs
-    │   ├── api-contracts.md
-    │   └── architecture.md
-    └── frontend
-        ├── Dockerfile
-        ├── index.html
-        ├── package.json
-        ├── package-lock.json
-        ├── public
-        │   └── vite.svg
-        ├── src
-        │   ├── counter.ts
-        │   ├── main.ts
-        │   ├── style.css
-        │   └── typescript.svg
-        ├── tsconfig.json
-        └── vite.config.ts
+ft_transcendence
+├── ANÁLISIS_START_SERVICES.txt         //añadir ciertas cosas a troubleshooting en contributin.md o algo y eliminar?
+├── CAMBIOS_REALIZADOS.txt              //mirar formato de api contracts y ver si utilizarlo en api-contracts.md o architecure.md 
+├── CONTRIBUTING.md                 
+├── README.md
+├── backend
+│   ├── Dockerfile
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── config
+│   │   │   ├── db.ts
+│   │   │   ├── fastify-swagger.d.ts
+│   │   │   └── websocket.ts
+│   │   ├── modules
+│   │   │   ├── auth
+│   │   │   │   ├── auth.controller.ts
+│   │   │   │   ├── auth.routes.ts
+│   │   │   │   └── auth.service.ts
+│   │   │   ├── game                //probably won't be here. Ask Kate
+│   │   │   │   ├── game.logic.ts
+│   │   │   │   └── game.routes.ts
+│   │   │   └── users
+│   │   │       ├── Controllers
+│   │   │       │   └── userControllers.ts
+│   │   │       ├── userSchemas.ts
+│   │   │       └── usersRoutes.ts
+│   │   ├── server.ts
+│   │   └── services
+│   │       └── dbClient.ts
+│   └── tsconfig.json
+├── db
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── data
+│   │   └── app.db
+│   ├── data.db
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── config
+│   │   │   ├── fastify-swagger.d.ts  //will be deleted
+│   │   │   └── sqlite.ts             //will probably change
+│   │   ├── modules
+│   │   │   └── users
+│   │   │       ├── users.routes.ts
+│   │   │       └── users.service.ts
+│   │   └── server.ts
+│   └── tsconfig.json
+├── docker-compose.yml
+├── docs
+│   ├── api-contracts.md                //eliminar? y dejarlo todo en architecture.md?
+│   ├── architecture.md
+│   └── db_schema.png                   //imagen de esquema base de datos
+├── frontend
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── prueba.ts
+│   │   ├── style.css
+│   │   └── typescript.svg
+│   ├── tsconfig.json
+│   └── vite.config.ts
+├── start-backend.sh            //scripts 
+├── start-db.sh
+└── start-services.sh
 
 ```
