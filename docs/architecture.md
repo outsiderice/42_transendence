@@ -154,7 +154,6 @@ ft_transcendence
 │   ├── public
 │   │   └── vite.svg
 │   ├── src
-│   │   ├── prueba.ts
 │   │   ├── style.css
 │   │   └── typescript.svg
 │   ├── tsconfig.json
