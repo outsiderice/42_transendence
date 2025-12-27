@@ -7,7 +7,11 @@ Our ft_transendence consists of a web application where users can play pong agai
 With registration users are also able to have a personalized display name and avatar, friend other registered users and look at their game history and statistics.
 
 ## Instructions
+Prerequisites:
+- Docker installed in your PC
+- .env files where there are env.example files
 
+Clone the project then run `docker compose up` in the root of the repository. 
 ## Team Information
 
 ## Project management
