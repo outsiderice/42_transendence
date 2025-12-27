@@ -17,7 +17,11 @@ Clone the project then run `docker compose up` in the root of the repository.
 ## Project management
 
 ## Technical Stack
+**Frontend:** Vue with Tailwind CSS
 
+**Backend:** Fastify
+
+**Database:** Prisma
 ## Database Schema
 ![alt text](docs/db_schema.png)
 Our initial design of the database.
