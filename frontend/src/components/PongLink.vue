@@ -8,7 +8,7 @@
 
 <template>
     <a 
-            :href= "href"
+            :href="href"
             class="pong-link text-blue-600 underline decoration-1 hover:decoration-2 visited:text-indigo-700"
     >
             <slot />   

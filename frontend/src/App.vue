@@ -8,13 +8,13 @@ import PongLink from './components/PongLink.vue'
 	<HomeTitle />
 	<RouterView />
 	<footer class="absolute bottom-0 block w-full mb-[2rem] flex justify-center gap-[2rem]" >
-		<PongLink to="/terms_of_service">
+		<PongLink href="/terms_of_service">
       		Terms of service
     	</PongLink>
-		<PongLink to="/privacy_policy">
+		<PongLink href="/privacy_policy">
 			Privacy policy
     	</PongLink>
-		<PongLink to="/test">
+		<PongLink href="/test">
 			Test
     	</PongLink>
 	</footer>
