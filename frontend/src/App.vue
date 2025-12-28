@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import HomeTitle from './components/HomeTitle.vue'
 import PongLink from './components/PongLink.vue'
+import PongInput from './components/PongInput.vue'
 </script>
 
 <template>
