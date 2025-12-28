@@ -19,16 +19,6 @@ const router = createRouter({
       name: 'privacy policy',
       component: () => import('../views/PrivacyPolicy.vue'),
     },
-	{
-      path: '/404',
-      name: '404',
-      component: () => import('../views/404.vue'),
-    },
-	{
-      path: '/401',
-      name: '401',
-      component: () => import('../views/401.vue'),
-    },
     {
       path: '/sign_in',
       name: 'signin',
@@ -40,14 +30,14 @@ const router = createRouter({
       component: () => import('../views/404.vue'),
     },
     {
-      path: '/game_local',
-      name: 'gamelocal',
-      component: () => import('../views/404.vue'),
+      path: '/local_game',
+      name: 'local_game',
+      component: () => import('../views/LocalGame.vue'),
     },
     {
-      path: '/game_online',
-      name: 'gameonline',
-      component: () => import('../views/404.vue'),
+      path: '/online_game',
+      name: 'online_game',
+      component: () => import('../views/OnLineGame.vue'),
     },
     {
       path: '/users',
@@ -62,6 +52,16 @@ const router = createRouter({
     {
       path: '/edit_profile',
       name: 'user',
+      component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/TestView.vue'),
+    },
+	{
+      path: '/:pathMatch(.*)*',
+      name: '404',
       component: () => import('../views/404.vue'),
     },
   ],
