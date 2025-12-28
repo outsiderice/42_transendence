@@ -2,5 +2,5 @@
 </script>
 
 <template>
-	<h3> home </h3>
+	<h3> online game </h3>
 </template>
