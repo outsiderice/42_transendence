@@ -1,4 +1,4 @@
-import { GameState } from "./GameState";
+import type { GameState } from "./GameState";
 
 export class Renderer {
     private ctx: CanvasRenderingContext2D;
