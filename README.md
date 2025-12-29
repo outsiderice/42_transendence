@@ -2,15 +2,26 @@
 of the 42 curriculum by amagnell, andmart2, josorteg, kkoval and tatahere*
 
 ## Description
+Our ft_transendence consists of a web application where users can play pong against another user locally, without registering, or also remotely if they're signed in. 
+
+With registration users are able to have a personalized display name and avatar, friend other registered users, and look at their game history and statistics.
 
 ## Instructions
+Prerequisites:
+- Docker installed in your PC
+- .env files where there are env.example files
 
+Clone the project then run `docker compose up` in the root of the repository. 
 ## Team Information
 
 ## Project management
 
 ## Technical Stack
+**Frontend:** Vue with Tailwind CSS
 
+**Backend:** Fastify
+
+**Database:** Prisma
 ## Database Schema
 ![alt text](docs/db_schema.png)
 Our initial design of the database.
