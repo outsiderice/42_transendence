@@ -87,6 +87,11 @@ Response fields:
 | POST   | Add a friend    |
 | DELETE | Remove a friend |
 
+### GAME
+| Method | Path         | Description                                   |
+| ------ | ------------ | -----------                                   |
+| POST   | `/api/games`  | Post the players and final score of a game   |
+
 ## Estrucutra de carpetas
 
 Estructura inicial de archivos, para que todo el mundo sepa donde poner las cosas.
