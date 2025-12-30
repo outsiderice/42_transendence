@@ -10,9 +10,9 @@ daily tastks.
 - [x] make a test page were to test all the diferent componets.
 - [x] make the router return the correct views for the 404 pages.
 - [x] add a css file with some variables.
-- [ ] refactor code to put into components.
+- [x] refactor code to put into components.
 	- [x] header.
-	- [ ] footer.
+	- [x] footer.
 - [ ] make some basic components.
 	- [ ] 
 
