@@ -7,14 +7,34 @@ current tastk.
 
 
 daily tastks.
-- [x] make a test page were to test all the diferent componets.
-- [x] make the router return the correct views for the 404 pages.
-- [x] add a css file with some variables.
-- [x] refactor code to put into components.
-	- [x] header.
-	- [x] footer.
-- [ ] make some basic components.
-	- [ ] 
+- [ ] design properly the page.
+	- [ ] components reusable components.
+		- [x] button.
+		- [x] text field.
+		- [x] toggle.
+		- [ ] user card.
+		- [ ] achivment card.
+		- [ ] game cards.
+		- [ ] navigation bar.
+		- [ ] scroll bar.
+	- [ ] views.
+		- [ ] home page.
+		- [ ] terms of service page.
+		- [ ] privacy policy page.
+		- [ ] sign in page.
+		- [ ] sign up page.
+		- [ ] local game page.
+		- [ ] online game page.
+		- [ ] user search page.
+		- [ ] profile page.
+		- [ ] profile edit page.
+- [ ] make components.
+	- [ ] user card.
+	- [ ] achivment card.
+	- [ ] game cards.
+	- [ ] navigation bar.
+	- [ ] scroll bar.
+- [ ] merge into the main branch all the components.
 
 things to do.
 
@@ -22,7 +42,7 @@ things to do.
 	- [x] set up vue.js.
 	- [x] dockerize it.
 	- [x] add tailwind css.
-	- [ ] add a css file with some variables for stuff like the color palet, typografy and more.
+	- [x] add a css file with some variables for stuff like the color palet, typografy and more.
 - [ ] make pages and components.
 	- [ ] pages or views.
 		- [ ] home page.
@@ -36,12 +56,11 @@ things to do.
 		- [ ] profile page.
 		- [ ] profile edit page.
 	- [ ] components.
-		- [ ] title.
-		- [ ] links.
+		- [x] header.
+		- [x] footer.
 		- [ ] button.
 		- [ ] text field.
 		- [ ] togle button.
-		- [ ] separators.
 		- [ ] user cards.
 		- [ ] navigation bar.
 		- [ ] scroll bar.
