@@ -3,34 +3,18 @@ todo lists.
 
 
 current tastk.
-- [ ] title.
-	- requirements.
-		- show hover efect.
-		- return to home if clicked.
-		- hide if inside a game.
-	- [x] design.
-	- [x] code.
-		- [x] make it responsive.
-		- [x] make it redirrect to the home page.
-		- [x] hide in the game page.
+
 
 
 daily tastks.
 - [x] make a test page were to test all the diferent componets.
 - [x] make the router return the correct views for the 404 pages.
-- [ ] 
+- [x] add a css file with some variables.
 - [ ] refactor code to put into components.
-	- [ ] title.
-	- [ ] links.
+	- [x] header.
+	- [ ] footer.
 - [ ] make some basic components.
-	- [ ] button.
-	- [ ] text field.
-	- [ ] togle button.
-	- [ ] separators.
-- [ ] build some basic pages.
-	- [ ] home page.
-	- [ ] sign in.
-	- [ ] sign up.
+	- [ ] 
 
 things to do.
 
@@ -79,15 +63,13 @@ pages or views:
 - profile edit page.
 
 components:
-- title (it will act like a link to the home page).
-- links.
+- title.
 - button.
 - text field (text input).
 - togle button.
-- separators.
 - user cards.
 - navigation bar.
 - scroll bar.
 - achivment items.
 - games cards.
-
+- 

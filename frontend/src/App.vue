@@ -20,12 +20,13 @@ import HomeTitle from './components/HomeTitle.vue'
 			Privacy policy
 		</a>
 		<a
-			href="/test"	
+			href="/test"
 			class="text-blue-600 underline decoration-1 hover:decoration-2 visited:text-indigo-700"
 		>
 			components tests
 		</a>
 	</footer>
+	
 </template>
 
 <style scoped>
