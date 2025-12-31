@@ -12,9 +12,13 @@ daily tastks.
 		- [x] button.
 		- [x] text field.
 		- [x] toggle.
-		- [ ] user card.
-		- [ ] achivment card.
-		- [ ] game cards.
+		- [x] user card.
+		- [x] achivments progres bar.
+		- [x] achivment icon.
+		- [x] achivment card.
+		- [x] donut char for comparing wins and losses or points in a game.
+		- [x] game history card.
+		- [x] per game cards.
 		- [ ] navigation bar.
 		- [ ] scroll bar.
 	- [ ] views.
