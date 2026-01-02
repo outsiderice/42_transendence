@@ -1,7 +1,7 @@
 import { Platform } from "./Platform";
 import { Score } from "./Score";
 import { Ball } from "./Ball";
-import { GameState } from "./GameState" 
+import type { GameState } from "./GameState" 
 
 export	class Pong {
 	// field
@@ -9,10 +9,9 @@ export	class Pong {
 	heightLimitPaddle: number;
 	width: number;
 
+	// paddle distribution
 	paddleMargin: number = 20;
 	paddlePosX: number;
-	//private canvas: HTMLCanvasElement;
-	//private ctx: CanvasRenderingContext2D;
 
 	// Game elements
 	ball: Ball;
@@ -21,15 +20,6 @@ export	class Pong {
 	score: Score;
 
 	constructor (width: number, height: number) {
-		//this.canvas = document.createElement("canvas");
-		//this.canvas.width = width;
-		//this.canvas.height = height;
-		//document.body.appendChild(this.canvas);
-		//this.canvas = canvas;
-		//const context = canvas.getContext("2d");
-    	//if (!context) throw new Error("Canvas not supported");
-    	//this.ctx = context;
-		
 		this.height = height;
 		this.width = width;
 		this.paddlePosX = this.width / 2 - this.paddleMargin;
@@ -41,7 +31,7 @@ export	class Pong {
 
 	}
 
-	// web sockets
+	// web sockets in future
 	private setupControls(): void {
 		window.addEventListener("keydown", (event: KeyboardEvent) => {
 			const key = event.key;
@@ -76,7 +66,7 @@ export	class Pong {
         	}
 		});
 	}
-//backend
+
 	handlePaddleBallContact(paddle: Platform ): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
 		const	botPaddle = paddle.getY() - paddle.getPadelHeight()/2;
@@ -134,55 +124,6 @@ export	class Pong {
 		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}
 
-	/*private draw(): void {
-		// Clear the canvas
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-		// Draw the ball
-		this.ctx.fillStyle = "white";
-		this.ctx.beginPath();
-		this.ctx.arc(
-			this.ball.getX() + this.canvas.width / 2,  // convert center-based coordinates
-			this.canvas.height / 2 - this.ball.getY(), // invert y-axis if center=0,0
-			this.ball.getRadius(),
-			0,
-			Math.PI * 2
-		);
-		this.ctx.fill();
-		this.ctx.closePath();
-
-		// Draw left paddle
-		this.ctx.fillStyle = "white";
-		this.ctx.fillRect(
-			this.leftPaddle.getX() + this.canvas.width / 2 - this.leftPaddle.getPadelWidth() / 2,
-			this.canvas.height / 2 - this.leftPaddle.getY() - this.leftPaddle.getPadelHeight() / 2,
-			this.leftPaddle.getPadelWidth(),
-			this.leftPaddle.getPadelHeight()
-		);
-
-		// Draw right paddle
-		this.ctx.fillStyle = "white";
-		this.ctx.fillRect(
-			this.rightPaddle.getX() + this.canvas.width / 2 - this.rightPaddle.getPadelWidth() / 2,
-			this.canvas.height / 2 - this.rightPaddle.getY() - this.rightPaddle.getPadelHeight() / 2,
-			this.rightPaddle.getPadelWidth(),
-			this.rightPaddle.getPadelHeight()
-		);
-
-		// Optionally, draw scores
-		this.ctx.font = "30px Arial";
-		this.ctx.fillText(
-			`${this.score.getLeftScore()}`,
-			this.canvas.width / 4,
-			50
-		);
-		this.ctx.fillText(
-			`${this.score.getRightScore()}`,
-			(this.canvas.width / 4) * 3,
-			50
-		);
-	}*/
-
 	getGameState() :GameState {
 		return {
 			ball: { x: this.ball.getX(), y: this.ball.getY(), radius: this.ball.getRadius() },
@@ -192,14 +133,7 @@ export	class Pong {
 		};
 	}
 
-	private gameLoop = () => {
-    	this.update();
-    	//this.draw();
-    	requestAnimationFrame(this.gameLoop);
-	}
-
-	start(): void {
-    	this.setupControls();
-    	requestAnimationFrame(this.gameLoop);
+	cleanup(): void {
+		window.removeEventListener("keydown", this.setupControls);
 	}
 }
