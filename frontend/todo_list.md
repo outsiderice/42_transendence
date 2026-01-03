@@ -54,9 +54,9 @@ things to do.
 	- [ ] components.
 		- [ ] title.
 		- [x] links.
-		- [ ] button.
+		- [x] button.
 		- [x] text field.
-		- [ ] togle button.
+		- [x] togle button.
 		- [ ] separators.
 		- [ ] user cards.
 		- [ ] navigation bar.

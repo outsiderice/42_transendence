@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import PongInput from '../components/PongInput.vue'
+import PongButton from '../components/PongButton.vue'
+import PongToggleButton from '../components/PongToggleButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
+import { useToggles } from '../composables/useToggles'
+
+const { newsletter } = useToggles()
 
 // Usamos el composable extendido que maneja name, email y password
 const { 
@@ -49,13 +54,17 @@ const handleSubmit = () => {
       @blur="touched.password = true"
     />
 
-    <button
-      @click="handleSubmit"
-      class="mt-6 w-full bg-blue-600 text-white py-2 rounded-2xl hover:bg-blue-700 transition-colors"
-    >
-      Enviar
-    </button>
-
+    <PongButton
+		label="Enviar"
+  		type="submit"
+  		:fullWidth="true"
+  		:disabled="!name || !email || !password"
+  		@click="handleSubmit"
+	/>
+	<div class="mt-4">
+      <PongToggleButton v-model="newsletter" label="Suscribirme al newsletter" />
+    </div>
+	
     <div class="mt-6 text-gray-700">
       <p><strong>Name:</strong> {{ name }}</p>
       <p><strong>Email:</strong> {{ email }}</p>
