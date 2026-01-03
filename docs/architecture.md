@@ -32,9 +32,11 @@ Auth: JWT
 ### Auth
 | Method | Path                 | Description |
 | ------ | -------------------- | ----------- |
-| POST   | `/api/auth/login`    | Sign in     |
-| POST   | `/api/auth/register` | Register    |
-| POST   | `/api/auth/logout`   | Log out     |
+| POST   | `/api/auth/login`    | Sign in     | DONE
+| POST   | `/api/auth/register` | Register    | DONE
+| POST   | `/api/auth/logout`   | Log out     | not yet
+
+***Igual habria que hacer una tabla nueva para los usuarios en line o crear una variable global en el back, con un vector y el ID de usuario
 
 ### Profile changes
 | Method            | Path      | Description                                 |
@@ -48,6 +50,8 @@ limiting, documentation, and at least 5 endpoints:
 ◦ POST /api/{something}
 ◦ PUT /api/{something}
 ◦ DELETE /api/{something}
+
+***La APIKEY ya funciona, solo que todas las rutas que vienen de nuestro backend entran, si quereis conectar a la db directamente, no deja (ver el Hook, se puede cambiar la logica)
 
 Subject module specifies PUT but it makes more sense to use PATCH in this case. Consult with team. Look up PUT with partial update.
 
