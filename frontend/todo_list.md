@@ -53,9 +53,9 @@ things to do.
 		- [ ] profile edit page.
 	- [ ] components.
 		- [ ] title.
-		- [ ] links.
+		- [x] links.
 		- [ ] button.
-		- [ ] text field.
+		- [x] text field.
 		- [ ] togle button.
 		- [ ] separators.
 		- [ ] user cards.
