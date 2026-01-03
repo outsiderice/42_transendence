@@ -8,11 +8,10 @@ import 'dotenv/config';
 
 import cors from "@fastify/cors";
 
-
 const app = Fastify({ logger: true });
 
 app.register(require('@fastify/jwt'), {
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET || 'supersecretkey',
 })
 
 app.register(cors, {
