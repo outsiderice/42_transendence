@@ -1,6 +1,7 @@
 
 import Fastify from "fastify";
 import { usersRoutes } from "./modules/users/usersRoutes";
+import { authRoutes } from "./modules/auth/authRoutes";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import 'dotenv/config';
@@ -43,6 +44,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 
 app.register(usersRoutes);
+app.register(authRoutes);
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
     console.log("Server is running on http://localhost:3000");
   });

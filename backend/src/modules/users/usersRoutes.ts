@@ -5,8 +5,6 @@ import {
   getAllUsersController,
   getUserByIdController,
   getUserByUsernameController,
-  registerUserController,
-  loginUserController,
   createUserController,
   updateUserController,
   deleteUserController
@@ -75,32 +73,7 @@ export const UpdateUserSchema = {
 };
 
 export const usersRoutes = async (app: FastifyInstance) => {
-  // REGISTER USER
-
-  app.post<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>('/auth/register', {
-    schema: {
-      tags: ['Users'],
-      body: CreateUserSchema,
-      response: {
-        201: UserSchema,
-        400: { type: 'object', properties: { error: { type: 'string' } } },
-        409: { type: 'object', properties: { error: { type: 'string' } } },
-      },
-    },
-  }, registerUserController);
-
-  // LOGIN USER
-  app.post<{ Body: { username: string; password: string } }>('/auth/login', {
-    schema: {
-      tags: ['Users'],
-      body: LoginUserSchema,
-      response: {
-        200: UserSafeSchema,
-        400: { type: 'object', properties: { error: { type: 'string' } } },
-        404: { type: 'object', properties: { error: { type: 'string' } } },
-      },
-    },
-  }, loginUserController);
+ 
 
   // CREATE
   app.post<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>('/users', {

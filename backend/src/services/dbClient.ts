@@ -149,9 +149,7 @@ export class DBClient {
     try {
       const response = await fetch(`${DB_SERVICE_URL}/api/users/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        
       });
 
       if (response.status === 404) {

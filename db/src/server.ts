@@ -1,7 +1,5 @@
 import Fastify from 'fastify';
 import 'dotenv/config';
-import Swagger from '@fastify/swagger';
-import SwaggerUI from '@fastify/swagger-ui';
 import { initializeDatabase } from './config/sqlite';
 import { usersRoutes } from './modules/users/users.routes';
 
@@ -14,25 +12,6 @@ const start = async () => {
   try {
     // Inicializar base de datos
     initializeDatabase();
-
-    // Registrar Swagger
-    await app.register(Swagger, {
-      openapi: {
-        info: {
-          title: 'DB Service API',
-          version: '1.0.0',
-        },
-      },
-    });
-
-    // Registrar Swagger UI
-    await app.register(SwaggerUI, {
-      routePrefix: '/docs',
-      uiConfig: {
-        docExpansion: 'list',
-        deepLinking: false,
-      },
-    });
 
     // Registrar rutas
     app.register(usersRoutes, { prefix: '/api' });
