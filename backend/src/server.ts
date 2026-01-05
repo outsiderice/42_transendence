@@ -37,24 +37,6 @@ app.register(SwaggerUI, {
   },
 });
 
-// const start = async () => {
-//   await app.register(Swagger, {
-//     openapi: {
-//       info: {
-//         title: "API Example",
-//         version: "1.0.0",
-//       },
-//     },
-//   });
-
-//   await app.register(SwaggerUI, {
-//     routePrefix: "/docs",
-//     uiConfig: {
-//       docExpansion: "list",
-//       deepLinking: false,
-//     },
-//   });
-
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
