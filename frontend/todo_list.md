@@ -12,8 +12,12 @@ current task.
 	- [ ] style correctly the profile picture with the online status dot.
 		- [x] make the mask for the profile picture.
 		- [x] arange the mask with the status dot.
-	- [ ] style correctly the text and boundary of the card.
-	- [ ] change color and text when hovered.
+	- [x] style correctly the text and boundary of the card.
+	- [x] change color and text when hovered.
+	- [x] animate the text change.
+	- [ ] refine the container.
+		- [ ] set properly the width.
+		- [ ] remove animations for reduced motion.
 
 daily tastks.
 - [x] design properly the page.
