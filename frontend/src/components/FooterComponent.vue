@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<footer class="absolute bottom-0 block w-full mb-[2rem] flex justify-center gap-[2rem]" >
+	<footer class="fixed bottom-0 block w-full mb-[2rem] flex justify-center gap-[2rem]" >
 		<a 
 			href="/terms_of_service" 
 			class="text-blue-600 underline decoration-1 hover:decoration-2 visited:text-indigo-700"

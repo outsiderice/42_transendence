@@ -9,15 +9,15 @@ current task.
 - [ ] user card.
 	- [x] define all the props that it will recive.
 	- [x] show all the information of the card.
-	- [ ] style correctly the profile picture with the online status dot.
+	- [x] style correctly the profile picture with the online status dot.
 		- [x] make the mask for the profile picture.
 		- [x] arange the mask with the status dot.
 	- [x] style correctly the text and boundary of the card.
 	- [x] change color and text when hovered.
 	- [x] animate the text change.
-	- [ ] refine the container.
-		- [ ] set properly the width.
-		- [ ] remove animations for reduced motion.
+	- [x] refine the container.
+		- [x] set properly the width.
+		- [x] change the unrendered style.
 
 daily tastks.
 - [x] design properly the page.
@@ -34,6 +34,7 @@ daily tastks.
 		- [x] per game cards.
 - [ ] make components.
 	- [ ] user card.
+	- [ ] modal image.
 	- [ ] achivment progress bar.
 	- [ ] achivment items.
 	- [ ] achivment card.
