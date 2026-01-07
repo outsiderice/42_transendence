@@ -21,6 +21,12 @@
 		>
 			components tests
 		</a>
+		<a
+			href="/test_2"
+			class="text-blue-600 underline decoration-1 hover:decoration-2 visited:text-indigo-700"
+		>
+			components tests 2
+		</a>
 	</footer>
 </template>
 
