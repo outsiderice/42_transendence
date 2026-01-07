@@ -3,34 +3,45 @@ todo lists.
 
 
 current tastk.
-- [ ] title.
-	- requirements.
-		- show hover efect.
-		- return to home if clicked.
-		- hide if inside a game.
-	- [x] design.
-	- [x] code.
-		- [x] make it responsive.
-		- [x] make it redirrect to the home page.
-		- [x] hide in the game page.
+- [ ] learn props properly.
 
+current task.
+- [ ] user card.
+	- [x] define all the props that it will recive.
+	- [x] show all the information of the card.
+	- [x] style correctly the profile picture with the online status dot.
+		- [x] make the mask for the profile picture.
+		- [x] arange the mask with the status dot.
+	- [x] style correctly the text and boundary of the card.
+	- [x] change color and text when hovered.
+	- [x] animate the text change.
+	- [x] refine the container.
+		- [x] set properly the width.
+		- [x] change the unrendered style.
 
 daily tastks.
-- [x] make a test page were to test all the diferent componets.
-- [x] make the router return the correct views for the 404 pages.
-- [ ] 
-- [ ] refactor code to put into components.
-	- [ ] title.
-	- [ ] links.
-- [ ] make some basic components.
-	- [ ] button.
-	- [ ] text field.
-	- [ ] togle button.
-	- [ ] separators.
-- [ ] build some basic pages.
-	- [ ] home page.
-	- [ ] sign in.
-	- [ ] sign up.
+- [x] design properly the page.
+	- [x] components reusable components.
+		- [x] button.
+		- [x] text field.
+		- [x] toggle.
+		- [x] user card.
+		- [x] achivments progres bar.
+		- [x] achivment icon.
+		- [x] achivment card.
+		- [x] donut char for comparing wins and losses or points in a game.
+		- [x] game history card.
+		- [x] per game cards.
+- [ ] make components.
+	- [ ] user card.
+	- [ ] modal image.
+	- [ ] achivment progress bar.
+	- [ ] achivment items.
+	- [ ] achivment card.
+	- [ ] donut chart.
+	- [ ] individual game cards.
+	- [ ] game historic card.
+- [ ] merge into the main branch all the components.
 
 things to do.
 
@@ -38,7 +49,7 @@ things to do.
 	- [x] set up vue.js.
 	- [x] dockerize it.
 	- [x] add tailwind css.
-	- [ ] add a css file with some variables for stuff like the color palet, typografy and more.
+	- [x] add a css file with some variables for stuff like the color palet, typografy and more.
 - [ ] make pages and components.
 	- [ ] pages or views.
 		- [ ] home page.
@@ -52,17 +63,20 @@ things to do.
 		- [ ] profile page.
 		- [ ] profile edit page.
 	- [ ] components.
-		- [ ] title.
-		- [x] links.
+		- [x] header.
+		- [x] footer.
 		- [ ] button.
 		- [x] text field.
 		- [ ] togle button.
-		- [ ] separators.
 		- [ ] user cards.
+		- [ ] achivment progress bar.
+		- [ ] achivment items.
+		- [ ] achivment card.
+		- [ ] donut chart.
+		- [ ] individual game cards.
+		- [ ] game historic card.
 		- [ ] navigation bar.
 		- [ ] scroll bar.
-		- [ ] achivment items.
-		- [ ] games cards.
 
 project elements.
 
@@ -79,15 +93,15 @@ pages or views:
 - profile edit page.
 
 components:
-- title (it will act like a link to the home page).
-- links.
 - button.
 - text field (text input).
 - togle button.
-- separators.
 - user cards.
+- donut chart.
+- individual games cards.
+- all games card.
+- achivment progress bar.
+- achivment items.
+- achivment card.
 - navigation bar.
 - scroll bar.
-- achivment items.
-- games cards.
-

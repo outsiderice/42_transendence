@@ -21,7 +21,9 @@ const handleSubmit = () => {
   }
 }
 </script>
-
+<!--
+	https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png
+-->
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
     <h2 class="text-3xl font-bold mb-8 text-center">Formulario de Prueba</h2>
