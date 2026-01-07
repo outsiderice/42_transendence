@@ -66,7 +66,7 @@ export const registerUserController = async (
       { expiresIn: '1h' }
     );
 
-    reply.status(201).send(safeUser);
+    reply.status(201).send({ user: safeUser, token });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
