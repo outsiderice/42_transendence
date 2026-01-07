@@ -1,4 +1,5 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance } from 'fastify';
+import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
@@ -54,6 +55,17 @@ export const registerUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = newUser;
 
+    //generar JWT
+    const token = await reply.jwtSign(
+      { 
+        id: newUser.id,
+        username: newUser.username,
+        nickname: newUser.nickname,
+        avatar: newUser.avatar
+      },
+      { expiresIn: '1h' }
+    );
+
     reply.status(201).send(safeUser);
   } catch (error) {
     console.error('Error in createUserController:', error);
@@ -102,7 +114,18 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = existingUsername;
 
-    reply.status(201).send(safeUser);
+    //generar JWT
+    const token = await reply.jwtSign(
+      { 
+        id: existingUsername.id,
+        username: existingUsername.username,
+        nickname: existingUsername.nickname,
+        avatar: existingUsername.avatar
+      },
+      { expiresIn: '1h' }
+    );
+
+    reply.status(201).send({ user: safeUser, token });
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
