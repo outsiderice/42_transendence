@@ -59,9 +59,7 @@ export const registerUserController = async (
     const token = await reply.jwtSign(
       { 
         id: newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        avatar: newUser.avatar
+        username: newUser.username
       },
       { expiresIn: '1h' }
     );
@@ -118,9 +116,7 @@ export const loginUserController = async (
     const token = await reply.jwtSign(
       { 
         id: existingUsername.id,
-        username: existingUsername.username,
-        nickname: existingUsername.nickname,
-        avatar: existingUsername.avatar
+        username: existingUsername.username
       },
       { expiresIn: '1h' }
     );
