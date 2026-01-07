@@ -1,4 +1,3 @@
-import { FastifyInstance } from 'fastify';
 import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
@@ -166,8 +165,6 @@ export const createUserController = async (
         error: 'El username ya está registrado',
       });
     }
-
-    
 
     const newUser = await DBClient.createUser({
       username,
