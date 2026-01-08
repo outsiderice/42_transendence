@@ -1,19 +1,16 @@
 
 import Fastify from "fastify";
-import jwt from "@fastify/jwt";
 import cors from "@fastify/cors";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import 'dotenv/config';
 
+import jwtplugin from './plugins/jwt.plugin';
+
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
 
 const app = Fastify({ logger: true });
-
-app.register(jwt, {
-  secret: process.env.JWT_SECRET || 'supersecretkey',
-});
 
 app.register(cors, {
   origin: true,       // cambiar a nuestro dominio cuando pasemos a produccion
@@ -36,6 +33,8 @@ app.register(SwaggerUI, {
     deepLinking: false,
   },
 });
+
+app.register(jwtplugin);
 
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
