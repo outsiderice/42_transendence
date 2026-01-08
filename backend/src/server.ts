@@ -1,12 +1,15 @@
 
+// external imports
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import 'dotenv/config';
 
+//our plugins
 import jwtplugin from './plugins/jwt.plugin';
 
+//our routes
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
 
