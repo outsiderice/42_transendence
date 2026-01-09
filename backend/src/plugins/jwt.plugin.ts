@@ -4,22 +4,22 @@ import jwt from '@fastify/jwt';
 
 /** 
 LIST OF places where jwt plugin needs to be used as prehandler:
-authenticate:
-[] - POST /api/auth/logout
-[] - PUT /api/me
-[] - GET /api/me
-[] - GET /api/users
-[] - GET /api/users/:id
-[] - POST /api/users/:id/add-friend
-[] - DELETE /api/users/:id/remove-friend
-[] - POST /api/games
+  authenticate:
+  [] - POST /api/auth/logout
+  [] - PUT /api/me
+  [] - GET /api/me
+  [] - GET /api/users
+  [] - GET /api/users/:id
+  [] - POST /api/users/:id/add-friend
+  [] - DELETE /api/users/:id/remove-friend
+  [] - POST /api/games
 
-pageauthenticate:
-[] - GET /play-online
-[] - GET /dashboard
-[] - GET /settings
-[] - GET /users
-[] - GET /users/:id
+  pageauthenticate:
+  [] - GET /play-online
+  [] - GET /dashboard
+  [] - GET /settings
+  [] - GET /users
+  [] - GET /users/:id
  */
 
 
@@ -33,14 +33,14 @@ export default fp(async function (fastify: FastifyInstance) {
       // This will verify the JWT and populate request.user
       await request.jwtVerify();
     } catch (err) {
-      reply.code(401).send({        //redirect to login or send error?
+      reply.code(401).send({
         error: 'Authentication required',
         message: 'Please provide a valid token'
       });
     }
   })
 
-  fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
+  fastify.decorate("pageAuthenticate", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
       // This will verify the JWT and populate request.user
       await request.jwtVerify();
