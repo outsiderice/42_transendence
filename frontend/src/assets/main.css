@@ -1,2 +1,35 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
+:root {
+	--color_background_1: hsl(0, 0%, 95%);
+	--color_background_2: hsl(0, 0%, 90%);
+	--color_background_3: hsl(0, 0%, 100%);
+	--color_accent_1: hsl(0, 0%, 10%);
+	--color_accent_2: hsl(0, 0%, 20%);
+	--color_accent_3: hsl(0, 0%, 50%);
+	--color_loading_content: hsl(0, 0%, 80%);
+	--color_accent_danger: hsl(0, 95%, 43%);
+	--color_accent_success: hsl(121, 92%, 31%);
+	--color_accent_link_unvisited: hsl(228, 87%, 39%);
+	--color_accent_link_visited: hsl(250, 86%, 22%);
+	
+	font-family: "Oswald", sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+@media (prefers-color-scheme: dark) {:root {
+	--color_background_1: hsl(0, 0%, 15%);
+	--color_background_2: hsl(0, 0%, 20%);
+	--color_background_3: hsl(0, 0%, 10%);
+	--color_accent_1: hsl(0, 0%, 100%);
+	--color_accent_2: hsl(0, 0%, 90%);
+	--color_accent_3: hsl(0, 0%, 50%);
+	--color_loading_content: hsl(0, 0%, 30%);
+}}
+
+body {
+	background-color: var(--color_background_1);
+	color: var(--color_accent_1);
+}
