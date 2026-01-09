@@ -73,20 +73,6 @@ export const UpdateUserSchema = {
 };
 
 export const usersRoutes = async (app: FastifyInstance) => {
- 
-
-  // CREATE
-  app.post<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>('/users', {
-    schema: {
-      tags: ['Users'],
-      body: CreateUserSchema,
-      response: {
-        201: UserSchema,
-        400: { type: 'object', properties: { error: { type: 'string' } } },
-        409: { type: 'object', properties: { error: { type: 'string' } } },
-      },
-    },
-  }, createUserController);
 
   // READ ALL
   app.get('/users', {
