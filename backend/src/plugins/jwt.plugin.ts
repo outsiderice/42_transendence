@@ -9,7 +9,7 @@ LIST OF places where jwt plugin needs to be used as prehandler:
   [] - PUT /api/me
   [] - GET /api/me
   [] - GET /api/users
-  [] - GET /api/users/:id
+  [x] - GET /api/users/:id
   [] - POST /api/users/:id/add-friend
   [] - DELETE /api/users/:id/remove-friend
   [] - POST /api/games
