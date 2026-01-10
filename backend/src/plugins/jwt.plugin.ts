@@ -28,7 +28,7 @@ export default fp(async function (fastify: FastifyInstance) {
     secret: process.env.JWT_SECRET || 'supersecretkey',
   });
 
-  fastify.decorate("authenticate", async function(request: FastifyRequest, reply: FastifyReply) {
+  fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
       // This will verify the JWT and populate request.user
       await request.jwtVerify();
@@ -40,7 +40,7 @@ export default fp(async function (fastify: FastifyInstance) {
     }
   })
 
-  fastify.decorate("pageAuthenticate", async function(request: FastifyRequest, reply: FastifyReply) {
+  fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
       // This will verify the JWT and populate request.user
       await request.jwtVerify();

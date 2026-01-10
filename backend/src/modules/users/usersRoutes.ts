@@ -97,7 +97,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ BY USERNAME
   app.get<{ Params: { username: string } }>('/users/by-username/:username', {
-    preHandler: app.authenticate,
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       params: { type: 'object', properties: { username: { type: 'string' } }, required: ['username'] },
