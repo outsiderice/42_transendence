@@ -54,8 +54,8 @@ export const registerUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = newUser;
 
-    //generar JWT
-    const token = await reply.jwtSign(
+    //generar JWTs
+    const accessToken = await reply.jwtSign(
       { 
         id: newUser.id,
         username: newUser.username
@@ -63,7 +63,15 @@ export const registerUserController = async (
       { expiresIn: '1h' }
     );
 
-    reply.status(201).send({ user: safeUser, token });
+    const refreshToken = await reply.jwtSign(
+      { 
+        id:   newUser.id,
+        type: 'refresh'
+      },
+      { expiresIn: '7d' }
+    );  
+
+    reply.status(201).send({ user: safeUser, accessToken, refreshToken });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -111,8 +119,8 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = existingUsername;
 
-    //generar JWT
-    const token = await reply.jwtSign(
+    //generar JWTs
+    const accessToken = await reply.jwtSign(
       { 
         id: existingUsername.id,
         username: existingUsername.username
@@ -120,7 +128,15 @@ export const loginUserController = async (
       { expiresIn: '1h' }
     );
 
-    reply.status(201).send({ user: safeUser, token });
+    const refreshToken = await reply.jwtSign(
+      { 
+        id: existingUsername.id,
+        type: 'refresh'
+      },
+      { expiresIn: '7d' }
+    );    
+
+    reply.status(201).send({ user: safeUser, accessToken, refreshToken });
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
@@ -181,5 +197,38 @@ export const createUserController = async (
       error: 'Error al crear usuario',
       details: error instanceof Error ? error.message : String(error),
     });
+  }
+};
+/**
+ * POST /refresh - actualizar token
+ */
+export const refreshTokenController = async (
+  request: FastifyRequest<{ Body: { refreshToken: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { refreshToken } = request.body;
+
+    const payload = request.server.jwt.verify(refreshToken) as {
+      id: number;
+      type?: string;
+    };
+
+    if (payload.type !== 'refresh') {
+      return reply.code(401).send({ error: 'Invalid refresh token' });
+    }
+
+    //generar nuevo token de acceso
+    const token = await reply.jwtSign(
+      { 
+        id: payload.id,
+        username: existingUsername.username
+      },
+      { expiresIn: '1h' }
+    );
+
+    return reply.send({ newToken });
+  } catch {
+    return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
 };
