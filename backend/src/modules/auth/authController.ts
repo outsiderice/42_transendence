@@ -37,6 +37,13 @@ export const registerUserController = async (
       });
     }
 
+    const existingEmail = await DBClient.getUserByUsername(email);
+    if (existingEmail) {
+      return reply.status(409).send({
+        error: 'El email ya está registrado',
+      });
+    }
+
     // generar contraseña hasheada 
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
