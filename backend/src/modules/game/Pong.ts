@@ -1,7 +1,7 @@
-import { Platform } from "./Platform";
-import { Score } from "./Score";
-import { Ball } from "./Ball";
-import type { GameState } from "./GameState" 
+import { Platform } from "./Platform.js";
+import { Score } from "./Score.js";
+import { Ball } from "./Ball.js";
+import type { GameState } from "./GameState.js" 
 
 export	class Pong {
 	// field
@@ -31,8 +31,18 @@ export	class Pong {
 
 	}
 
+	handleInput(key: string, isPressed: boolean) {
+		if (key === 'w' || key === 'W')
+			this.leftPaddle.moveUp = isPressed;
+		if (key === "s" || key === "S")
+            this.leftPaddle.moveDown = isPressed;
+		if (key === "ArrowUp")
+            this.rightPaddle.moveUp = isPressed;
+		if (key === "ArrowDown")
+            this.rightPaddle.moveDown = isPressed;
+	}
 	// web sockets in future
-	private setupControls(): void {
+	/*private setupControls(): void {
 		window.addEventListener("keydown", (event: KeyboardEvent) => {
 			const key = event.key;
 			if (key === "w" || key === "W") {
@@ -65,7 +75,7 @@ export	class Pong {
             	this.rightPaddle.moveDown = false;
         	}
 		});
-	}
+	}*/
 
 	handlePaddleBallContact(paddle: Platform ): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
@@ -85,7 +95,7 @@ export	class Pong {
 			}
 		}	
 	}
-//backend
+
 	handleScore() {
 		const	ballX = this.ball.getX();
 
@@ -133,7 +143,7 @@ export	class Pong {
 		};
 	}
 
-	cleanup(): void {
-		window.removeEventListener("keydown", this.setupControls);
-	}
+	//cleanup(): void {
+	//	window.removeEventListener("keydown", this.setupControls);
+	//}
 }
