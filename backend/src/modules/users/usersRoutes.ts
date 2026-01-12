@@ -87,6 +87,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
     preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
+      security: [{ bearerAuth: [] }],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
       response: {
         200: UserSchema,
@@ -101,6 +102,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
     preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
+      security: [{ bearerAuth: [] }],
       params: { type: 'object', properties: { username: { type: 'string' } }, required: ['username'] },
       response: {
         200: UserSchema,
