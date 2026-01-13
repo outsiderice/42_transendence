@@ -58,7 +58,8 @@ export const registerUserController = async (
     const accessToken = await reply.jwtSign(
       { 
         id:       newUser.id,
-        username: newUser.username
+        username: newUser.username,
+        type:     'access'
       },
       { expiresIn: '1h' }
     );
@@ -124,7 +125,8 @@ export const loginUserController = async (
     const accessToken = await reply.jwtSign(
       { 
         id:       existingUsername.id,
-        username: existingUsername.username
+        username: existingUsername.username,
+        type:     'access'
       },
       { expiresIn: '1h' }
     );

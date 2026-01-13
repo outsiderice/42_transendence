@@ -30,8 +30,14 @@ export default fp(async function (fastify: FastifyInstance) {
 
   fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
-      // This will verify the JWT and populate request.user
-      await request.jwtVerify();
+      
+      const payload = await request.jwtVerify() as { id: number; username: string; type?: string;};
+      if (payload.type !== 'access') {
+        return reply.code(401).send({
+          error: 'Invalid token type',
+          message: 'Please provide a valid access token'
+        });
+      }
     } catch (err) {
       reply.code(401).send({
         error: 'Authentication required',
@@ -42,8 +48,13 @@ export default fp(async function (fastify: FastifyInstance) {
 
   fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
-      // This will verify the JWT and populate request.user
-      await request.jwtVerify();
+      const payload = await request.jwtVerify() as { id: number; username: string; type?: string;};
+      if (payload.type !== 'access') {
+        return reply.code(401).send({
+          error: 'Invalid token type',
+          message: 'Please provide a valid access token'
+        });
+      }
     } catch (err) {
       reply.redirect('/sign-in');
     }
@@ -51,7 +62,6 @@ export default fp(async function (fastify: FastifyInstance) {
 
     fastify.decorate("verifyRefreshToken", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
-      // This will verify the JWT and populate request.user
       await request.jwtVerify();
     } catch (err) {
       reply.code(401).send({
