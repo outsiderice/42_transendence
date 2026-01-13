@@ -61,7 +61,7 @@ export const registerUserController = async (
         username: newUser.username,
         type:     'access'
       },
-      { expiresIn: '1h' }
+      { expiresIn: '15m' }
     );
 
     const refreshToken = await reply.jwtSign(
@@ -73,7 +73,7 @@ export const registerUserController = async (
       { expiresIn: '7d' }
     );  
 
-    reply.status(201).send({ user: safeUser, accessToken, refreshToken });
+    reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -128,7 +128,7 @@ export const loginUserController = async (
         username: existingUsername.username,
         type:     'access'
       },
-      { expiresIn: '1h' }
+      { expiresIn: '15m' }
     );
 
     const refreshToken = await reply.jwtSign(
@@ -140,7 +140,7 @@ export const loginUserController = async (
       { expiresIn: '7d' }
     );
 
-    reply.status(201).send({ user: safeUser, accessToken, refreshToken });
+    reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
@@ -229,7 +229,7 @@ export const refreshTokenController = async (
         id: payload.id,
         username: payload.username
       },
-      { expiresIn: '1h' }
+      { expiresIn: '15m' }
     );
 
     return reply.send({ newToken });
