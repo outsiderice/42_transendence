@@ -12,6 +12,7 @@ import jwtplugin from './plugins/jwt.plugin';
 //our routes
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
+import { refreshTokenController } from "./modules/auth/authController";
 
 const app = Fastify({ logger: true });
 
@@ -28,10 +29,16 @@ app.register(Swagger, {
     },
     components: {
       securitySchemes: {
-        bearerAuth: {
+        accessToken: {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
+        },
+        refreshToken: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "refresh token"
         },
       },
     },
