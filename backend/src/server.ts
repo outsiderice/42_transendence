@@ -2,6 +2,7 @@
 // external imports
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import 'dotenv/config';
@@ -19,6 +20,8 @@ app.register(cors, {
   origin: true,       // cambiar a nuestro dominio cuando pasemos a produccion
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
+
+app.register(cookie);
 
 app.register(Swagger, {
   openapi: {

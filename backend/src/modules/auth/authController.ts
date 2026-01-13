@@ -71,7 +71,15 @@ export const registerUserController = async (
         type:     'refresh'
       },
       { expiresIn: '7d' }
-    );  
+    );
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
 
     reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
@@ -139,6 +147,14 @@ export const loginUserController = async (
       },
       { expiresIn: '7d' }
     );
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
 
     reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
@@ -211,9 +227,8 @@ export const refreshTokenController = async (
   reply: FastifyReply
 ) => {
   try {
-    const { refreshToken } = request.body;
 
-    const payload = request.server.jwt.verify(refreshToken) as {
+    const payload = await request.jwtVerify({onlyCookie: true, }) as {
       id: number;
       username: string;
       type?: string;
@@ -232,7 +247,7 @@ export const refreshTokenController = async (
       { expiresIn: '15m' }
     );
 
-    return reply.send({ newToken });
+    return reply.send({ accessToken: newToken });
   } catch {
     return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
