@@ -2,7 +2,7 @@ import Fastify from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import 'dotenv/config';
 import { initializeDatabase } from './config/sqlite';
-import { usersRoutes } from './modules/users/users.routes';
+import usersRoutes from './modules/users/users.routes';
 
 
 const DB_API_KEY = process.env.DB_API_KEY || 'JoseMiguel';

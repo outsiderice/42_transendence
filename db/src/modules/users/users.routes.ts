@@ -1,10 +1,10 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { UsersService, User } from './users.service';
-import { Console } from 'console';
 
-export const usersRoutes = async (app: FastifyInstance) => {
+
+export default async (app: FastifyInstance) => {
   // CREATE
-  app.post<{ Body: User }>('/users', {
+  app.post<{ Body: User; }>('/users', {
     schema: {
       tags: ['Users'],
       body: {
@@ -19,7 +19,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Body: User }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Body: User; }>, reply: FastifyReply) => {
     try {
       const { username, email, password, nickname, avatar } = request.body;
 
@@ -81,7 +81,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // READ ONE BY ID
-  app.get<{ Params: { id: string } }>('/users/:id', {
+  app.get<{ Params: { id: string; }; }>('/users/:id', {
     schema: {
       tags: ['Users'],
       params: {
@@ -91,7 +91,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { id: string; }; }>, reply: FastifyReply) => {
     try {
       const id = parseInt(request.params.id, 10);
 
@@ -119,7 +119,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // READ ONE BY USERNAME
-  app.get<{ Params: { username: string } }>('/users/by-username/:username', {
+  app.get<{ Params: { username: string; }; }>('/users/by-username/:username', {
     schema: {
       tags: ['Users'],
       params: {
@@ -129,7 +129,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { username: string } }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { username: string; }; }>, reply: FastifyReply) => {
     try {
       const { username } = request.params;
 
@@ -151,7 +151,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // UPDATE
-  app.put<{ Params: { id: string }; Body: Partial<User> }>('/users/:id', {
+  app.put<{ Params: { id: string; }; Body: Partial<User>; }>('/users/:id', {
     schema: {
       tags: ['Users'],
       params: {
@@ -171,7 +171,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { id: string }; Body: Partial<User> }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { id: string; }; Body: Partial<User>; }>, reply: FastifyReply) => {
     try {
       const id = parseInt(request.params.id, 10);
 
@@ -201,7 +201,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // DELETE
-  app.delete<{ Params: { id: string } }>('/users/:id', {
+  app.delete<{ Params: { id: string; }; }>('/users/:id', {
     schema: {
       tags: ['Users'],
       params: {
@@ -211,7 +211,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { id: string; }; }>, reply: FastifyReply) => {
     try {
       const id = parseInt(request.params.id, 10);
 

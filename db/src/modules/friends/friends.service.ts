@@ -9,22 +9,25 @@ export interface Friends {
 
 export class friendsService{
     static postFriendPetition(friends: Friends): Friends {
-    const stmt = db.prepare(`
-      INSERT INTO relationship (user_1,user_2,petition_status)
-      VALUES (?, ?, ?)
-    `);
+      const stmt = db.prepare(`
+        INSERT INTO relationship (user_1,user_2,petition_status)
+        VALUES (?, ?, ?)
+      `);
 
-    const result = stmt.run(
-      friends.user_1,
-      friends.user_2,
-      friends.petition_status,
-      friends.petition_status || 0,  
-    );
-    return {
-        id: Number(result.lastInsertRowid),
-        ...friends,
+      const result = stmt.run(
+        friends.user_1,
+        friends.user_2,
+        friends.petition_status,
+        friends.petition_status || 0,  
+      );
+      return {
+          id: Number(result.lastInsertRowid),
+          ...friends,
       };
-}
+    }
 
-
+    static getAllFriends(user_1: number): Friends[] | undefined {
+        const stmt = db.prepare('SELECT * FROM relationship WHERE user_1 = ?');
+        return stmt.all(user_1) as Friends[];
+      }
 }
