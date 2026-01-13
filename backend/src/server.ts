@@ -12,7 +12,6 @@ import jwtplugin from './plugins/jwt.plugin';
 //our routes
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
-import { refreshTokenController } from "./modules/auth/authController";
 
 const app = Fastify({ logger: true });
 
