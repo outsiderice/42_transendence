@@ -3,7 +3,7 @@ import { User } from '../../services/dbClient';
 import {
  registerUserController,
   loginUserController,
-  
+  refreshTokenController
 } from './authController';
 
 export const UserSchema = {
@@ -59,7 +59,7 @@ export const authRoutes = async (app: FastifyInstance) => {
 
   app.post<{ Body: Omit<User, 'id' | 'nickname' | 'avatar' | 'created_at' | 'updated_at'> }>('/auth/register', {
     schema: {
-      tags: ['Users'],
+      tags: ['Auth'],
       body: CreateUserSchema,
       response: {
         201: UserSafeSchema,
@@ -72,7 +72,7 @@ export const authRoutes = async (app: FastifyInstance) => {
   // LOGIN USER
   app.post<{ Body: { username: string; password: string } }>('/auth/login', {
     schema: {
-      tags: ['Users'],
+      tags: ['Auth'],
       body: LoginUserSchema,
       response: {
         200: UserSafeSchema,
@@ -81,4 +81,26 @@ export const authRoutes = async (app: FastifyInstance) => {
       },
     },
   }, loginUserController);
+
+  // REFRESH TOKEN
+  app.post<{ Body: { refreshToken: string } }>('/auth/refresh', {
+    schema: {
+      tags: ['Auth'],
+      body: {
+        type: "object",
+        required: ["refreshToken"],
+        properties: {
+          refreshToken: { type: "string" },
+        },
+      },
+      response: {
+              200: {
+                type: "object",
+                properties: {
+                  accessToken: { type: "string" },
+                },
+              },
+      },
+    },
+  },refreshTokenController);
 };

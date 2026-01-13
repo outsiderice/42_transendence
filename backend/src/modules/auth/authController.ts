@@ -57,7 +57,7 @@ export const registerUserController = async (
     //generar JWTs
     const accessToken = await reply.jwtSign(
       { 
-        id: newUser.id,
+        id:       newUser.id,
         username: newUser.username
       },
       { expiresIn: '1h' }
@@ -65,8 +65,9 @@ export const registerUserController = async (
 
     const refreshToken = await reply.jwtSign(
       { 
-        id:   newUser.id,
-        type: 'refresh'
+        id:       newUser.id,
+        username: newUser.username,
+        type:     'refresh'
       },
       { expiresIn: '7d' }
     );  
@@ -122,7 +123,7 @@ export const loginUserController = async (
     //generar JWTs
     const accessToken = await reply.jwtSign(
       { 
-        id: existingUsername.id,
+        id:       existingUsername.id,
         username: existingUsername.username
       },
       { expiresIn: '1h' }
@@ -130,11 +131,12 @@ export const loginUserController = async (
 
     const refreshToken = await reply.jwtSign(
       { 
-        id: existingUsername.id,
-        type: 'refresh'
+        id:       existingUsername.id,
+        username: existingUsername.username,
+        type:     'refresh'
       },
       { expiresIn: '7d' }
-    );    
+    );
 
     reply.status(201).send({ user: safeUser, accessToken, refreshToken });
   } catch (error) {
@@ -211,6 +213,7 @@ export const refreshTokenController = async (
 
     const payload = request.server.jwt.verify(refreshToken) as {
       id: number;
+      username: string;
       type?: string;
     };
 
@@ -219,10 +222,10 @@ export const refreshTokenController = async (
     }
 
     //generar nuevo token de acceso
-    const token = await reply.jwtSign(
+    const newToken = await reply.jwtSign(
       { 
         id: payload.id,
-        username: existingUsername.username
+        username: payload.username
       },
       { expiresIn: '1h' }
     );

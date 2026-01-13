@@ -48,4 +48,16 @@ export default fp(async function (fastify: FastifyInstance) {
       reply.redirect('/sign-in');
     }
   })
+
+    fastify.decorate("verifyRefreshToken", async function(request: FastifyRequest, reply: FastifyReply) {
+  try {
+      // This will verify the JWT and populate request.user
+      await request.jwtVerify();
+    } catch (err) {
+      reply.code(401).send({
+        error: 'Authentication required',
+        message: 'Authentication has expired, please log in again'
+      });
+    }
+  })
 })
