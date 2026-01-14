@@ -25,7 +25,7 @@ app.register(cookie);
 
 app.register(oauthPlugin, {
   name: 'githubOAuth2',
-  scope: ['user:email'],
+  scope: [],
   credentials: {
     client: {
       id: process.env.CLIENT_ID || '',
