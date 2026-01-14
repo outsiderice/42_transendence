@@ -1,11 +1,11 @@
-
 // external imports
+import 'dotenv/config';
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import cookie from "@fastify/cookie";
+import oauthPlugin from "@fastify/oauth2";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
-import 'dotenv/config';
 
 //our plugins
 import jwtplugin from './plugins/jwt.plugin';
@@ -22,6 +22,20 @@ app.register(cors, {
 });
 
 app.register(cookie);
+
+app.register(oauthPlugin, {
+  name: 'githubOAuth2',
+  scope: ['user:email'],
+  credentials: {
+    client: {
+      id: process.env.CLIENT_ID || '',
+      secret: process.env.CLIENT_SECRET || '',
+    },
+    auth: oauthPlugin.GITHUB_CONFIGURATION,
+  },
+  startRedirectPath: '/auth/github/login',
+  callbackUri: 'http://localhost:3000/auth/github/callback',
+});
 
 app.register(Swagger, {
   openapi: {
