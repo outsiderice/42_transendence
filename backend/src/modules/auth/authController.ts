@@ -85,7 +85,7 @@ export const registerUserController = async (
       path: '/auth/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
     });
 
     reply.status(201).send({ user: safeUser, accessToken });
@@ -160,7 +160,7 @@ export const loginUserController = async (
       path: '/auth/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
     });
 
     reply.status(201).send({ user: safeUser, accessToken });
