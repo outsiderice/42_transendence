@@ -29,6 +29,9 @@ import DonutChart from "@/components/DonutChart.vue";
 	/>
 	<h4>testing the donut chars</h4>
 	<DonutChart class="w-[60px]" :greenValue="12" :redValue="24" dropDownText="this is my drop down text"/>
+	<DonutChart class="w-[60px]" :greenValue="17" :redValue="24" dropDownText="17 points to 24"/>
+	<DonutChart class="w-[60px]" :greenValue="8" :redValue="3" dropDownText="8 points to 3"/>
+	<DonutChart class="w-[60px]" :greenValue="12" :redValue="7" dropDownText="12 points to 7"/>
 	<div />
 </section>
 </template>
