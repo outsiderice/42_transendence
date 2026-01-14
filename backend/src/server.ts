@@ -8,6 +8,7 @@ import 'dotenv/config';
 
 
 import cors from "@fastify/cors";
+import { friendsRoutes } from "./modules/Friends/friendsRoutes";
 
 
 
@@ -45,6 +46,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 app.register(usersRoutes);
 app.register(authRoutes);
+app.register(friendsRoutes);
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
     console.log("Server is running on http://localhost:3000");
   });

@@ -12,7 +12,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
         properties: {
           user_1: { type: 'number' },
           user_2: { type: 'number' },
-          petition_status: { type: 'string' },
+          petition_status: { type: 'number' },
         }, 
       },
     } as any,
@@ -27,7 +27,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
   });
     // READ ALL Friends
     app.get<{ Querystring: { user_1: number } }>('/friends', {
-      schema: {
+      schema: { 
         tags: ['Friends'],
         querystring: {
           type: 'object',

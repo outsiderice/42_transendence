@@ -4,7 +4,7 @@ export interface Friends {
     id?: number;
     user_1: number;
     user_2: number;
-    petition_status: boolean;
+    petition_status: number;
 }
 
 export class friendsService{
@@ -17,8 +17,7 @@ export class friendsService{
       const result = stmt.run(
         friends.user_1,
         friends.user_2,
-        friends.petition_status,
-        friends.petition_status || 0,  
+        friends.petition_status
       );
       return {
           id: Number(result.lastInsertRowid),
@@ -26,8 +25,9 @@ export class friendsService{
       };
     }
 
-    static getAllFriends(user_1: number): Friends[] | undefined {
-        const stmt = db.prepare('SELECT * FROM relationship WHERE user_1 = ?');
-        return stmt.all(user_1) as Friends[];
-      }
+   static getAllFriends(user_1: number): Friends[] {
+    const stmt = db.prepare('SELECT * FROM relationship WHERE user_1 = ? OR user_2 = ?');
+    const rows = stmt.all(user_1, user_1) as Friends[];
+    return Array.isArray(rows) ? rows : [];
+}
 }
