@@ -1,18 +1,18 @@
 
+// external imports
 import Fastify from "fastify";
-import { usersRoutes } from "./modules/users/usersRoutes";
-import { authRoutes } from "./modules/auth/authRoutes";
+import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import 'dotenv/config';
 
+//our plugins
+import jwtplugin from './plugins/jwt.plugin';
 
-import cors from "@fastify/cors";
-
-
-
-const PORT = Number(process.env.PORT);
-const HOST = process.env.HOST;
+//our routes
+import { usersRoutes } from "./modules/users/usersRoutes";
+import { authRoutes } from "./modules/auth/authRoutes";
 
 const app = Fastify({ logger: true });
 
@@ -21,32 +21,45 @@ app.register(cors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
 
-const start = async () => {
-  await app.register(Swagger, {
-    openapi: {
-      info: {
-        title: "API Example",
-        version: "1.0.0",
+app.register(cookie);
+
+app.register(Swagger, {
+  openapi: {
+    info: {
+      title: "Transendence API",
+      version: "1.0.0",
+    },
+    components: {
+      securitySchemes: {
+        accessToken: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
       },
     },
-  });
+  },
+});
 
-  await app.register(SwaggerUI, {
-    routePrefix: "/docs",
-    uiConfig: {
-      docExpansion: "list",
-      deepLinking: false,
-    },
-  });
+app.register(SwaggerUI, {
+  routePrefix: "/docs",
+  uiConfig: {
+    docExpansion: "list",
+    deepLinking: false,
+  },
+});
+
+app.register(jwtplugin);
+
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
-
-
-app.register(usersRoutes);
-app.register(authRoutes);
-  await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
-    console.log("Server is running on http://localhost:3000");
-  });
+const start = async () => {
+  app.register(usersRoutes);
+  app.register(authRoutes);
+    await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
+      console.log("Server is running on http://localhost:3000");
+    });
 };
+
 start();
