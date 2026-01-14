@@ -35,6 +35,9 @@ app.register(oauthPlugin, {
   },
   startRedirectPath: '/auth/github/login',
   callbackUri: 'http://localhost:3000/auth/github/callback',
+  cookie: {
+    secure: true,
+  }
 });
 
 app.register(Swagger, {
