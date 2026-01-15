@@ -13,6 +13,7 @@ import jwtplugin from './plugins/jwt.plugin';
 //our routes
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
+import { friendsRoutes } from "./modules/Friends/friendsRoutes";
 
 const app = Fastify({ logger: true });
 
@@ -74,7 +75,8 @@ const HOST = process.env.HOST || '0.0.0.0';
 const start = async () => {
   app.register(usersRoutes);
   app.register(authRoutes);
-    await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
+  app.register(friendsRoutes);
+  await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
       console.log("Server is running on http://localhost:3000");
     });
 };

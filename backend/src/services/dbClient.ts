@@ -13,6 +13,13 @@ export interface User {
   updated_at?: string;
 }
 
+export default interface Friends {
+    id?: number;
+    user_1: number;
+    user_2: number;
+    petition_status: number;
+}
+
 async function dbFetch(path: string, options: RequestInit = {}) {
   const headers = {
     ...(options.headers || {}),
@@ -35,6 +42,27 @@ export class DBClient {
     return await res.json();
   }
 
+ static async getAllFriends(user_1: number): Promise<Friends[]> {
+  try {
+    const res = await dbFetch(`/api/friends?user_1=${user_1}`);
+    //if (!res.ok) return []; // fallo HTTP → array vacío
+
+    const data = await res.json();
+    console.log('Data received from /friends:', data);
+    //🔒 VALIDACIÓN EN RUNTIME
+    if (Array.isArray(data)) {
+      return data as Friends[];
+    }
+
+    // Si viene cualquier otra cosa (objeto vacío, undefined, etc.)
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+  
+
   static async getUserById(id: number): Promise<User | null> {
     const res = await dbFetch(`/api/users/${id}`, { method: 'GET' });
     if (res.status === 404) return null;
@@ -54,6 +82,27 @@ export class DBClient {
     });
     return await res.json();
   }
+
+static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<Friends> {
+  const res = await dbFetch('/api/friends', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', // 🔑 obligatorio
+    },
+    body: JSON.stringify({
+      user_1: Number(friendPetition.user_1),
+      user_2: Number(friendPetition.user_2),
+      petition_status: String(friendPetition.petition_status),
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`DB Service error: ${res.status} ${text}`);
+  }
+
+  return await res.json();
+}
 
   static async updateUser(id: number, updates: Partial<User>): Promise<User | null> {
     const res = await dbFetch(`/api/users/${id}`, {
