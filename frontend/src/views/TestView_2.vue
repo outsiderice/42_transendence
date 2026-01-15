@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import UserCard from "@/components/UserCard.vue";
+import DonutChart from "@/components/DonutChart.vue";
 </script>
 <!--
 	https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png
 -->
 <template>
 <section class="max-w-[80rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
-	<h3 class="text-center mb-[4rem]" >test page.</h3>
+	<h3 class="text-center mb-[4rem] text-[2rem]" >test page.</h3>
+	<h4>testing the user cards</h4>
 	<UserCard />
 	<UserCard 
 		nickName="pedro"
@@ -25,6 +27,12 @@ import UserCard from "@/components/UserCard.vue";
 		userName="migel_smith"
 		:online=true
 	/>
+	<h4>testing the donut chars</h4>
+	<DonutChart class="w-[60px]" :greenValue="12" :redValue="24" dropDownText="this is my drop down text"/>
+	<DonutChart class="w-[60px]" :greenValue="17" :redValue="24" dropDownText="17 points to 24"/>
+	<DonutChart class="w-[60px]" :greenValue="8" :redValue="3" dropDownText="8 points to 3"/>
+	<DonutChart class="w-[60px]" :greenValue="12" :redValue="7" dropDownText="12 points to 7"/>
+	<div />
 </section>
 </template>
 
