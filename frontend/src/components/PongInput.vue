@@ -34,7 +34,7 @@
           class="pong-input-label absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200
                  peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-gray-400
                  peer-placeholder-shown:text-base
-                 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-blue-500
+                 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-[var(--color_accent_1)]
                  pointer-events-none"
         >
           {{ props.label }}
@@ -49,21 +49,22 @@
     .pong-input-field {
       width: 100%;
       padding: 1rem 0.75rem 0.25rem 0.75rem; /* espacio para el label */
-      border: 2px solid #ccc;
+      border: 1px solid #ccc;
       border-radius: 1rem; /* más redondo */
       outline: none;
       transition: border-color 0.2s;
-      background-color: #f7fafc; 
+      background-color:var(--color_background_1); 
+      font:Oswald;
     }
     
     .pong-input-field:focus {
-      border-color: #2563eb; /* azul */
+      border-color: var(--color_accent_1);
     }
     
     .pong-input-label {
       background-color: white; /* evita que el label se superponga al input */
       padding: 0 0.25rem;
-      background-color: #f7fafc; 
+      background-color: var(--color_background_1); 
     }
     </style>
     

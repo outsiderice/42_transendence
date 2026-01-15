@@ -20,20 +20,22 @@ const toggle = () => {
 <template>
   <div class="flex items-center space-x-3">
     <!-- Toggle -->
-    <button
-      :class="[
-        'relative w-12 h-6 rounded-full transition-colors duration-200',
-        modelValue ? 'bg-blue-600' : 'bg-gray-300',
-        disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      ]"
-      @click="toggle"
-      :disabled="disabled"
-    >
-      <span
-        class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200"
-        :class="modelValue ? 'translate-x-6' : ''"
-      ></span>
-    </button>
+   <button
+  :class="[
+    'relative w-12 h-6 rounded-full transition-colors duration-200',
+    'bg-[var(--color_background_1)] border border-[var(--color_accent_1)]',
+    disabled ? 'bg-[var(--color_disabled)] opacity-50 cursor-not-allowed' : 'cursor-pointer'
+  ]"
+  @click="toggle"
+  :disabled="disabled"
+>
+  <span
+    class="absolute left-0.5 w-5 h-5 bg-[var(--color_accent_1)] rounded-full shadow transform transition-transform duration-200 top-1/2 -translate-y-1/2"
+    :class="modelValue ? 'translate-x-6' : ''"
+  ></span>
+</button>
+
+
 
     <!-- Label opcional -->
     <span v-if="label" class="select-none text-gray-700">{{ label }}</span>
