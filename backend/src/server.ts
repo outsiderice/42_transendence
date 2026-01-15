@@ -13,14 +13,7 @@ import jwtplugin from './plugins/jwt.plugin';
 //our routes
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
-
-import cors from "@fastify/cors";
 import { friendsRoutes } from "./modules/Friends/friendsRoutes";
-
-
-
-const PORT = Number(process.env.PORT);
-const HOST = process.env.HOST;
 
 const app = Fastify({ logger: true });
 
