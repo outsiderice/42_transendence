@@ -25,7 +25,7 @@ const handleClick = (e: Event) => {
     :class="[
       'pong-button transition-colors duration-200 py-2 px-4 rounded-2xl font-semibold',
       fullWidth ? 'w-full' : '',
-      disabled ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'
+      isDisabled ? 'bg-[var(--color_disabled)] text-white cursor-not-allowed': 'bg-[var(--color_background_1)] text-[var(--color_accent_1)] hover:bg-[var(--color_accent_1)] hover:text-white'
     ]"
     @click="handleClick"
   >
@@ -36,10 +36,11 @@ const handleClick = (e: Event) => {
 <style scoped>
 .pong-button {
   outline: none;
-  border: none;
+  border: 1px solid var(--color_accent_1);
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   user-select: none;
+  font:Oswald;
 }
 
 .pong-button:active {
