@@ -21,13 +21,25 @@ export default interface Friends {
 }
 
 async function dbFetch(path: string, options: RequestInit = {}) {
-  const headers = {
-    ...(options.headers || {}),
-    'x-api-key': DB_API_KEY ||'JoseMiguel',          // ✅ API key añadida automáticamente
-    'Content-Type': 'application/json',
+  const headers: Record<string, string> = {
+    'x-api-key': DB_API_KEY || 'JoseMiguel',
+    ...(options.headers as Record<string, string>),
   };
 
-  const res = await fetch(`${DB_SERVICE_URL}${path}`, { ...options, headers });
+  // ✅ Solo añadir JSON si hay body
+  if (options.body !== undefined && options.body !== null) {
+    headers['Content-Type'] = 'application/json';
+  }
+
+  // 🔒 Blindaje extra: DELETE nunca lleva JSON sin body
+  if (options.method === 'DELETE' && !options.body) {
+    delete headers['Content-Type'];
+  }
+
+  const res = await fetch(`${DB_SERVICE_URL}${path}`, {
+    ...options,
+    headers,
+  });
 
   if (!res.ok && res.status !== 404) {
     throw new Error(`DB Service error: ${res.status} ${res.statusText}`);
@@ -35,6 +47,8 @@ async function dbFetch(path: string, options: RequestInit = {}) {
 
   return res;
 }
+
+
 
 export class DBClient {
   static async getAllUsers(): Promise<User[]> {
@@ -113,9 +127,17 @@ static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<
     return await res.json();
   }
 
-  static async deleteUser(id: number): Promise<boolean> {
-    const res = await dbFetch(`/api/users/${id}`, { method: 'DELETE' });
-    if (res.status === 404) return false;
-    return true;
-  }
+  static async deleteUser(id: number) {
+  const res = await dbFetch(`/api/users/${id}`, {
+    method: 'DELETE',
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  return {
+    status: res.status,
+    data,
+  };
+}
+
 }
