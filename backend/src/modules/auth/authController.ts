@@ -286,7 +286,7 @@ export const getCallbackController = async (
     });
 
     const githubUser = await githubUserRes.json();
-    const githubEmail = await githubEmailRes.json();
+    const githubEmails = await githubEmailRes.json();
 
     //check if user exists in database
     const existingUser = await DBClient.getUserByUsername(githubUser.login);
