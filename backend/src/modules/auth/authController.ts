@@ -260,37 +260,37 @@ export const refreshTokenController = async (
   }
 };
 
-/**
- * GET /callback - OAuth callback
- */
-export const getCallbackController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-) => {
-  try {
-    //get user info from github
-    const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+// /**
+//  * GET /callback - OAuth callback
+//  */
+// export const getCallbackController = async (
+//   request: FastifyRequest,
+//   reply: FastifyReply
+// ) => {
+//   try {
+//     //get user info from github
+//     const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
     
-    const githubUserRes = await fetch('https://api.github.com/user', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/vnd.github+json',
-      },
-    });
+//     const githubUserRes = await fetch('https://api.github.com/user', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         Accept: 'application/vnd.github+json',
+//       },
+//     });
 
-    const githubEmailRes = await fetch('https://api.github.com/user/emails', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/vnd.github+json',
-      },
-    });
+//     const githubEmailRes = await fetch('https://api.github.com/user/emails', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         Accept: 'application/vnd.github+json',
+//       },
+//     });
 
-    const githubUser = await githubUserRes.json();
-    const githubEmail = await githubEmailRes.json();
+//     const githubUser = await githubUserRes.json();
+//     const githubEmail = await githubEmailRes.json();
 
-    //check if user exists in database
-    const existingUser = await DBClient.getUserByUsername(githubUser.login);
-    //then call login or register logic
-  } catch (error) {
+//     //check if user exists in database
+//     const existingUser = await DBClient.getUserByUsername(githubUser.login);
+//     //then call login or register logic
+//   } catch (error) {
 
-  }
+//   }

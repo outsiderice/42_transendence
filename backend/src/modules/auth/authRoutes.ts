@@ -4,7 +4,7 @@ import {
  registerUserController,
   loginUserController,
   refreshTokenController,
-  getCallbackController
+//  getCallbackController
 } from './authController';
 
 export const UserSchema = {
@@ -105,13 +105,13 @@ export const authRoutes = async (app: FastifyInstance) => {
     },
   },refreshTokenController);
 
-  // GITHUB OAUTH CALLBACK
-  app.get('/auth/github/callback', {
-    schema: {
-      tags: ['Auth'],
-      response: { 
-        200: UserSchema,           
-        },
-      },
-    },getCallbackController);
+//   // GITHUB OAUTH CALLBACK
+//   app.get('/auth/github/callback', {
+//     schema: {
+//       tags: ['Auth'],
+//       response: { 
+//         200: UserSchema,           
+//         },
+//       },
+//     },getCallbackController);
 }
