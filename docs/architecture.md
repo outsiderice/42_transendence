@@ -4,7 +4,7 @@ Frontend: Vue
 
 Backend: Fastify
 
-Architecture: MPA (Multiple-Page Application)
+Architecture: SPA (Single-Page Application)
 
 API Style: REST
 
@@ -13,8 +13,9 @@ Auth: JWT
 ## Database
 
 User entity:
-Añadir githubid (nullable)
-poner password como (nullable)
+Añadir githubid nullable
+poner password como nullable
+poner email como nullable
 
 ## Page Routes (HTML)
 
