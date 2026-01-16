@@ -12,7 +12,7 @@
 		class="block w-full"
 	>
 		<h1 class="inline-block m-auto w-full text-center text-[6rem] sm:text-[8rem]">
-			<a href="/" class="hover:underline" >PONG</a>
+			<a href="/" class="text-(--color_accent_1)! no-underline! decoration-4! hover:underline!" >PONG</a>
 		</h1>
 	</header>
 </template>

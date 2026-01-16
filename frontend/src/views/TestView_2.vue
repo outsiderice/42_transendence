@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UserCard from "@/components/UserCard.vue";
 import DonutChart from "@/components/DonutChart.vue";
+import GameStatisticsCard from "@/components/GameStatisticsCard.vue";
 </script>
 <!--
 	https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png
@@ -32,6 +33,9 @@ import DonutChart from "@/components/DonutChart.vue";
 	<DonutChart class="w-[60px]" :greenValue="17" :redValue="24" dropDownText="17 points to 24"/>
 	<DonutChart class="w-[60px]" :greenValue="8" :redValue="3" dropDownText="8 points to 3"/>
 	<DonutChart class="w-[60px]" :greenValue="12" :redValue="7" dropDownText="12 points to 7"/>
+	<GameStatisticsCard player2="taha" dateStr="31/10/2003" :pointsPlayer1="12" :pointsPlayer2="4" />
+	<GameStatisticsCard player2="pedro" dateStr="31/10/2003" :pointsPlayer1="11" :pointsPlayer2="12" />
+	<GameStatisticsCard player2="mark" dateStr="31/10/2003" :pointsPlayer1="11" :pointsPlayer2="12" />
 	<div />
 </section>
 </template>

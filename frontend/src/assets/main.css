@@ -11,8 +11,8 @@
 	--color_loading_content: hsl(0, 0%, 80%);
 	--color_accent_danger: hsl(0, 95%, 43%);
 	--color_accent_success: hsl(121, 92%, 31%);
-	--color_accent_link_unvisited: hsl(228, 87%, 39%);
-	--color_accent_link_visited: hsl(250, 86%, 22%);
+	--color_accent_link_unvisited: hsl(228, 87%, 44%);
+	--color_accent_link_visited: hsl(268, 82%, 44%);
 	
 }
 * {
@@ -34,4 +34,18 @@
 body {
 	background-color: var(--color_background_1);
 	color: var(--color_accent_1);
+}
+
+a {
+	color: var(--color_accent_link_unvisited);
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration-thickness: 2px;
+
+}
+
+a:visited {
+	color: var(--color_accent_link_visited);
 }
