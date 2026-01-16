@@ -57,7 +57,7 @@ const handleSubmit = () => {
     />
 
     <PongButton
-		label="Enviar"
+		label="SEND"
   		type="submit"
   		:fullWidth="true"
   		:disabled="!name || !email || !password"
