@@ -10,6 +10,12 @@ API Style: REST
 
 Auth: JWT
 
+## Database
+
+User entity:
+Añadir githubid (nullable)
+poner password como (nullable)
+
 ## Page Routes (HTML)
 
 | Screen (check figma)  | Method | Path                      | Auth     | Notes                                 |
