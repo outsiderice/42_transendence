@@ -289,7 +289,9 @@ export const getCallbackController = async (
     const githubEmails = await githubEmailRes.json();
 
     //check if user exists in database
-    const existingUser = await DBClient.getUserByUsername(githubUser.login);
+    const user = await DBClient.getUserByGithubId(githubUser.id);
+    if (!user)
+    {loginUserController}
     //then call login or register logic
   } catch (error) {
 
