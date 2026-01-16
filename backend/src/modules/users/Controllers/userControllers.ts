@@ -22,11 +22,11 @@ export const getAllUsersController = async (request: FastifyRequest, reply: Fast
  * GET /users/:id - Obtener usuario por ID
  */
 export const getUserByIdController = async (
-  request: FastifyRequest<{ Params: { id: string } }>,
+  request: FastifyRequest<{ Params: { id: number } }>,
   reply: FastifyReply
 ) => {
   try {
-    const id = parseInt(request.params.id, 10);
+    const id = request.params.id;
 
     if (isNaN(id)) {
       return reply.status(400).send({
@@ -258,11 +258,11 @@ export const createUserController = async (
  * PUT /users/:id - Actualizar usuario
  */
 export const updateUserController = async (
-  request: FastifyRequest<{ Params: { id: string }; Body: Partial<User> }>,
+  request: FastifyRequest<{ Params: { id: number }; Body: Partial<User> }>,
   reply: FastifyReply
 ) => {
   try {
-    const id = parseInt(request.params.id, 10);
+    const id = request.params.id;
     if (isNaN(id)) {
       return reply.status(400).send({ error: 'ID inválido' });
     }
@@ -303,12 +303,11 @@ export const updateUserController = async (
  * DELETE /users/:id - Eliminar usuario
  */
 export const deleteUserController = async (
-  request: FastifyRequest<{ Params: { id: string } }>,
+  request: FastifyRequest<{ Params: { id: number } }>,
   reply: FastifyReply
 ) => {
   try {
-    const id = parseInt(request.params.id, 10);
-
+    const id = request.params.id;
     if (isNaN(id)) {
       return reply.status(400).send({
         error: 'ID inválido',
