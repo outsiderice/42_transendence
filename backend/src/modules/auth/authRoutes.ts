@@ -110,9 +110,8 @@ export const authRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ['Auth'],
       response: { 
-        200: { type: 'array', items: UserSchema           
-        }
+        200: UserSchema,           
+        },
       },
-    },
-  }, getCallbackController);
+    },getCallbackController);
 }
