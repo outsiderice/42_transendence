@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { OAuth2Namespace } from '@fastify/oauth2'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -11,11 +12,7 @@ declare module 'fastify' {
       request: FastifyRequest,
       reply: FastifyReply
     ): Promise<void>
-  
-    githubOAuth2: {
-      getAccessTokenFromAuthorizationCodeFlow(
-        request: FastifyRequest
-      ): Promise<{ access_token: string; refresh_token?: string }>
-    }
+
+    githubOAuth2: OAuth2Namespace;
   }
 }
