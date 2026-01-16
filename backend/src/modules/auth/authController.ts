@@ -235,11 +235,50 @@ export const getCallbackController = async (
     const githubUser = await githubUserRes.json();
     const githubEmails = await githubEmailRes.json();
 
-    //check if user exists in database
-    const user = await DBClient.getUserByGithubId(githubUser.id);
-    if (!user)
-    {loginUserController}
-    //then call login or register logic
-  } catch (error) {
+    const email = githubEmails.find(
+      (emailObj: any) => emailObj.primary
+    )?.email ?? null;
 
+    const user = await findOrCreateGithubUser({
+      githubId: githubUser.id,
+      username: githubUser.login,
+      email: email,
+      nickname: githubUser.name,
+      avatar: githubUser.avatar_url,
+    });
+
+    //generar JWTs
+    const jwtAccessToken = await reply.jwtSign(
+      { 
+        id:       user.id,
+        username: user.username,
+        type:     'access'
+      },
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = await reply.jwtSign(
+      { 
+        id:       user.id,
+        username: user.username,
+        type:     'refresh'
+      },
+      { expiresIn: '7d' }
+    );
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: 'lax',
+      secure: true,
+    });
+    reply.status(200).send({ user, accessToken: jwtAccessToken }); //check response number later
+  } catch (error) {
+    console.error('Error in getCallbackController:', error);
+    reply.status(500).send({
+      error: 'Error en autenticación con GitHub',
+      details: error instanceof Error ? error.message : String(error),
+    });
   }
+};
