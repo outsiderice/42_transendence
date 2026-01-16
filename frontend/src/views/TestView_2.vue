@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UserCard from "@/components/UserCard.vue";
+import ProgressBar from "@/components/ProgressBar.vue";
 import DonutChart from "@/components/DonutChart.vue";
 import GameStatisticsCard from "@/components/GameStatisticsCard.vue";
 import GameHistoricStatisticsCard from "@/components/GameHistoricStatisticsCard.vue";
@@ -45,6 +46,10 @@ import GameHistoricStatisticsCard from "@/components/GameHistoricStatisticsCard.
 		:gamesWon="7" 
 		:gamesLost="10" 
 	/>
+	<ProgressBar :progress="33" :total="120" label="taha tahere "/>
+	<ProgressBar :progress="112" :total="120" />
+	<ProgressBar :progress="12" :total="120" />
+	<ProgressBar :progress="82" :total="120" />
 	<div />
 </section>
 </template>
