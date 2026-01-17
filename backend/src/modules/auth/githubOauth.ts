@@ -14,9 +14,11 @@ export async function findOrCreateGithubUser(
     const {githubId, username, email, avatarUrl} = input;
     let user = await DBClient.getUserbyGithubId(githubId);
 
+    //user already exists
     if (user)
         return user;
     
+    //check if email or username already in use
     if (email) {
         const existingEmail = await DBClient.getUserByEmail(email);
         
@@ -31,6 +33,7 @@ export async function findOrCreateGithubUser(
             throw new Error('Username already in use');
     }
 
+    //create new user
     user = await DBClient.createUser({
         username: username,
         email: email ?? `,
