@@ -55,6 +55,17 @@ export const CreateUserSchema = {
   },
 };
 
+export const OauthUserSchema = {
+  type: 'object',
+  required: ['username','githubId'],
+  properties: {
+    username: { type: 'string' },
+    email: { type: 'string' },
+    githubId: { type: 'string' },
+    avatarUrl: { type: 'string'}
+  },
+};
+
 export const authRoutes = async (app: FastifyInstance) => {
   // REGISTER USER
 
