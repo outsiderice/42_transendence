@@ -65,7 +65,9 @@ Modules:
 | A gamification system                                              | 1       |
 | **TOTAL**                                                          | **17**  |
 
-This project began with the old requirements then we decided to adapt it to the new subject, which we thought would make for a more solid project. Because this was a Pong project from the start with some features already decided before the new list of modules was available the biggest change was dropping the tournament system where we foresaw some issues which would be difficult in our limited time frame to finish the project.
+This project began with the old requirements then we decided to adapt it to the new subject, which we thought would make for a more solid project. 
+
+Because this was a Pong project from the start with some features already decided before the new list of modules was available the biggest change was dropping the tournament system where we foresaw some issues which would be difficult to solve in our limited time frame to finish the project.
 
 ## Individual Contributions
 
