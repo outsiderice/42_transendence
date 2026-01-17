@@ -31,6 +31,22 @@ In the docs folder we have some other documents that were useful in managing the
 ![alt text](docs/db_schema.png)
 Our initial design of the database.
 ## Features List
+Mandatory requirements:
+- Frontend                  -   andmart2, kkoval, tatahere
+- Backend                   -   amagnell, josorteg, kkoval
+- Database                  -   josorteg
+- Containerized deployement -   amagnell
+- User management system    -   amagnell, josorteg
+
+Modules:
+- Websockets                -   kkoval
+- API                       -   josorteg
+- Design system             -   andmart2, tatahere
+- User management and auth  -   amagnell, josorteg
+- Game statistics           -   josorteg, tatahere
+- Remote authentication     -   amagnell
+- Web-based game            -   kkoval
+- Remote players            -   kkoval
 
 ## Modules
 
