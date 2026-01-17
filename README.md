@@ -15,6 +15,11 @@ Clone the project then run `docker compose up` in the root of the repository.
 ## Team Information
 
 ## Project management
+We organized ourselves through a Whatsapp group chat where we shared our advancements and where we coordinated for meetings and tasks.
+
+At first we had a scheduled video call, specially because all team memebers had other responsabilities outside the project, but once the project was more advanced we slowed the meetings up for more specific coordination.
+
+In the docs folder we have some other documents that were useful in managing the project.
 
 ## Technical Stack
 **Frontend:** Vue with Tailwind CSS
