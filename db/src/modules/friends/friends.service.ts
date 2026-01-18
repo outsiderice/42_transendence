@@ -1,0 +1,33 @@
+import { db } from '../../config/sqlite';
+
+export interface Friends {
+    id?: number;
+    user_1: number;
+    user_2: number;
+    petition_status: number;
+}
+
+export class friendsService{
+    static postFriendPetition(friends: Friends): Friends {
+      const stmt = db.prepare(`
+        INSERT INTO relationship (user_1,user_2,petition_status)
+        VALUES (?, ?, ?)
+      `);
+
+      const result = stmt.run(
+        friends.user_1,
+        friends.user_2,
+        friends.petition_status
+      );
+      return {
+          id: Number(result.lastInsertRowid),
+          ...friends,
+      };
+    }
+
+   static getAllFriends(user_1: number): Friends[] {
+    const stmt = db.prepare('SELECT * FROM relationship WHERE user_1 = ? OR user_2 = ?');
+    const rows = stmt.all(user_1, user_1) as Friends[];
+    return Array.isArray(rows) ? rows : [];
+}
+}

@@ -2,7 +2,8 @@ import Fastify from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import 'dotenv/config';
 import { initializeDatabase } from './config/sqlite';
-import { usersRoutes } from './modules/users/users.routes';
+import usersRoutes from './modules/users/users.routes';
+import { friendsRoutes } from './modules/friends/friends.routes';
 
 
 const DB_API_KEY = process.env.DB_API_KEY || 'JoseMiguel';
@@ -34,6 +35,7 @@ const start = async () => {
 
     // Registrar rutas
     app.register(usersRoutes, { prefix: '/api' });
+    app.register(friendsRoutes, { prefix: '/api' });
 
     // Health check
     app.get('/health', async () => {

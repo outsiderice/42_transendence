@@ -4,22 +4,26 @@ Frontend: Vue
 
 Backend: Fastify
 
-Architecture: MPA (Multiple-Page Application)
+Architecture: SPA (Single-Page Application)
 
 API Style: REST
 
 Auth: JWT
+
+## Database
+
+User entity:
+Añadir githubid nullable
+poner password como nullable
+poner email como nullable
 
 ## Page Routes (HTML)
 
 | Screen (check figma)  | Method | Path                      | Auth     | Notes                                 |
 | -----------------     | ------ | ------------------------- | -------- | --------------------------------------|
 | Home                  | GET    | `/`                       | No       |                                       |
-| Terms of Service      | GET    | `/terms`                  | No       |                                       |
-| Privacy Policy        | GET    | `/privacy-policy`         | No       |                                       |
 | Sign In               | GET    | `/sign-in`                | No       |                                       |
 | Sign Up               | GET    | `/sign-up`                | No       |                                       |
-| Play Local            | GET    | `/play-local`             | No       |                                       |
 | Play Online           | GET    | `/play-online`            | No       |                                       |
 | User home             | GET    | `/dashboard`              | Required | Redirect if unauthenticated           |
 | Edit Profile          | GET    | `/settings`               | Required |                                       |

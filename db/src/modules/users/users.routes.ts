@@ -1,10 +1,10 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { UsersService, User } from './users.service';
-import { Console } from 'console';
 
-export const usersRoutes = async (app: FastifyInstance) => {
+
+export default async (app: FastifyInstance) => {
   // CREATE
-  app.post<{ Body: User }>('/users', {
+  app.post<{ Body: User; }>('/users', {
     schema: {
       tags: ['Users'],
       body: {
@@ -19,7 +19,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Body: User }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Body: User; }>, reply: FastifyReply) => {
     try {
       const { username, email, password, nickname, avatar } = request.body;
 
@@ -81,19 +81,19 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // READ ONE BY ID
-  app.get<{ Params: { id: string } }>('/users/:id', {
+  app.get<{ Params: { id: number; }; }>('/users/:id', {
     schema: {
       tags: ['Users'],
       params: {
         type: 'object',
         properties: {
-          id: { type: 'string' },
+          id: { type: 'number' },
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { id: number; }; }>, reply: FastifyReply) => {
     try {
-      const id = parseInt(request.params.id, 10);
+      const id = request.params.id;
 
       if (isNaN(id)) {
         return reply.status(400).send({
@@ -119,7 +119,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // READ ONE BY USERNAME
-  app.get<{ Params: { username: string } }>('/users/by-username/:username', {
+  app.get<{ Params: { username: string; }; }>('/users/by-username/:username', {
     schema: {
       tags: ['Users'],
       params: {
@@ -129,7 +129,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { username: string } }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { username: string; }; }>, reply: FastifyReply) => {
     try {
       const { username } = request.params;
 
@@ -151,13 +151,13 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // UPDATE
-  app.put<{ Params: { id: string }; Body: Partial<User> }>('/users/:id', {
+  app.put<{ Params: { id: number; }; Body: Partial<User>; }>('/users/:id', {
     schema: {
       tags: ['Users'],
       params: {
         type: 'object',
         properties: {
-          id: { type: 'string' },
+          id: { type: 'number' },
         },
       },
       body: {
@@ -171,9 +171,9 @@ export const usersRoutes = async (app: FastifyInstance) => {
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { id: string }; Body: Partial<User> }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { id: number; }; Body: Partial<User>; }>, reply: FastifyReply) => {
     try {
-      const id = parseInt(request.params.id, 10);
+      const id = request.params.id;
 
       if (isNaN(id)) {
         return reply.status(400).send({
@@ -201,19 +201,19 @@ export const usersRoutes = async (app: FastifyInstance) => {
   });
 
   // DELETE
-  app.delete<{ Params: { id: string } }>('/users/:id', {
+  app.delete<{ Params: { id: number; }; }>('/users/:id', {
     schema: {
       tags: ['Users'],
       params: {
         type: 'object',
         properties: {
-          id: { type: 'string' },
+          id: { type: 'number' },
         },
       },
     } as any,
-  }, async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  }, async (request: FastifyRequest<{ Params: { id: number; }; }>, reply: FastifyReply) => {
     try {
-      const id = parseInt(request.params.id, 10);
+      const id = request.params.id;
 
       if (isNaN(id)) {
         return reply.status(400).send({
@@ -228,23 +228,23 @@ export const usersRoutes = async (app: FastifyInstance) => {
           error: 'Usuario no encontrado',
         });
       }
+      const changes = UsersService.deleteUser(id);
 
-      const deleted = UsersService.deleteUser(id);
-
-      if (deleted) {
-        return reply.send({
-          message: 'Usuario eliminado correctamente',
+      if (changes === 0) {
+        return reply.status(404).send({
+          error: 'Usuario no encontrado',
         });
       }
 
-      return reply.status(500).send({
-        error: 'Error al eliminar usuario',
+      return reply.status(200).send({
+        message: 'Usuario eliminado correctamente',
       });
+
     } catch (error) {
       return reply.status(500).send({
-        error: 'Error al eliminar usuario',
-        details: error instanceof Error ? error.message : String(error),
-      });
+    error: 'Error al eliminar usuario',
+    details: error instanceof Error ? error.message : String(error),
+  });
     }
   });
 };

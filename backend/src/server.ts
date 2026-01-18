@@ -1,7 +1,19 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
+import oauthPlugin from "@fastify/oauth2";
+import Swagger from "@fastify/swagger";
+import SwaggerUI from "@fastify/swagger-ui";
+
+//our plugins
+import jwtplugin from './plugins/jwt.plugin';
+
+//our routes
 import websocket from "@fastify/websocket";
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
+import { friendsRoutes } from "./modules/Friends/friendsRoutes";
+
 import { pongGame } from "./modules/game/pongGame.js";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
@@ -16,37 +28,66 @@ app.register(cors, {
   origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
+app.register(websocket);
+app.register(cookie);
+
+app.register(oauthPlugin, {
+  name: 'githubOAuth2',
+  scope: ['user:email'],
+  credentials: {
+    client: {
+      id: process.env.CLIENT_ID || '',
+      secret: process.env.CLIENT_SECRET || '',
+    },
+    auth: oauthPlugin.GITHUB_CONFIGURATION,
+  },
+  startRedirectPath: '/auth/github/login',
+  callbackUri: 'http://localhost:3000/auth/github/callback',
+  cookie: {
+    secure: true,
+  }
+});
+
+app.register(Swagger, {
+  openapi: {
+    info: {
+      title: "Transendence API",
+      version: "1.0.0",
+    },
+    components: {
+      securitySchemes: {
+        accessToken: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+  },
+});
+
+app.register(SwaggerUI, {
+  routePrefix: "/docs",
+  uiConfig: {
+    docExpansion: "list",
+    deepLinking: false,
+  },
+});
+
+app.register(jwtplugin);
+
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 const start = async () => {
-  // 3. Register Plugins
-  await app.register(websocket);
-  
-  await app.register(Swagger, {
-    openapi: { info: { title: "API Example", version: "1.0.0" } },
-  });
-
-  await app.register(SwaggerUI, {
-    routePrefix: "/docs",
-  });
-
-  // 4. Register Game and Routes
-  // We use await here to make sure the websocket plugin is ready
-  await app.register(usersRoutes);
-  await app.register(authRoutes);
-  await app.register(pongGame);
-
-  // 5. Define connection details correctly for Docker
-  // '0.0.0.0' is the "magic number" that lets Docker talk to the outside world
-  const LISTEN_PORT = Number(process.env.PORT) || 3000;
-  const LISTEN_HOST = '0.0.0.0'; 
-
-  try {
-    await app.listen({ port: LISTEN_PORT, host: LISTEN_HOST });
-    console.log(`🚀 Server is listening on http://${LISTEN_HOST}:${LISTEN_PORT}`);
-  } catch (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
+  app.register(usersRoutes);
+  app.register(authRoutes);
+  app.register(friendsRoutes);
+  app.register(pongGame);
+  await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
+      console.log("Server is running on http://localhost:3000");
+    });
 };
+
 
 start();

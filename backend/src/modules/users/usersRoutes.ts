@@ -73,20 +73,6 @@ export const UpdateUserSchema = {
 };
 
 export const usersRoutes = async (app: FastifyInstance) => {
- 
-
-  // CREATE
-  app.post<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>('/users', {
-    schema: {
-      tags: ['Users'],
-      body: CreateUserSchema,
-      response: {
-        201: UserSchema,
-        400: { type: 'object', properties: { error: { type: 'string' } } },
-        409: { type: 'object', properties: { error: { type: 'string' } } },
-      },
-    },
-  }, createUserController);
 
   // READ ALL
   app.get('/users', {
@@ -98,8 +84,10 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ BY ID
   app.get<{ Params: { id: string } }>('/users/:id', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
+      security: [{ accessToken: [] }],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
       response: {
         200: UserSchema,
@@ -111,8 +99,10 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ BY USERNAME
   app.get<{ Params: { username: string } }>('/users/by-username/:username', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
+      security: [{ accessToken: [] }],
       params: { type: 'object', properties: { username: { type: 'string' } }, required: ['username'] },
       response: {
         200: UserSchema,

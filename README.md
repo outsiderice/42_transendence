@@ -15,6 +15,11 @@ Clone the project then run `docker compose up` in the root of the repository.
 ## Team Information
 
 ## Project management
+We organized ourselves through a Whatsapp group chat where we shared our advancements and where we coordinated for meetings and tasks.
+
+At first we had a scheduled video call, specially because all team memebers had other responsabilities outside the project, but once the project was more advanced we slowed the meetings up for more specific coordination.
+
+In the docs folder we have some other documents that were useful in managing the project.
 
 ## Technical Stack
 **Frontend:** Vue with Tailwind CSS
@@ -26,6 +31,22 @@ Clone the project then run `docker compose up` in the root of the repository.
 ![alt text](docs/db_schema.png)
 Our initial design of the database.
 ## Features List
+Mandatory requirements:
+- Frontend                  -   andmart2, kkoval, tatahere
+- Backend                   -   amagnell, josorteg, kkoval
+- Database                  -   josorteg
+- Containerized deployement -   amagnell
+- User management system    -   amagnell, josorteg
+
+Modules:
+- Websockets                -   kkoval
+- API                       -   josorteg
+- Design system             -   andmart2, tatahere
+- User management and auth  -   amagnell, josorteg
+- Game statistics           -   josorteg, tatahere
+- Remote authentication     -   amagnell
+- Web-based game            -   kkoval
+- Remote players            -   kkoval
 
 ## Modules
 
@@ -43,6 +64,10 @@ Our initial design of the database.
 | Remote players                                                     | 2       |
 | A gamification system                                              | 1       |
 | **TOTAL**                                                          | **17**  |
+
+This project began with the old requirements then we decided to adapt it to the new subject, which we thought would make for a more solid project. 
+
+Because this was a Pong project from the start with some features already decided before the new list of modules was available the biggest change was dropping the tournament system where we foresaw some issues which would be difficult to solve in our limited time frame to finish the project.
 
 ## Individual Contributions
 

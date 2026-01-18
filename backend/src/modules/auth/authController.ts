@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
@@ -37,6 +37,13 @@ export const registerUserController = async (
       });
     }
 
+    const existingEmail = await DBClient.getUserByUsername(email);
+    if (existingEmail) {
+      return reply.status(409).send({
+        error: 'El email ya está registrado',
+      });
+    }
+
     // generar contraseña hasheada 
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
@@ -54,7 +61,34 @@ export const registerUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = newUser;
 
-    reply.status(201).send(safeUser);
+    //generar JWTs
+    const accessToken = await reply.jwtSign(
+      { 
+        id:       newUser.id,
+        username: newUser.username,
+        type:     'access'
+      },
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = await reply.jwtSign(
+      { 
+        id:       newUser.id,
+        username: newUser.username,
+        type:     'refresh'
+      },
+      { expiresIn: '7d' }
+    );
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: 'lax',
+      secure: true,
+    });
+
+    reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -102,7 +136,34 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = existingUsername;
 
-    reply.status(201).send(safeUser);
+    //generar JWTs
+    const accessToken = await reply.jwtSign(
+      { 
+        id:       existingUsername.id,
+        username: existingUsername.username,
+        type:     'access'
+      },
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = await reply.jwtSign(
+      { 
+        id:       existingUsername.id,
+        username: existingUsername.username,
+        type:     'refresh'
+      },
+      { expiresIn: '7d' }
+    );
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: 'lax',
+      secure: true,
+    });
+
+    reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
@@ -148,8 +209,6 @@ export const createUserController = async (
       });
     }
 
-    
-
     const newUser = await DBClient.createUser({
       username,
       email,
@@ -167,3 +226,71 @@ export const createUserController = async (
     });
   }
 };
+/**
+ * POST /refresh - actualizar token
+ */
+export const refreshTokenController = async (
+  request: FastifyRequest<{ Body: { refreshToken: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+
+    const payload = await request.jwtVerify({onlyCookie: true, }) as {
+      id: number;
+      username: string;
+      type?: string;
+    };
+
+    if (payload.type !== 'refresh') {
+      return reply.code(401).send({ error: 'Invalid refresh token' });
+    }
+
+    //generar nuevo token de acceso
+    const newToken = await reply.jwtSign(
+      { 
+        id: payload.id,
+        username: payload.username
+      },
+      { expiresIn: '15m' }
+    );
+
+    return reply.send({ accessToken: newToken });
+  } catch {
+    return reply.code(401).send({ error: 'Invalid or expired refresh token' });
+  }
+};
+
+// /**
+//  * GET /callback - OAuth callback
+//  */
+// export const getCallbackController = async (
+//   request: FastifyRequest,
+//   reply: FastifyReply
+// ) => {
+//   try {
+//     //get user info from github
+//     const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+    
+//     const githubUserRes = await fetch('https://api.github.com/user', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         Accept: 'application/vnd.github+json',
+//       },
+//     });
+
+//     const githubEmailRes = await fetch('https://api.github.com/user/emails', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         Accept: 'application/vnd.github+json',
+//       },
+//     });
+
+//     const githubUser = await githubUserRes.json();
+//     const githubEmail = await githubEmailRes.json();
+
+//     //check if user exists in database
+//     const existingUser = await DBClient.getUserByUsername(githubUser.login);
+//     //then call login or register logic
+//   } catch (error) {
+
+//   }
