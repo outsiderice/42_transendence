@@ -66,6 +66,7 @@ export const registerUserController = async (
       { 
         id:       newUser.id,
         username: newUser.username,
+        nickname: newUser.nickname,
         type:     'access'
       },
       { expiresIn: '15m' }
@@ -75,6 +76,7 @@ export const registerUserController = async (
       { 
         id:       newUser.id,
         username: newUser.username,
+        nickname: newUser.nickname,
         type:     'refresh'
       },
       { expiresIn: '7d' }
@@ -141,6 +143,7 @@ export const loginUserController = async (
       { 
         id:       existingUsername.id,
         username: existingUsername.username,
+        nickname: existingUsername.nickname,
         type:     'access'
       },
       { expiresIn: '15m' }
@@ -150,6 +153,7 @@ export const loginUserController = async (
       { 
         id:       existingUsername.id,
         username: existingUsername.username,
+        nickname: existingUsername.nickname,
         type:     'refresh'
       },
       { expiresIn: '7d' }
@@ -238,6 +242,7 @@ export const refreshTokenController = async (
     const payload = await request.jwtVerify({onlyCookie: true, }) as {
       id: number;
       username: string;
+      nickname:string;
       type?: string;
     };
 
@@ -249,7 +254,9 @@ export const refreshTokenController = async (
     const newToken = await reply.jwtSign(
       { 
         id: payload.id,
-        username: payload.username
+        username: payload.username,
+        nickname: payload.nickname,
+        type: 'access'
       },
       { expiresIn: '15m' }
     );
