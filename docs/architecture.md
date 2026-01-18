@@ -10,6 +10,8 @@ API Style: REST
 
 Auth: JWT
 
+***there is a problem with cors when requested from the front end.***
+
 ## Page Routes (HTML)
 
 | Screen (check figma)  | Method | Path                      | Auth     | Notes                                 |
