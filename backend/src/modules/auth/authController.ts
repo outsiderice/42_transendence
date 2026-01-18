@@ -1,5 +1,6 @@
 import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../services/dbClient';
+import { findOrCreateGithubUser } from './githubOauth';
 import * as bcrypt from 'bcrypt';
 
 
@@ -243,8 +244,7 @@ export const getCallbackController = async (
       githubId: githubUser.id,
       username: githubUser.login,
       email: email,
-      nickname: githubUser.name,
-      avatar: githubUser.avatar_url,
+      avatarUrl: githubUser.avatar_url,
     });
 
     //generar JWTs
