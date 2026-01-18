@@ -124,7 +124,7 @@ export const loginUserController = async (
     }
 
     // comparar contraseña hasheada
-    const passwordMatch = bcrypt.compareSync(password, existingUsername.password);
+    const passwordMatch = bcrypt.compareSync(password, existingUsername.password as string);
     console.log('Password match:', passwordMatch);
     console.log('Input password:', password);
     console.log('Stored hashed password:', existingUsername.password);  
