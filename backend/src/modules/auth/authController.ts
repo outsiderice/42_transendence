@@ -244,7 +244,7 @@ export const getCallbackController = async (
       githubId: githubUser.id,
       username: githubUser.login,
       email: email,
-      avatarUrl: githubUser.avatar_url,
+      avatar: githubUser.avatar,
     });
 
     //generar JWTs

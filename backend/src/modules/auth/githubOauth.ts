@@ -5,13 +5,13 @@ type findOrCreateGithubUser = {
     githubId: string;
     username: string;
     email: string | null;
-    avatarUrl?: string;
+    avatar: string;
 };
 
 export async function findOrCreateGithubUser(
     input: findOrCreateGithubUser
 ): Promise<User> {
-    const {githubId, username, email, avatarUrl} = input;
+    const {githubId, username, email, avatar} = input;
     let user = await DBClient.getUserbyGithubId(githubId);
 
     //user already exists
@@ -35,10 +35,6 @@ export async function findOrCreateGithubUser(
     
     //create new user
     user = await DBClient.createUser({
-        username: username,
-        email: email ?? `,
-        avatar: avatarUrl ?? '',
-        githubId: githubId,
-    });
+
     return user;
 }
