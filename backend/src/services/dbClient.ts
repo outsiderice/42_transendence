@@ -5,13 +5,23 @@ const DB_API_KEY = process.env.DB_API_KEY || '';
 export interface User {
   id?: number;
   username: string;
-  email: string;
-  password: string;
+  email: string | null;
+  password: string | null;
   nickname?: string;
   avatar?: string;
   created_at?: string;
   updated_at?: string;
 }
+
+// export interface GithubUser {
+//   id?: number;
+//   username: string;
+//   email: string | null;
+//   nickname?: string;
+//   avatar?: string;
+//   created_at?: string;
+//   updated_at?: string;
+// }
 
 export default interface Friends {
     id?: number;
