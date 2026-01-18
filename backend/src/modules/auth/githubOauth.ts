@@ -37,6 +37,7 @@ export async function findOrCreateGithubUser(
     user = await DBClient.createUser({
         username,
         email: email ? email : null,
+        password: null,
         githubId,
         avatar,
     });

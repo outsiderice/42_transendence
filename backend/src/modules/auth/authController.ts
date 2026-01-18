@@ -56,6 +56,7 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
+      githubId: null,
       ...(nickname && { nickname }),
       ...(avatar && { avatar }),
     });

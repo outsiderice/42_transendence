@@ -6,6 +6,7 @@ export interface User {
   id?: number;
   username: string;
   email: string | null;
+  githubId: string | null;
   password: string | null;
   nickname?: string;
   avatar?: string;
