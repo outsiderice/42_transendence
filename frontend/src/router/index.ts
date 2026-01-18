@@ -10,13 +10,65 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+	{
+      path: '/terms_of_service',
+      name: 'terms of service',
+      component: () => import('../views/TermsOfService.vue'),
+    },
+	{
+      path: '/privacy_policy',
+      name: 'privacy policy',
+      component: () => import('../views/PrivacyPolicy.vue'),
+    },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/sign_in',
+      name: 'signin',
+      component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/sign_up',
+      name: 'signup',
+      component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/local_game',
+      name: 'local_game',
+      component: () => import('../views/LocalGame.vue'),
+    },
+    {
+      path: '/online_game',
+      name: 'online_game',
+      component: () => import('../views/OnLineGame.vue'),
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/user/:id',
+      name: 'user',
+      component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/edit_profile',
+      name: 'user',
+      component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/TestView.vue'),
+    },
+    {
+      path: '/test_2',
+      name: 'test_2',
+      component: () => import('../views/TestView_2.vue'),
+    },
+	{
+      path: '/:pathMatch(.*)*',
+      name: '404',
+      component: () => import('../views/404.vue'),
     },
     {
       path: '/game',

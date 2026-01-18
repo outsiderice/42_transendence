@@ -1,35 +1,51 @@
-@import './base.css';
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+:root {
+	--color_background_1: hsl(0, 0%, 95%);
+	--color_background_2: hsl(0, 0%, 90%);
+	--color_background_3: hsl(0, 0%, 100%);
+	--color_accent_1: hsl(0, 0%, 10%);
+	--color_accent_2: hsl(0, 0%, 20%);
+	--color_accent_3: hsl(0, 0%, 50%);
+	--color_loading_content: hsl(0, 0%, 80%);
+	--color_accent_danger: hsl(0, 95%, 43%);
+	--color_accent_success: hsl(121, 92%, 31%);
+	--color_accent_link_unvisited: hsl(228, 87%, 44%);
+	--color_accent_link_visited: hsl(268, 82%, 44%);
+	
+}
+* {
+	font-family: "Oswald", sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+@media (prefers-color-scheme: dark) {:root {
+	--color_background_1: hsl(0, 0%, 15%);
+	--color_background_2: hsl(0, 0%, 20%);
+	--color_background_3: hsl(0, 0%, 10%);
+	--color_accent_1: hsl(0, 0%, 100%);
+	--color_accent_2: hsl(0, 0%, 90%);
+	--color_accent_3: hsl(0, 0%, 50%);
+	--color_loading_content: hsl(0, 0%, 30%);
+}}
+
+body {
+	background-color: var(--color_background_1);
+	color: var(--color_accent_1);
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+a {
+	color: var(--color_accent_link_unvisited);
+	text-decoration: underline;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+a:hover {
+	text-decoration-thickness: 2px;
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+}
+
+a:visited {
+	color: var(--color_accent_link_visited);
 }
