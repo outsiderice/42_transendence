@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import greenCheck from '../icons/Green-check.png'
+import greyCheck from '../icons/Grey-check.png'
 
 interface PongAchievementCardInfo {
 	icon?: string
@@ -23,6 +25,13 @@ const statusColor = computed(() => {
 		? 'var(--color_accent_success)'
 		: 'var(--color_accent_danger)'
 })
+
+// NUEVO: Computed para el ícono
+const iconToShow = computed(() => {
+	if (isLoading.value) return '' // o un placeholder si quieres
+	return props.completed ? 'greenCheck' : 'greyCheck'
+})
+
 </script>
 
 <template>
@@ -63,11 +72,11 @@ const statusColor = computed(() => {
 
 			<!-- icon -->
 			<img
-				v-else
-				:src="props.icon"
-				class="w-full h-full object-contain"
-				draggable="false"
-			/>
+                v-else
+                :src="iconToShow"
+                class="w-full h-full object-contain"
+                draggable="false"
+            />
 		</div>
 
 		<!-- TEXT -->
