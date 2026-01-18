@@ -1,19 +1,22 @@
-import { defineConfig} from 'vite'
-import tailwindcss from '@tailwindcss/vite';
-import 'dotenv/config';
+import { fileURLToPath, URL } from 'node:url'
 
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import vueDevTools from 'vite-plugin-vue-devtools'
+import tailwindcss from '@tailwindcss/vite'
 
-const PORT = Number(process.env.VITE_PORT);
-const HOST = process.env.VITE_HOST;
-
-console.log(PORT);
-
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    tailwindcss(),
+    vue(),
+    vueJsx(),
+    vueDevTools(),
+	tailwindcss(),
   ],
-  server: {
-	host: HOST,
-	port: PORT,
-	},
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    },
+  },
 })

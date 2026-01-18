@@ -1,5 +1,3 @@
-// external imports
-import 'dotenv/config';
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import cookie from "@fastify/cookie";
@@ -11,17 +9,26 @@ import SwaggerUI from "@fastify/swagger-ui";
 import jwtplugin from './plugins/jwt.plugin';
 
 //our routes
+import websocket from "@fastify/websocket";
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
 import { friendsRoutes } from "./modules/Friends/friendsRoutes";
 
+import { pongGame } from "./modules/game/pongGame.js";
+import Swagger from "@fastify/swagger";
+import SwaggerUI from "@fastify/swagger-ui";
+import 'dotenv/config';
+import cors from "@fastify/cors";
+
+// 1. Setup the basic App
 const app = Fastify({ logger: true });
 
+// 2. Setup Security
 app.register(cors, {
-  origin: true,       // cambiar a nuestro dominio cuando pasemos a produccion
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
-
+app.register(websocket);
 app.register(cookie);
 
 app.register(oauthPlugin, {
@@ -76,9 +83,11 @@ const start = async () => {
   app.register(usersRoutes);
   app.register(authRoutes);
   app.register(friendsRoutes);
+  app.register(pongGame);
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
       console.log("Server is running on http://localhost:3000");
     });
 };
+
 
 start();
