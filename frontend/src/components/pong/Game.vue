@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { ref, onMounted, onUnmounted } from 'vue';
 import GameCanvas from './GameCanvas.vue';
 import type { GameState } from './GameState';
@@ -31,8 +32,8 @@ onMounted(() => {
   // Connect to the Fastify backend WebSocket route
   //socket = new WebSocket("ws://0.0.0.0:3000/ws/pong");
 // Game.vue
-  socket = new WebSocket("wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong");
-  //socket = new WebSocket("ws://localhost:3000/ws/pong");
+//   socket = new WebSocket("wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong");
+  socket = new WebSocket("ws://localhost:3000/ws/pong");
 
   socket.onmessage = (event) => {
     try {

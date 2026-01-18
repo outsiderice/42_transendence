@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+
+fetch("localhost:3000/users").then((result) => {
+	console.log(result);
+});
+
 </script>
 
 <template>
