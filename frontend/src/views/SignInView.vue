@@ -18,9 +18,24 @@ const {
 } = useAuthForm()
 
 // Función para gestionar envío
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (validate()) {
-    
+    try {
+      const response = await fetch('http://localhost:3000/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.value,
+          password: password.value,
+        }),
+        credentials: 'include',
+      });
+      if (response.ok) {
+        console.log('Signed in successfully');
+      }
+    } catch (error) {
+      console.error('Error signing in:', error);
+    }
   }
 }
 </script>
@@ -37,7 +52,7 @@ const handleSubmit = () => {
       :error="nameError"
       @blur="touched.name = true"
     />
-    
+
     <PongInput
       label="Password"
       type="password"
