@@ -26,6 +26,7 @@ const app = Fastify({ logger: true });
 // 2. Setup Security
 app.register(cors, {
   origin: true,
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
 app.register(websocket);
