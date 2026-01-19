@@ -10,6 +10,8 @@ API Style: REST
 
 Auth: JWT
 
+*** browsers complain on cors. it need to be set up to please the browsers.***
+
 ## Database
 
 User entity:
@@ -40,7 +42,9 @@ poner email como nullable
 | POST   | `/api/auth/register` | Register    | DONE
 | POST   | `/api/auth/logout`   | Log out     | not yet
 
-***Igual habria que hacer una tabla nueva para los usuarios en line o crear una variable global en el back, con un vector y el ID de usuario
+***Igual habria que hacer una tabla nueva para los usuarios en line o crear una variable global en el back, con un vector y el ID de usuario***
+
+***successfull requests to the :3000/auth/register return a 500 error. but the user is created correctly.***
 
 ### Profile changes
 | Method            | Path      | Description                                 |

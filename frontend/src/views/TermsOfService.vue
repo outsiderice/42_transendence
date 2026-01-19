@@ -2,5 +2,5 @@
 </script>
 
 <template>
-	<h3> home </h3>
+	<h3> Terms of serivce </h3>
 </template>

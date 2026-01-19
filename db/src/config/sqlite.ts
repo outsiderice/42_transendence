@@ -48,6 +48,14 @@ export const initializeDatabase = () => {
       FOREIGN KEY (winner_id) REFERENCES users(id)
     );
 
+    CREATE TABLE IF NOT EXISTS relationship (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_1 INTEGER NOT NULL,
+    user_2 INTEGER,
+    petition_status INTEGER,
+    FOREIGN KEY (user_1) REFERENCES users(id),
+    FOREIGN KEY (user_2) REFERENCES users(id)
+    );
     
     CREATE TABLE IF NOT EXISTS user_stats (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

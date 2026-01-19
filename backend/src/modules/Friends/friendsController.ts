@@ -68,6 +68,7 @@ export const createFriendPetitionController = async (
                 error: 'La relación de amistad ya existe',
                 });
             };
+            console.log("la relacion es",relation);
     }}
     // 4. Crear la relación (API DB)
     const newRelation = await DBClient.createFriendPetition({
