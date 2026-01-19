@@ -10,11 +10,9 @@ const { newsletter } = useToggles()
 // Usamos el composable extendido que maneja name, email y password
 const { 
   name, 
-  email, 
   password, 
   touched, 
   nameError, 
-  emailError, 
   passwordError, 
   validate 
 } = useAuthForm()
@@ -22,7 +20,7 @@ const {
 // Función para gestionar envío
 const handleSubmit = () => {
   if (validate()) {
-    alert(`¡Formulario enviado!\nName: ${name.value}\nEmail: ${email.value}`)
+    
   }
 }
 </script>
@@ -39,15 +37,7 @@ const handleSubmit = () => {
       :error="nameError"
       @blur="touched.name = true"
     />
-
-    <PongInput
-      label="Email"
-      type="email"
-      v-model="email"
-      :error="emailError"
-      @blur="touched.email = true"
-    />
-
+    
     <PongInput
       label="Password"
       type="password"
@@ -60,7 +50,7 @@ const handleSubmit = () => {
 		label="SEND"
   		type="submit"
   		:fullWidth="true"
-  		:disabled="!name || !email || !password"
+  		:disabled="!name || !password"
   		@click="handleSubmit"
 	/>
 	<div class="mt-4">
@@ -69,7 +59,6 @@ const handleSubmit = () => {
 	
     <div class="mt-6 text-gray-700">
       <p><strong>Name:</strong> {{ name }}</p>
-      <p><strong>Email:</strong> {{ email }}</p>
     </div>
   </div>
 </template>
