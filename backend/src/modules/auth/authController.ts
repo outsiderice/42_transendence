@@ -90,6 +90,7 @@ export const registerUserController = async (
       secure: true,
     });
 
+    console.log('User registered:', safeUser);
     reply.status(201).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in createUserController:', error);
@@ -167,6 +168,7 @@ export const loginUserController = async (
       secure: true,
     });
 
+    console.log('User logged in:', safeUser);
     reply.status(200).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in loginUserController:', error);
