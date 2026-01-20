@@ -4,6 +4,9 @@ import ProgressBar from "@/components/ProgressBar.vue";
 import DonutChart from "@/components/DonutChart.vue";
 import GameStatisticsCard from "@/components/GameStatisticsCard.vue";
 import GameHistoricStatisticsCard from "@/components/GameHistoricStatisticsCard.vue";
+import TabList from "@/components/TabList.vue";
+import Star from "@/assets/Star.svg"
+import Book from "@/assets/Book-open.svg"
 </script>
 <!--
 	https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png
@@ -50,6 +53,7 @@ import GameHistoricStatisticsCard from "@/components/GameHistoricStatisticsCard.
 	<ProgressBar :progress="112" :total="120" />
 	<ProgressBar :progress="12" :total="120" />
 	<ProgressBar :progress="82" :total="120" />
+	<TabList :tabs="[{'achibments', logo: Star }, {'game history', logo: Book}]"/>
 	<div />
 </section>
 </template>
