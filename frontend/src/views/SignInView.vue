@@ -35,9 +35,12 @@ const handleSubmit = async () => {
       });
       if (response.ok) {
         console.log('Signed in successfully');
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
       }
     } catch (error) {
       console.error('Error signing in:', error);
+      
 //    }
   }
 }
