@@ -7,7 +7,6 @@ import FooterComponent from './components/FooterComponent.vue'
 <template>
 	<HeaderComponent />
 	<RouterView />
-	<RouterLink to="/game">Game</RouterLink>
 	<FooterComponent />
 </template>
 

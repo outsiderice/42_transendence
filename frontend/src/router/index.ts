@@ -23,22 +23,12 @@ const router = createRouter({
     {
       path: '/sign_in',
       name: 'signin',
-      component: () => import('../views/404.vue'),
+      component: () => import('../views/SignInView.vue'),
     },
     {
       path: '/sign_up',
       name: 'signup',
       component: () => import('../views/404.vue'),
-    },
-    {
-      path: '/local_game',
-      name: 'local_game',
-      component: () => import('../views/LocalGame.vue'),
-    },
-    {
-      path: '/online_game',
-      name: 'online_game',
-      component: () => import('../views/OnLineGame.vue'),
     },
     {
       path: '/users',

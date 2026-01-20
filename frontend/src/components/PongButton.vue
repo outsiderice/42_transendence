@@ -11,10 +11,9 @@ interface Props {
 const { label, type, disabled, fullWidth } = defineProps<Props>()
 const emit = defineEmits(['click'])
 
-const handleClick = (e: Event) => {
-  if (!disabled) {
-    emit('click', e)
-  }
+const handleClick = (e: MouseEvent) => {
+  console.log('PongButton clicked')
+  emit('click', e)
 }
 </script>
 
@@ -25,7 +24,7 @@ const handleClick = (e: Event) => {
     :class="[
       'pong-button transition-colors duration-200 py-2 px-4 rounded-2xl font-semibold',
       fullWidth ? 'w-full' : '',
-      isDisabled ? 'bg-[var(--color_disabled)] text-white cursor-not-allowed': 'bg-[var(--color_background_1)] text-[var(--color_accent_1)] hover:bg-[var(--color_accent_1)] hover:text-white'
+      disabled ? 'bg-[var(--color_disabled)] text-white cursor-not-allowed': 'bg-[var(--color_background_1)] text-[var(--color_accent_1)] hover:bg-[var(--color_accent_1)] hover:text-white'
     ]"
     @click="handleClick"
   >
