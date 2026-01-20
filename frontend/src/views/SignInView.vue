@@ -17,15 +17,18 @@ const {
   validate 
 } = useAuthForm()
 
+
 // Función para gestionar envío
 const handleSubmit = async () => {
-  if (validate()) {
+  console.log('Submitting form with:', { name: name.value, password: password.value });
+ // if (validate()) {
+    console.log('Form is valid, proceeding to submit...');
     try {
-      const response = await fetch('http://localhost:3000/auth/signin', {
+      const response = await fetch('https://gloomy-werewolf-r56p66rw5pqcgpg-3000.app.github.dev/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: name.value,
+          username: name.value,
           password: password.value,
         }),
         credentials: 'include',
@@ -35,7 +38,7 @@ const handleSubmit = async () => {
       }
     } catch (error) {
       console.error('Error signing in:', error);
-    }
+//    }
   }
 }
 </script>
