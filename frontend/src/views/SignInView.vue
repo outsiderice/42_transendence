@@ -24,7 +24,7 @@ const handleSubmit = async () => {
  // if (validate()) {
     console.log('Form is valid, proceeding to submit...');
     try {
-      const response = await fetch('https://gloomy-werewolf-r56p66rw5pqcgpg-3000.app.github.dev/auth/login', {
+      const response = await fetch('https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -36,7 +36,8 @@ const handleSubmit = async () => {
       if (response.ok) {
         console.log('Signed in successfully');
       const data = await response.json();
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.accessToken);
+      console.log(data.accessToken);
       }
     } catch (error) {
       console.error('Error signing in:', error);
