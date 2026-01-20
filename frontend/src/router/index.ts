@@ -31,16 +31,6 @@ const router = createRouter({
       component: () => import('../views/404.vue'),
     },
     {
-      path: '/local_game',
-      name: 'local_game',
-      component: () => import('../views/LocalGame.vue'),
-    },
-    {
-      path: '/online_game',
-      name: 'online_game',
-      component: () => import('../views/OnLineGame.vue'),
-    },
-    {
       path: '/users',
       name: 'users',
       component: () => import('../views/404.vue'),
