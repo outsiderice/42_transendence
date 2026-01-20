@@ -66,6 +66,7 @@ export const registerUserController = async (
       { 
         id:       newUser.id,
         username: newUser.username,
+        nickname: newUser.nickname,
         type:     'access'
       },
       { expiresIn: '15m' }
@@ -75,6 +76,7 @@ export const registerUserController = async (
       { 
         id:       newUser.id,
         username: newUser.username,
+        nickname: newUser.nickname,
         type:     'refresh'
       },
       { expiresIn: '7d' }
@@ -85,7 +87,7 @@ export const registerUserController = async (
       path: '/auth/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
     });
 
     reply.status(201).send({ user: safeUser, accessToken });
@@ -141,6 +143,7 @@ export const loginUserController = async (
       { 
         id:       existingUsername.id,
         username: existingUsername.username,
+        nickname: existingUsername.nickname,
         type:     'access'
       },
       { expiresIn: '15m' }
@@ -150,6 +153,7 @@ export const loginUserController = async (
       { 
         id:       existingUsername.id,
         username: existingUsername.username,
+        nickname: existingUsername.nickname,
         type:     'refresh'
       },
       { expiresIn: '7d' }
@@ -160,7 +164,7 @@ export const loginUserController = async (
       path: '/auth/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
     });
 
     reply.status(201).send({ user: safeUser, accessToken });
@@ -238,6 +242,7 @@ export const refreshTokenController = async (
     const payload = await request.jwtVerify({onlyCookie: true, }) as {
       id: number;
       username: string;
+      nickname:string;
       type?: string;
     };
 
@@ -249,7 +254,9 @@ export const refreshTokenController = async (
     const newToken = await reply.jwtSign(
       { 
         id: payload.id,
-        username: payload.username
+        username: payload.username,
+        nickname: payload.nickname,
+        type: 'access'
       },
       { expiresIn: '15m' }
     );
@@ -259,3 +266,38 @@ export const refreshTokenController = async (
     return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
 };
+
+// /**
+//  * GET /callback - OAuth callback
+//  */
+// export const getCallbackController = async (
+//   request: FastifyRequest,
+//   reply: FastifyReply
+// ) => {
+//   try {
+//     //get user info from github
+//     const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+    
+//     const githubUserRes = await fetch('https://api.github.com/user', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         Accept: 'application/vnd.github+json',
+//       },
+//     });
+
+//     const githubEmailRes = await fetch('https://api.github.com/user/emails', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         Accept: 'application/vnd.github+json',
+//       },
+//     });
+
+//     const githubUser = await githubUserRes.json();
+//     const githubEmail = await githubEmailRes.json();
+
+//     //check if user exists in database
+//     const existingUser = await DBClient.getUserByUsername(githubUser.login);
+//     //then call login or register logic
+//   } catch (error) {
+
+//   }
