@@ -25,7 +25,7 @@ const handleClick = (e: Event) => {
     :class="[
       'pong-button transition-colors duration-200 py-2 px-4 rounded-2xl font-semibold',
       fullWidth ? 'w-full' : '',
-      isDisabled ? 'bg-[var(--color_disabled)] text-white cursor-not-allowed': 'bg-[var(--color_background_1)] text-[var(--color_accent_1)] hover:bg-[var(--color_accent_1)] hover:text-white'
+      isDisabled ? 'bg-[var(--color_disabled)] text-[var(--color_accent_1)] cursor-not-allowed': 'bg-[var(--color_background_1)] text-[var(--color_accent_1)] hover:bg-[var(--color_accent_1)] hover:text-[var(--color_background_1)]'
     ]"
     @click="handleClick"
   >
