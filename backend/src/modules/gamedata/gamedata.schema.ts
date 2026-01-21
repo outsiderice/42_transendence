@@ -3,20 +3,22 @@ export interface Game {
   player1_id: number;
   player2_id: number;
   winner_id: number ;
-  status: string;
+  player1_score?: number;
+  player2_score?: number;
   created_at?: string;
   updated_at?: string;
 }
 
 export const GameSchema = {
   type: 'object',
-  required: ['player1_id', 'player2_id', 'winner_id', 'status'],
+  required: ['player1_id', 'player2_id', 'player1_score', 'player2_score', 'winner_id'],
   properties: {
     id: { type: 'number' },
     player1_id: { type: 'number' },
     player2_id: { type: 'number' },
     winner_id: { type: 'number' },
-    status: { type: 'string' },
+    player1_score: { type: 'number' },
+    player2_score: { type: 'number' },
     created_at: { type: 'string' },
     updated_at: { type: 'string' },
   },

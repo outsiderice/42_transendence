@@ -6,10 +6,10 @@ export const createGameController = async (
   reply: FastifyReply
 ) => {
   try {
-    const game = request.body as { player1_id: number, player2_id: number, winner_id: number, status: string };
+    const game = request.body as { player1_id: number, player2_id: number, player1_score: number, player2_score: number, winner_id: number };
 
-    if (!game || !game.player1_id || !game.player2_id || !game.winner_id || !game.status) {
-      return reply.status(400).send({ error: 'player1_id, player2_id, winner_id y status son obligatorios' });
+    if (!game || !game.player1_id || !game.player2_id || !game.player1_score || !game.player2_score || !game.winner_id) {
+      return reply.status(400).send({ error: 'player1_id, player2_id, player1_score, player2_score y winner_id son obligatorios' });
     }
     console.log('Creating game with player1_id:', game.player1_id, game);
     const createdGame = await DBClient.createGame(game);
