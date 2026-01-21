@@ -1,14 +1,15 @@
-import fastify, { FastifyRequest, FastifyReply } from 'fastify';
-import { DBClient, User } from '../../services/dbClient';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { RegisterUserBody, LoginUserBody, SafeUserResponese } from './authRoutes';
+import { DBClient } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
 
 export const registerUserController = async (
-  request: FastifyRequest<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>,
+  request: FastifyRequest<{ Body: RegisterUserBody }>,
   reply: FastifyReply
 ) => {
   try {
-    const { username, email, password,nickname, avatar} = request.body;
+    const { username, email, password} = request.body;
 
     // Validaciones básicas
     if (!username || !email || !password) {
@@ -55,11 +56,13 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
-      ...(nickname && { nickname }),
-      ...(avatar && { avatar }),
     });
+  
     //evita devolver el password en la respuesta
-    const { password: _, ...safeUser } = newUser;
+    const safeUser: SafeUserResponese = {
+      username: newUser.username,
+      email: newUser.email,
+    };
 
     //generar JWTs
     const accessToken = await reply.jwtSign(
@@ -90,8 +93,7 @@ export const registerUserController = async (
       secure: true,
     });
 
-    console.log('User registered:', safeUser);
-    reply.status(201).send({ user: safeUser, accessToken });
+    reply.status(201).send({ safeUser, accessToken });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -104,7 +106,7 @@ export const registerUserController = async (
 * POST /users - Login usuario
 */
 export const loginUserController = async (
-  request: FastifyRequest<{ Body: { username: string;  password: string } }>,
+  request: FastifyRequest<{ Body: LoginUserBody }>,
   reply: FastifyReply
 ) => {
   try {
