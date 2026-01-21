@@ -37,7 +37,7 @@ export const registerUserController = async (
       });
     }
 
-    const existingEmail = await DBClient.getUserByUsername(email);
+    const existingEmail = await DBClient.getUserByEmail(email);
     if (existingEmail) {
       return reply.status(409).send({
         error: 'El email ya está registrado',
