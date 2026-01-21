@@ -89,6 +89,12 @@ export class DBClient {
     return await res.json();
   }
 
+  static async getUserByEmail(email: string): Promise<User | null> {
+  const res = await dbFetch(`/api/users/by-email/${email}`, { method: 'GET' });
+    if (res.status === 404) return null;
+    return await res.json();
+  }
+
   static async createUser(user: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
     const res = await dbFetch('/api/users', {
       method: 'POST',
