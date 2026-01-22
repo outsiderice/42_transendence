@@ -7,7 +7,7 @@ export	const gameRoutes = async (app:FastifyInstance) => {
 	app.get<{
 		Querystring: {accessToken: string }
 	}>(
-		'ws/play',
+		'/ws/play',
 		{
 			websocket: true,
 			prehandler: app.authenticatePage,
