@@ -1,14 +1,15 @@
-import fastify, { FastifyRequest, FastifyReply } from 'fastify';
-import { DBClient, User } from '../../services/dbClient';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { RegisterUserBody, LoginUserBody, SafeUserResponese } from './authRoutes';
+import { DBClient } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
 
 export const registerUserController = async (
-  request: FastifyRequest<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>,
+  request: FastifyRequest<{ Body: RegisterUserBody }>,
   reply: FastifyReply
 ) => {
   try {
-    const { username, email, password,nickname, avatar} = request.body;
+    const { username, email, password} = request.body;
 
     // Validaciones básicas
     if (!username || !email || !password) {
@@ -37,7 +38,7 @@ export const registerUserController = async (
       });
     }
 
-    const existingEmail = await DBClient.getUserByUsername(email);
+    const existingEmail = await DBClient.getUserByEmail(email);
     if (existingEmail) {
       return reply.status(409).send({
         error: 'El email ya está registrado',
@@ -55,11 +56,13 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
-      ...(nickname && { nickname }),
-      ...(avatar && { avatar }),
     });
+  
     //evita devolver el password en la respuesta
-    const { password: _, ...safeUser } = newUser;
+    const safeUser: SafeUserResponese = {
+      username: newUser.username,
+      email: newUser.email,
+    };
 
     //generar JWTs
     const accessToken = await reply.jwtSign(
@@ -90,7 +93,7 @@ export const registerUserController = async (
       secure: true,
     });
 
-    reply.status(201).send({ user: safeUser, accessToken });
+    reply.status(201).send({ safeUser, accessToken });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -103,7 +106,7 @@ export const registerUserController = async (
 * POST /users - Login usuario
 */
 export const loginUserController = async (
-  request: FastifyRequest<{ Body: { username: string;  password: string } }>,
+  request: FastifyRequest<{ Body: LoginUserBody }>,
   reply: FastifyReply
 ) => {
   try {
@@ -167,7 +170,8 @@ export const loginUserController = async (
       secure: true,
     });
 
-    reply.status(201).send({ user: safeUser, accessToken });
+    console.log('User logged in:', safeUser);
+    reply.status(200).send({ user: safeUser, accessToken });
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
@@ -176,60 +180,7 @@ export const loginUserController = async (
     });
   }
 };
-/**
- * POST /users - Crear nuevo usuario
- */
-export const createUserController = async (
-  request: FastifyRequest<{ Body: Omit<User, 'id' | 'created_at' | 'updated_at'> }>,
-  reply: FastifyReply
-) => {
-  try {
-    const { username, email, password, nickname, avatar } = request.body;
 
-    // Validaciones básicas
-    if (!username || !email || !password) {
-      return reply.status(400).send({
-        error: 'username, email y password son requeridos',
-      });
-    }
-
-    if (username.trim().length < 3) {
-      return reply.status(400).send({
-        error: 'username debe tener al menos 3 caracteres',
-      });
-    }
-
-    if (password.length < 6) {
-      return reply.status(400).send({
-        error: 'password debe tener al menos 6 caracteres',
-      });
-    }
-
-    // Verificar si el usuario ya existe
-    const existingUsername = await DBClient.getUserByUsername(username);
-    if (existingUsername) {
-      return reply.status(409).send({
-        error: 'El username ya está registrado',
-      });
-    }
-
-    const newUser = await DBClient.createUser({
-      username,
-      email,
-      password,
-      ...(nickname && { nickname }),
-      ...(avatar && { avatar }),
-    });
-
-    reply.status(201).send(newUser);
-  } catch (error) {
-    console.error('Error in createUserController:', error);
-    reply.status(500).send({
-      error: 'Error al crear usuario',
-      details: error instanceof Error ? error.message : String(error),
-    });
-  }
-};
 /**
  * POST /refresh - actualizar token
  */

@@ -1,24 +1,21 @@
+//external
+import 'dotenv/config';
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import cookie from "@fastify/cookie";
 import oauthPlugin from "@fastify/oauth2";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
+import websocket from "@fastify/websocket";
 
 //our plugins
 import jwtplugin from './plugins/jwt.plugin';
 
 //our routes
-import websocket from "@fastify/websocket";
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
 import { friendsRoutes } from "./modules/Friends/friendsRoutes";
-
 import { pongGame } from "./modules/game/pongGame.js";
-import Swagger from "@fastify/swagger";
-import SwaggerUI from "@fastify/swagger-ui";
-import 'dotenv/config';
-import cors from "@fastify/cors";
 
 // 1. Setup the basic App
 const app = Fastify({ logger: true });

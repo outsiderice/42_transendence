@@ -24,12 +24,12 @@ const handleSubmit = async () => {
  // if (validate()) {
     console.log('Form is valid, proceeding to submit...');
     try {
-      const response = await fetch('https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/auth/login', {
+      const response = await fetch(import.meta.env.VITE_GATEWAY_URL + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: name.value,
-          password: password.value,
+          'username': name.value,
+          'password': password.value,
         }),
         credentials: 'include',
       });

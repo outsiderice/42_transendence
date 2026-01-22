@@ -10,8 +10,6 @@ API Style: REST
 
 Auth: JWT
 
-*** browsers complain on cors. it need to be set up to please the browsers.***
-
 ## Database
 
 User entity:
