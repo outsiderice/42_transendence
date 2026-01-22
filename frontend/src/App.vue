@@ -3,6 +3,8 @@ import { RouterLink, RouterView } from 'vue-router';
 import HeaderComponent from './components/HeaderComponent.vue';
 import FooterComponent from './components/FooterComponent.vue';
 import {useRouter} from 'vue-router';
+import {onMounted } from 'vue';
+import {onUpdated } from 'vue';
 
 //
 //	redirecting the user to the log in screen if it is not loged in.
@@ -21,16 +23,27 @@ function remove_traling_slash(path: string): string
 function is_on_login_screan(): boolean
 {
 	const path = remove_traling_slash(window.location.pathname);
-	if (path === "/")
+	if (path === "/sign_in" || path === '/sign_up')
 	{
 		return true;
 	}
 	return false;
 }
 
-	 
+function redirect_if_not_loged_in()
+{
+	const jwt = localStorage.getItem('accessToken');
+	if (typeof jwt === "object" && !is_on_login_screan())
+	{
+		// redirect to login.
+		const router = useRouter();
+		router.push({ path: 'sign_in' })
+	}
+}
 
-
+onMounted(() => {
+	redirect_if_not_loged_in();
+})
 
 </script>
 
