@@ -58,6 +58,14 @@ const handleSubmit = () => {
       @blur="touched.password = true"
     />
 
+    <PongInput
+      label="Confirm Password"
+      type="password"
+      v-model="confirmPassword"
+      :error="confirmPasswordError"
+      @blur="touched.confirmPassword = true"
+    />
+    
     <PongButton
 		label="SEND"
   		type="submit"
