@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { Pong } from "./Pong.js";
+import  { Player } from "./Player.js"
 
 import { FastifyJWT } from '@fastify/jwt';
 
@@ -10,7 +11,7 @@ declare module 'fastify' {
 }
 
 export async function pongGame(fastify: FastifyInstance) {
-  // one game instance shared by everyone
+  // one game instance shared by everyone, to change for matchmaking
   const game = new Pong(800, 600);
   let players: any[] = [];
 
@@ -19,7 +20,7 @@ export async function pongGame(fastify: FastifyInstance) {
   fastify.get("/ws/pong", { websocket: true }, (connection, req) => {
     const socket = (connection as any).socket || connection;
     const { token } = req.query as { token?: string };
-    // 2. The "Gatekeeper" - Print and Validate
+    
     if (!token) {
         fastify.log.warn("Connection attempt blocked: No token provided.");
         connection.socket.close(1008, "Policy Violation: Token Required");
@@ -29,17 +30,19 @@ export async function pongGame(fastify: FastifyInstance) {
     try {
       // 3. VERIFY IDENTITY (Using your existing @fastify/jwt)
       // This will throw an error if the token is fake or expired
-      const decoded = fastify.jwt.verify(token) as { id: number, username: string };
+      const decoded = fastify.jwt.verify(token);
+      console.log("Decoded Object:", JSON.stringify(decoded, null, 2));    
       const userId = decoded.id;
 
       console.log(`✅ Verified User: ${decoded.username} (ID: ${userId})`);
+      Player
 
       const isLeft = Array.from(players.keys())[0] === userId;
-      socket.send(JSON.stringify({ 
+      /*socket.send(JSON.stringify({ 
         type: "ASSIGN_SIDE", 
         side: isLeft ? "LEFT" : "RIGHT",
         user: decoded.username 
-      }));
+      }));*/
 
     } catch (err) {
       console.log("❌ JWT Verification Failed:", err);
