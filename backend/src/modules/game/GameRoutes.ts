@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import {
 	GameController
-} from '.Controllers/gameControllers';
+} from './GameControllers';
 
 export	const gameRoutes = async (app:FastifyInstance) => {
 	app.get<{
