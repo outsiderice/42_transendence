@@ -69,6 +69,11 @@ This project began with the old requirements then we decided to adapt it to the 
 
 Because this was a Pong project from the start with some features already decided before the new list of modules was available the biggest change was dropping the tournament system where we foresaw some issues which would be difficult to solve in our limited time frame to finish the project.
 
+### Web Game
+
+The Pong game implementation was mainly inspired and followed the logic of the original Pong 1971 game. We decided to use Authoritative server architecture. All calculations and general managment of movement of paddles, ball and score of the game resides on the backend container and frontend only renders the image using Canvas Api. This way we protect our game from possible cheating and secure the same rendering image for both players. The comunication happens via web sockets, where front end sends an message every time  player presses the keys to backend and backend does a calculation of movement and collisions and sends an updated game state of ball, paddles and scores to be rendered by frontend.
+
+
 ## Individual Contributions
 
 ## Resources

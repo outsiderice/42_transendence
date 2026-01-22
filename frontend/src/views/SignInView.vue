@@ -36,7 +36,8 @@ const handleSubmit = async () => {
       if (response.ok) {
         console.log('Signed in successfully');
       const data = await response.json();
-      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('token', data.accessToken);
+      console.log(data.accessToken);
       }
     } catch (error) {
       console.error('Error signing in:', error);
