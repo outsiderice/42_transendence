@@ -87,20 +87,18 @@ export const authRoutes = async (app: FastifyInstance) => {
   app.post<{ Body: { refreshToken: string } }>('/auth/refresh', {
     schema: {
       tags: ['Auth'],
-      body: {
-        type: "object",
-        required: ["refreshToken"],
-        properties: {
-          refreshToken: { type: "string" },
-        },
       },
       response: {
-              200: {
-                type: "object",
-                properties: {
-                  accessToken: { type: "string" },
-                },
+              204: {
+				description: "Access token refreshed succesfully",
+                type: "null",
               },
+				401:{
+					type: "object",
+					properties: {
+						error: {type: "string"},
+				},
+		},
       },
     },
   },refreshTokenController);

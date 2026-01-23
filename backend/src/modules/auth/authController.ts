@@ -135,7 +135,7 @@ export const loginUserController = async (
  * POST /refresh - actualizar token
  */
 export const refreshTokenController = async (
-  request: FastifyRequest<{ Body: { refreshToken: string } }>,
+  request: FastifyRequest,
   reply: FastifyReply
 ) => {
   try {
@@ -167,10 +167,10 @@ export const refreshTokenController = async (
       path: '/',
       maxAge: 60 * 15,
       sameSite: 'lax',
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
     });
 
-    return reply.send({ accessToken: newToken });
+    return reply.code(204).send();
   } catch {
     return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
