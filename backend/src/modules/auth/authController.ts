@@ -139,7 +139,7 @@ export const refreshTokenController = async (
 ) => {
   try {
 
-    const payload = await request.refreshJWT.jwtVerify({onlyCookie: true, }) as {
+    const payload = await request.jwtVerify({onlyCookie: true, }) as {
       id: number;
       username: string;
       nickname:string;

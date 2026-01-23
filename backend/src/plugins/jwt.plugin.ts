@@ -4,30 +4,14 @@ import jwt from '@fastify/jwt';
 
 export default fp(async function (fastify: FastifyInstance) {
 
-  // --- Register access JWT ---
   fastify.register(jwt, {
-    namespace: 'accessJWT',
     secret: process.env.JWT_SECRET || 'supersecretkey',
-    cookie: {
-      cookieName: 'accessToken',
-      signed: false,
-    }
-  });
-
-  // --- Register refresh JWT ---
-  fastify.register(jwt, {
-    namespace: 'refreshJWT',
-    secret: process.env.JWT_SECRET || 'supersecretkey',
-    cookie: {
-      cookieName: 'refreshToken',
-      signed: false,
-    }
   });
 
   // --- Authenticate API requests ---
   fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const payload = await request.accessJWT.jwtVerify({ onlyCookie: true }) as { id: number; username: string; type?: string; };
+      const payload = await request.jwtVerify({ onlyCookie: true }) as { id: number; username: string; type?: string; };
       if (payload.type !== 'access') {
         return reply.code(401).send({
           error: 'Invalid token type',
@@ -45,7 +29,7 @@ export default fp(async function (fastify: FastifyInstance) {
   // --- Authenticate Page requests ---
   fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const payload = await request.accessJWT.jwtVerify({ onlyCookie: true }) as { id: number; username: string; type?: string; };
+      const payload = await request.jwtVerify({ onlyCookie: true }) as { id: number; username: string; type?: string; };
       console.log("hell"); // optional debug
       if (payload.type !== 'access') {
         return reply.code(401).send({
@@ -61,12 +45,12 @@ export default fp(async function (fastify: FastifyInstance) {
   // --- Generate both access and refresh tokens ---
   fastify.decorateReply("generateTokens", async function(user: { id: string; username: string; nickname: string }) {
 
-    const accessToken = await this.accessJWT.jwtSign(
+    const accessToken = await this.jwtSign(
       { id: user.id, username: user.username, nickname: user.nickname, type: 'access' },
       { expiresIn: '15m' }
     );
 
-    const refreshToken = await this.refreshJWT.jwtSign(
+    const refreshToken = await this.jwtSign(
       { id: user.id, username: user.username, nickname: user.nickname, type: 'refresh' },
       { expiresIn: '7d' }
     );
