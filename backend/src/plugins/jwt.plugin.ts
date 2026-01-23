@@ -74,4 +74,49 @@ export default fp(async function (fastify: FastifyInstance) {
       reply.redirect('/sign_in');
     }
   })
+	fastify.decorateReply(
+		"generateTokens", async function (user: {
+			id: string;
+			username: string;
+			nickname: string;
+		}) {
+
+    //generar JWTs
+    const accessToken = await this.jwtSign(
+      { 
+        id:       newUser.id,
+        username: newUser.username,
+        nickname: newUser.nickname,
+        type:     'access'
+      },
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = await this.jwtSign(
+      { 
+        id:       newUser.id,
+        username: newUser.username,
+        nickname: newUser.nickname,
+        type:     'refresh'
+      },
+      { expiresIn: '7d' }
+    );
+
+    this.setCookie('accessToken', accessToken, {
+      httpOnly: true,
+      path: '/',
+      maxAge: 60 * 15,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    this.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    });
+	}
+
 });

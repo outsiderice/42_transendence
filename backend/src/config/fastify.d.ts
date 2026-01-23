@@ -6,12 +6,17 @@ declare module 'fastify' {
     authenticateApi(
       request: FastifyRequest,
       reply: FastifyReply
-    ): Promise<void>
+    ): Promise<void>;
 
     authenticatePage(
       request: FastifyRequest,
       reply: FastifyReply
-    ): Promise<void>
+    ): Promise<void>;
+	generateTokens(user:{ 
+		id: string;
+		username: string;
+		nickname: string;
+	}): Promise<void>;
 
     githubOAuth2: OAuth2Namespace;
   }
