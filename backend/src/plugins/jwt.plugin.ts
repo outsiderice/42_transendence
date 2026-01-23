@@ -45,7 +45,7 @@ export default fp(async function (fastify: FastifyInstance) {
   fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
       
-      const payload = await request.jwtVerify() as { id: number; username: string; type?: string;};
+      const payload = await request.jwtVerify({onlyCookie: true}) as { id: number; username: string; type?: string;};
       if (payload.type !== 'access') {
         return reply.code(401).send({
           error: 'Invalid token type',
@@ -62,7 +62,7 @@ export default fp(async function (fastify: FastifyInstance) {
 
   fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
-      const payload = await request.jwtVerify() as { id: number; username: string; type?: string;};
+      const payload = await request.jwtVerify({onlyCookie: true}) as { id: number; username: string; type?: string;};
 		console.loge("hell");
       if (payload.type !== 'access') {
         return reply.code(401).send({
