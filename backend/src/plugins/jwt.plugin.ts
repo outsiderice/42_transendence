@@ -25,11 +25,21 @@ LIST OF places where jwt plugin needs to be used as prehandler:
 
 export default fp(async function (fastify: FastifyInstance) {
   fastify.register(jwt, {
+	namespace: 'accessJWT',
+    secret: process.env.JWT_SECRET || 'supersecretkey',
+	cookie: {
+		cookieName: 'accessToken',
+		signed: false,
+	}
+  });
+
+  fastify.register(jwt, {
+	namespace: 'refreshJWT',
     secret: process.env.JWT_SECRET || 'supersecretkey',
     cookie: {
       cookieName: 'refreshToken',
       signed: false,
-    },
+	}
   });
 
   fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
