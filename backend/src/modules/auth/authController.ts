@@ -64,36 +64,9 @@ export const registerUserController = async (
       email: newUser.email,
     };
 
-    //generar JWTs
-    const accessToken = await reply.jwtSign(
-      { 
-        id:       newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        type:     'access'
-      },
-      { expiresIn: '15m' }
-    );
+	await reply.generateTokens(newUser);
 
-    const refreshToken = await reply.jwtSign(
-      { 
-        id:       newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        type:     'refresh'
-      },
-      { expiresIn: '7d' }
-    );
-
-    reply.setCookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      path: '/auth/refresh',
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-      sameSite: 'lax',
-      secure: true,
-    });
-
-    reply.status(201).send({ safeUser, accessToken });
+    reply.status(201).send({ safeUser });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -141,37 +114,14 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = existingUsername;
 
-    //generar JWTs
-    const accessToken = await reply.jwtSign(
-      { 
-        id:       existingUsername.id,
-        username: existingUsername.username,
-        nickname: existingUsername.nickname,
-        type:     'access'
-      },
-      { expiresIn: '15m' }
-    );
-
-    const refreshToken = await reply.jwtSign(
-      { 
-        id:       existingUsername.id,
-        username: existingUsername.username,
-        nickname: existingUsername.nickname,
-        type:     'refresh'
-      },
-      { expiresIn: '7d' }
-    );
-
-    reply.setCookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      path: '/auth/refresh',
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-      sameSite: 'lax',
-      secure: true,
-    });
+    const safeUser: SafeUserResponese = {
+      username: existingUsername.username,
+      email: existingUsername.email,
+    };
+	await reply.generateTokens(existingUsername);
 
     console.log('User logged in:', safeUser);
-    reply.status(200).send({ user: safeUser, accessToken });
+    reply.status(200).send({ user: safeUser});
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
@@ -211,6 +161,14 @@ export const refreshTokenController = async (
       },
       { expiresIn: '15m' }
     );
+
+    reply.setCookie('accessToken', newToken, {
+      httpOnly: true,
+      path: '/',
+      maxAge: 60 * 15,
+      sameSite: 'lax',
+      secure: true,
+    });
 
     return reply.send({ accessToken: newToken });
   } catch {
