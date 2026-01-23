@@ -45,7 +45,7 @@ export default fp(async function (fastify: FastifyInstance) {
   fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
       
-      const payload = await request.jwtVerify({onlyCookie: true}) as { id: number; username: string; type?: string;};
+      const payload = await request.accessJWT.jwtVerify({onlyCookie: true}) as { id: number; username: string; type?: string;};
       if (payload.type !== 'access') {
         return reply.code(401).send({
           error: 'Invalid token type',
@@ -62,8 +62,8 @@ export default fp(async function (fastify: FastifyInstance) {
 
   fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
   try {
-      const payload = await request.jwtVerify({onlyCookie: true}) as { id: number; username: string; type?: string;};
-		console.loge("hell");
+      const payload = await request.accessJWT.jwtVerify({onlyCookie: true}) as { id: number; username: string; type?: string;};
+		console.log("hell");
       if (payload.type !== 'access') {
         return reply.code(401).send({
           error: 'Invalid token type',
@@ -84,9 +84,9 @@ export default fp(async function (fastify: FastifyInstance) {
     //generar JWTs
     const accessToken = await this.jwtSign(
       { 
-        id:       newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
+        id:       user.id,
+        username: user.username,
+        nickname: user.nickname,
         type:     'access'
       },
       { expiresIn: '15m' }
@@ -94,9 +94,9 @@ export default fp(async function (fastify: FastifyInstance) {
 
     const refreshToken = await this.jwtSign(
       { 
-        id:       newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
+        id:       user.id,
+        username: user.username,
+        nickname: user.nickname,
         type:     'refresh'
       },
       { expiresIn: '7d' }
@@ -119,4 +119,4 @@ export default fp(async function (fastify: FastifyInstance) {
     });
 	}
 
-});
+);}
