@@ -31,24 +31,61 @@ export function player_controls(player: Player, game: Pong){
     });
   }
 
-  export function close_game(player: Player, gameInterval: any){
-      player.webSocket.on("close", () => {
-        clearInterval(gameInterval);
-        console.log("A user disconnected");
-      });
+export function game_end(game: Pong, player1: Player, player2: Player) {
+  let winnerSide = game.score.whoWon();
+  let winner: Player;
+  let loser: Player;
+  let winnerPoints: number;
+  let loserPoints: number;
+  winner = player1;
+  if (winnerSide === "left") {
+    winner = player1;
+    loser = player2;
+    winnerPoints = game.score.getLeftScore();
+    loserPoints = game.score.getRightScore();
   }
+  else if (winnerSide === "right") {
+    winner = player2;
+    loser = player1;
+    winnerPoints = game.score.getRightScore();
+    loserPoints = game.score.getLeftScore();
+  }
+  let winerNick = winner.nick;
+  // hacer el post a la database;
+    // HERE GOES POST
+  // inform each front-end that the game is over
+  const finalMsg = JSON.stringify({ type: "GAME_OVER", winerNick});
+  player1.webSocket.send(finalMsg);
+  player2.webSocket.send(finalMsg);
+  player1.webSocket.close();
+  player2.webSocket.close();
+  // maybe send winner
+}
+
+export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
+  player.webSocket.on("close", () => {
+    clearInterval(gameInterval);
+    console.log(`Player ${player.nick} disconnected. Game stopped.`);
+  });
+}
 
   export function start_game(player1: Player, player2: Player){
     const game = new Pong(800, 600);
     player_controls(player1, game);
     player_controls(player2, game);
 
-    // Inform players of their sides
+    // Inform players of their sides -- is it necessary?
     player1.webSocket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: "LEFT" }));
     player2.webSocket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: "RIGHT" }));
 
+
     const gameInterval = setInterval(() => {
       game.update();
+      if (game.endGame()) {
+        game_end(game, player1, player2);
+        clearInterval(gameInterval);
+        return;
+      }
       const state = JSON.stringify({
         type: "STATE_UPDATE",
         state: game.getGameState()
@@ -56,8 +93,9 @@ export function player_controls(player: Player, game: Pong){
       player1.webSocket.send(state);
       player2.webSocket.send(state);
     }, 1000 / 60);
-    close_game(player1, game);
-    close_game(player2, game);
+
+    close_game(player1, gameInterval);
+    close_game(player2, gameInterval);
   }
   
 export async function pongGame(fastify: FastifyInstance) {

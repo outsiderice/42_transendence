@@ -126,10 +126,6 @@ export	class Pong {
 	update() {
 		this.ball.update( - this.height/2, this.height/2);
 		this.handleBallContacts();
-		if (this.endGame()) {
-			//parar el juego
-			console.log(this.score.whoWon());
-		}
 		this.leftPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle);
 		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}
