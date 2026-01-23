@@ -34,8 +34,9 @@ onMounted(() => {
 
 //  socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
 // socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
- socket = new WebSocket("ws://localhost:3000/ws/play");
+socket = new WebSocket("ws://localhost:3000/ws/play");
 
+/*
 const checkPrehandler = async () => {
   try {
     const response = await fetch('http://localhost:3000/users/by-username/local0', {
@@ -54,7 +55,7 @@ const checkPrehandler = async () => {
 };
 
 checkPrehandler();
-
+*/
   socket.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
