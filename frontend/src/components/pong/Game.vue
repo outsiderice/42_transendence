@@ -31,11 +31,29 @@ onMounted(() => {
   // Connect to the Fastify backend WebSocket route
   //socket = new WebSocket("ws://0.0.0.0:3000/ws/pong");
 // Game.vue SI NO FUNCIONA CAMBIAR DIRECCION DE BACKEND, PONER LUEGO ENV VAR
-  const token = localStorage.getItem('token');
-  console.log(token);
+
 //  socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
 // socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
- socket = new WebSocket("ws://localhost:3000/ws/play?token=${token}");
+ socket = new WebSocket("ws://localhost:3000/ws/play");
+
+const checkPrehandler = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/users/by-username/local0', {
+      method: 'GET',
+      credentials: 'include', // send cookies
+    });
+
+    if (response.ok) {
+      console.log('You can see local0, but should you?');
+    } else {
+      console.warn('Failed to fetch user:', response.status);
+    }
+  } catch (err) {
+    console.error('Error fetching user:', err);
+  }
+};
+
+checkPrehandler();
 
   socket.onmessage = (event) => {
     try {
