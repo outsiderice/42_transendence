@@ -100,8 +100,7 @@ export const authRoutes = async (app: FastifyInstance) => {
 				},
 		},
       },
-    },
-  },refreshTokenController);
+    },refreshTokenController);
 
 //   // GITHUB OAUTH CALLBACK
 //   app.get('/auth/github/callback', {

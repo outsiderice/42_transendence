@@ -112,7 +112,6 @@ export const loginUserController = async (
       });
     }
     //evita devolver el password en la respuesta
-    const { password: _, ...safeUser } = existingUsername;
 
     const safeUser: SafeUserResponese = {
       username: existingUsername.username,
