@@ -45,7 +45,7 @@ export default async (app: FastifyInstance) => {
         });
       }
 
-      const newUser = UsersService.createUser({
+      const newUser = await UsersService.createUser({
         username,
         email,
         password,

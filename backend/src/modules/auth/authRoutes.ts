@@ -45,6 +45,25 @@ export const UserSafeSchema = {
   required: ['id', 'username', 'email'],
 };
 
+export const loginResponseSchema = {
+  type: "object",
+  required: ["user", "accessToken"],
+  properties: {
+    user: {
+      type: "object",
+      required: ["id", "username"],
+      properties: {
+        id: { type: "number" },
+        username: { type: "string" },
+        nickname: { type: "string" },
+        avatar: { type: "string" }
+      }
+    },
+    accessToken: { type: "string" }
+  }
+};
+
+
 export const CreateUserSchema = {
   type: 'object',
   required: ['username', 'email', 'password'],
@@ -63,7 +82,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       body: CreateUserSchema,
       response: {
-        201: UserSafeSchema,
+        201: loginResponseSchema,
         400: { type: 'object', properties: { error: { type: 'string' } } },
         409: { type: 'object', properties: { error: { type: 'string' } } },
       },
@@ -76,7 +95,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       body: LoginUserSchema,
       response: {
-        200: UserSafeSchema,
+        200: loginResponseSchema,
         400: { type: 'object', properties: { error: { type: 'string' } } },
         404: { type: 'object', properties: { error: { type: 'string' } } },
       },
