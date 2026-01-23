@@ -20,11 +20,12 @@ const {
 
 // Función para gestionar envío
 const handleSubmit = async () => {
+  console.log("DEBUG ENV:", import.meta.env);
   console.log('Submitting form with:', { name: name.value, password: password.value });
  // if (validate()) {
     console.log('Form is valid, proceeding to submit...');
     try {
-      const response = await fetch(import.meta.env.VITE_GATEWAY_URL + '/auth/login', {
+      const response = await fetch('https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
