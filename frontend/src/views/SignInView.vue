@@ -31,7 +31,6 @@ const handleSubmit = async () => {
           'username': name.value,
           'password': password.value,
         }),
-        credentials: 'include',
       });
       if (response.ok) {
         console.log('Signed in successfully');

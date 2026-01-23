@@ -2,14 +2,6 @@ import { FastifyInstance } from "fastify";
 import { Pong } from "./Pong.js";
 import  { Player } from "./Player.js"
 
-import { FastifyJWT } from '@fastify/jwt';
-
-declare module 'fastify' {
-  interface FastifyInstance {
-    jwt: FastifyJWT;
-  }
-}
-
 export async function pongGame(fastify: FastifyInstance) {
   // one game instance shared by everyone, to change for matchmaking
   const game = new Pong(800, 600);

@@ -34,7 +34,7 @@ onMounted(() => {
 
 //  socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
 // socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
-socket = new WebSocket("ws://localhost:3000/ws/play");
+const socket = new WebSocket("ws://localhost:3000/ws/play");
 
 /*
 const checkPrehandler = async () => {

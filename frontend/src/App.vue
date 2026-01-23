@@ -37,7 +37,7 @@ function redirect_if_not_loged_in()
 	{
 		// redirect to login.
 		const router = useRouter();
-		router.push({ path: 'sign_in' })
+//		router.push({ path: 'sign_in' })
 	}
 }
 
