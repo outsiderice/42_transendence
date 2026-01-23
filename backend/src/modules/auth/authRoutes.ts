@@ -63,7 +63,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       body: CreateUserSchema,
       response: {
-        201: {UserSafeSchema: {type: 'object'}, accessToken: { type: 'string' }},
+        201: {UserSafeSchema: {type: 'object'}},
         400: { type: 'object', properties: { error: { type: 'string' } } },
         409: { type: 'object', properties: { error: { type: 'string' } } },
       },
@@ -76,7 +76,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       body: LoginUserSchema,
       response: {
-        200: {UserSafeSchema: {type: 'object'}, accessToken: { type: 'string' }},
+        200: {UserSafeSchema: {type: 'object'}},
         400: { type: 'object', properties: { error: { type: 'string' } } },
         404: { type: 'object', properties: { error: { type: 'string' } } },
       },
