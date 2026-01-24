@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import PongToggleButton from '../components/PongToggleButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 
@@ -47,9 +46,9 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-8 text-center">
-      Formulario de Prueba
+  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
+    <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">
+      Sign Up
     </h2>
 
     <PongInput
@@ -82,22 +81,11 @@ const handleSubmit = async () => {
       :disabled="!name || !password || !confirmPassword"
       @click="handleSubmit"
     />
-
-    <div class="mt-4">
-      <PongToggleButton
-        v-model="newsletter"
-        label="Suscribirme al newsletter"
-      />
-    </div>
-
-    <div class="mt-6 text-gray-700">
-      <p><strong>Name:</strong> {{ name }}</p>
-    </div>
   </div>
 </template>
 
 <style scoped>
 body {
-  background-color: #f3f4f6;
+  background-color: var(--color_background_1);
 }
 </style>
