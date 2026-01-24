@@ -3,11 +3,13 @@ services:
     build: ./proxy
     container_name: proxy
     ports:
-      - "443:443"
+      - "8443:443"
     restart: always
     depends_on:
       - frontend
       - backend
+    volumes:
+      - ./proxy/certs
     networks:
       - ft-transcendence
 
