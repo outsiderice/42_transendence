@@ -9,7 +9,7 @@ services:
       - frontend
       - backend
     volumes:
-      - ./proxy/certs
+      - ./proxy/certs:/certs
     networks:
       - ft-transcendence
 
