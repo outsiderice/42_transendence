@@ -1,12 +1,12 @@
 FROM nginx:alpine
 
-RUN add --no-cache openssl
+RUN apk add --no-cache openssl
 
 RUN mkdir certs
 
-COPY ./conf/nginx.conf /etc/nginx/http.d/nginx.conf
+COPY conf/nginx.conf /etc/nginx/http.d/nginx.conf
 
-COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY tools/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 

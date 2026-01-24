@@ -1,7 +1,6 @@
 services:
   proxy:
     build: ./proxy
-    image: t_proxy
     container_name: proxy
     ports:
       - "443:443"
@@ -10,11 +9,10 @@ services:
       - frontend
       - backend
     networks:
-      -ft-transcendence
+      - ft-transcendence
 
   db:
     build: ./db
-    image: t_db
     container_name: db-service
     volumes:
       - ./db/data:/app/data
@@ -42,7 +40,6 @@ services:
 
   backend:
     build: ./backend
-    image: t_backend
     container_name: backend
     ports:
       - "3000:3000"   # change later?
