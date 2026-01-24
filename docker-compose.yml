@@ -1,18 +1,4 @@
 services:
-  proxy:
-    build: ./proxy
-    container_name: proxy
-    ports:
-      - "8443:443"
-    restart: always
-    depends_on:
-      - frontend
-      - backend
-    volumes:
-      - ./proxy/certs:/certs
-    networks:
-      - ft-transcendence
-
   db:
     build: ./db
     container_name: db-service
@@ -85,6 +71,25 @@ services:
         - path: ./frontend/vite.config.js
           target: /app/vite.config.js
           action: restart
+    networks:
+      - ft-transcendence
+
+  proxy:
+    build: ./proxy
+    container_name: proxy
+    ports:
+      - "8443:443"
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - proxy_certs:/certs
+    networks:
+      - ft-transcendence
+
+volumes:
+  proxy_certs:
 
 networks:
   ft-transcendence:
