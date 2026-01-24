@@ -2,4 +2,3 @@
 */node_modules
 **/*.swp
 node_modules/
-/proxy/certs
