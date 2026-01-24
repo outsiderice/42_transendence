@@ -61,16 +61,16 @@ export default fp(async function (fastify: FastifyInstance) {
       httpOnly: true,
       path: '/',
       maxAge: 60 * 15, // 15 minutes
-      sameSite: 'lax',
-      secure: false
+      sameSite: 'none',
+      secure: true,
     });
 
     this.setCookie('refreshToken', refreshToken, {
       httpOnly: true,
       path: '/auth/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      secure: true,
     });
 
   });
