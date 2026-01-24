@@ -1,7 +1,6 @@
 services:
   db:
     build: ./db
-    image: t_db
     container_name: db-service
     volumes:
       - ./db/data:/app/data
@@ -29,7 +28,6 @@ services:
 
   backend:
     build: ./backend
-    image: t_backend
     container_name: backend
     ports:
       - "3000:3000"   # change later?
@@ -73,6 +71,25 @@ services:
         - path: ./frontend/vite.config.js
           target: /app/vite.config.js
           action: restart
+    networks:
+      - ft-transcendence
+
+  proxy:
+    build: ./proxy
+    container_name: proxy
+    ports:
+      - "8443:443"
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - proxy_certs:/certs
+    networks:
+      - ft-transcendence
+
+volumes:
+  proxy_certs:
 
 networks:
   ft-transcendence:

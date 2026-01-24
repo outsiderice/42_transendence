@@ -32,7 +32,7 @@ function is_on_login_screan(): boolean
 
 function redirect_if_not_loged_in()
 {
-	const jwt = localStorage.getItem('accessToken');
+	const jwt = localStorage.getItem('token');
 	if (typeof jwt === "object" && !is_on_login_screan())
 	{
 		// redirect to login.

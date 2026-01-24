@@ -18,7 +18,7 @@
 <style>
     .pong-link {
         text-decoration-thickness: 1.5px;
-        color: var(--color_accent_link_unvisited); /* reemplaza text-blue-600 */
+        color: var(--color_accent_link_unvisited); 
     }   
 
     .pong-link:hover {
@@ -26,6 +26,6 @@
     }
 
     .pong-link:visited {
-        color: var(--color_accent_link_visited); /* reemplaza visited:text-indigo-700 */
+        color: var(--color_accent_link_visited); 
     }
 </style>
