@@ -15,4 +15,6 @@ console.log(decodedHeader);
 	<RouterLink to="/sign_in">Sign In</RouterLink>
 	<RouterLink to="/game">Play Game</RouterLink>
 	<RouterLink to="/sign_up">Sign Up</RouterLink>
+	<RouterLink to="/settings">Settings</RouterLink>
+	<RouterLink to="/edit_profile">Settings</RouterLink>
 </template>
