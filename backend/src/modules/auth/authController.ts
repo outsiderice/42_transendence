@@ -166,7 +166,7 @@ export const refreshTokenController = async (
       path: '/',
       maxAge: 60 * 15,
       sameSite: 'none',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
     });
 
     return reply.code(204).send();

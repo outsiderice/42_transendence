@@ -67,7 +67,7 @@ export default fp(async function (fastify: FastifyInstance) {
 
     this.setCookie('refreshToken', refreshToken, {
       httpOnly: true,
-      path: '/auth/refresh',
+      path: '/',
       maxAge: 7 * 24 * 60 * 60, // 7 days
       sameSite: 'none',
       secure: true,
