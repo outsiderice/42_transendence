@@ -12,6 +12,7 @@ if [ ! -f "$CERT" ]; then
     -keyout "$KEY" \
     -out "$CERT" \
     -subj "/CN=localhost"
+	-addtext "subjectAltName=DNS:localhost"
 fi
 
 exec nginx -g "daemon off;"
