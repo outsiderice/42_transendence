@@ -24,8 +24,8 @@ export	class Pong {
 		this.width = width;
 		this.paddlePosX = this.width / 2 - this.paddleMargin;
 		this.ball = new Ball(0, 0, 5);
-		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 10, 50, 5);
-		this.rightPaddle = new Platform(this.paddlePosX, 0, 10, 50, 5);
+		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 20, 100, 5);
+		this.rightPaddle = new Platform(this.paddlePosX, 0, 20, 100, 5);
 		this.heightLimitPaddle = this.height/2 - this.leftPaddle.getPadelHeight()/2;
 		this.score = new Score();
 

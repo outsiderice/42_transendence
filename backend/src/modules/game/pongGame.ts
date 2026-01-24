@@ -50,22 +50,21 @@ export function game_end(game: Pong, player1: Player, player2: Player) {
     winnerPoints = game.score.getRightScore();
     loserPoints = game.score.getLeftScore();
   }
-  let winerNick = winner.nick;
+  let winnerName = winner.userName;
   // hacer el post a la database;
     // HERE GOES POST
   // inform each front-end that the game is over
-  const finalMsg = JSON.stringify({ type: "GAME_OVER", winerNick});
+  const finalMsg = JSON.stringify({ type: "GAME_OVER", winnerName});
   player1.webSocket.send(finalMsg);
   player2.webSocket.send(finalMsg);
   player1.webSocket.close();
   player2.webSocket.close();
-  // maybe send winner
 }
 
 export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
   player.webSocket.on("close", () => {
     clearInterval(gameInterval);
-    console.log(`Player ${player.nick} disconnected. Game stopped.`);
+    console.log(`Player ${player.userName} disconnected. Game stopped.`);
   });
 }
 
@@ -75,8 +74,8 @@ export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
     player_controls(player2, game);
 
     // Inform players of their sides -- is it necessary?
-    player1.webSocket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: "LEFT" }));
-    player2.webSocket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: "RIGHT" }));
+    player1.webSocket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: "LEFT", name: player1.userName }));
+    player2.webSocket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: "RIGHT", name: player2.userName }));
 
 
     const gameInterval = setInterval(() => {

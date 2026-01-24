@@ -4,6 +4,7 @@ import GameCanvas from './GameCanvas.vue';
 import type { GameState } from './GameState';
 
 const currentGameState = ref<GameState | null>(null);
+const winnerMessage = ref<string | null>(null);
 let socket: WebSocket | null = null;
 
 // Send input to backend
@@ -42,6 +43,12 @@ onMounted(() => {
       if (data.type === "STATE_UPDATE") {
         currentGameState.value = data.state;
       }
+      else if (data.type === "GAME_OVER") {
+        winnerMessage.value = `${data.winnerName} wins!`;
+
+      }
+      else if (data.type === "ASSIGN_SIDE") {
+      }
     } catch (err) {
       console.error("Error parsing WebSocket message:", err);
     }
@@ -61,6 +68,9 @@ onUnmounted(() => {
 <template>
   <div class="game-wrapper">
     <h2>Pong Online</h2>
+      <h1 v-if="winnerMessage" class="winner-announcement">
+        {{ winnerMessage }}
+      </h1>
     <GameCanvas :gameState="currentGameState" />
     <div v-if="!currentGameState" class="overlay">
       Connecting to Game Server...
