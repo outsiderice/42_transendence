@@ -40,7 +40,7 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
   let winnerName = winner.userName;
   // Data to be send to DATABASE
   const gameData = {
-    id: 0,
+    id: 0, // check, can give problem
     player1_id: player1.id,
     player2_id: player2.id,
     winner_id: winner.id,
@@ -51,7 +51,7 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
   };
   
  try {
-    const response = await fetch("localhost:300/games", {
+    const response = await fetch("http://localhost:3000/games", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,10 +71,17 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
   }
   // inform each front-end that the game is over
   const finalMsg = JSON.stringify({ type: "GAME_OVER", winnerName});
-  player1.webSocket.send(finalMsg);
-  player2.webSocket.send(finalMsg);
-  player1.webSocket.close();
-  player2.webSocket.close();
+  // check if the socket still open before sending, 1 == OPEN
+  [player1, player2].forEach(p => {
+    if (p.webSocket.readyState === 1) {
+      p.webSocket.send(finalMsg);
+      p.webSocket.close();
+    }
+  });
+  //player1.webSocket.send(finalMsg);
+  //player2.webSocket.send(finalMsg);
+  //player1.webSocket.close();
+  //player2.webSocket.close();
 }
 
 export function close_socket_waiting(player: Player, players: any[]) {
