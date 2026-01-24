@@ -61,9 +61,24 @@ export function game_end(game: Pong, player1: Player, player2: Player) {
   player2.webSocket.close();
 }
 
+export function close_socket_waiting(player: Player, players: any[]) {
+  player.webSocket.on("close", () => {
+    const index = players.indexOf(player);
+
+    if (index !== -1) {
+      players.splice(index, 1);
+      console.log(`Player ${player.userName} removed from waiting list. Queue size: ${players.length}`);
+    } else {
+      // This happens if they were already moved to a game before the socket closed
+      console.log(`Player ${player.userName} disconnected, but was not in the waiting list.`);
+    }
+  });
+}
+
 export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
   player.webSocket.on("close", () => {
     clearInterval(gameInterval);
+    // send message that the opponent disconected, coward
     console.log(`Player ${player.userName} disconnected. Game stopped.`);
   });
 }
@@ -98,13 +113,8 @@ export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
   }
   
 export async function pongGame(fastify: FastifyInstance) {
-  // one game instance shared by everyone, to change for matchmaking
+
   let players: any[] = [];
-  let rooms: Map<number, any> = new Map();
-  let current_side = -1;
-
-  // Shared Game Loop: Sends the ball/paddle positions to EVERYONE
-
   console.log("SERVER CHECK: Multiplayer Pong logic is starting...");
 
   fastify.get("/ws/pong", { websocket: true }, async (connection, req) => {
@@ -118,11 +128,10 @@ export async function pongGame(fastify: FastifyInstance) {
     }
 
     try {
-      // 3. VERIFY IDENTITY (Using your existing @fastify/jwt)
+      //VERIFY IDENTITY using fastify/jwt
       // This will throw an error if the token is fake or expired
       const decoded = await fastify.jwt.verify(token) as any;
       console.log("Decoded Object:", JSON.stringify(decoded, null, 2));
-
       const userId = decoded.id;
       const isAlreadyWaiting = players.some(p => p.id === decoded.id);
       if (isAlreadyWaiting) {
@@ -131,22 +140,24 @@ export async function pongGame(fastify: FastifyInstance) {
             type: "ERROR", 
             message: "You are already in the matchmaking queue!" 
         }));
-        // We don't close the socket immediately so they see the message, 
-        // or you can just return to ignore the second connection.
+        //close the socket maybe redirect to main page?
+        socket.close();
         return;
       }
       console.log(`✅ Verified User: ${decoded.username} (ID: ${userId})`);
 
       const player = new Player(decoded.id, socket, decoded.nickname, decoded.username, -1);
       players.push(player);
-      console.log("--- HANDSHAKE REACHED ---");
+      close_socket_waiting(player, players);
       if (players.length >= 2){
+        // shift first come first go and deletes the player from the array
         let player1 = players.shift()!;
         let player2 = players.shift()!;
         player2.side = 1;    
         start_game(player1, player2);
       } else {
         socket.send(JSON.stringify({ type: "INFO", msg: "Waiting for opponent..." }));
+
       }
     } catch (err) {
       console.log("❌ JWT Verification Failed:", err);

@@ -43,9 +43,11 @@ onMounted(() => {
       if (data.type === "STATE_UPDATE") {
         currentGameState.value = data.state;
       }
+      else if (data.type === "INFO") {
+        winnerMessage.value = data.msg;
+      }
       else if (data.type === "GAME_OVER") {
         winnerMessage.value = `${data.winnerName} wins!`;
-
       }
       else if (data.type === "ASSIGN_SIDE") {
       }
