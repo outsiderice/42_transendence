@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode'
 
-const jwt = localStorage.getItem('accessToken');
-
-console.log(jwt);
+const jwt = localStorage.getItem('token');
 
 const decodedHeader = jwtDecode(jwt);
 console.log(decodedHeader);

@@ -32,7 +32,9 @@ function is_on_login_screan(): boolean
 
 function redirect_if_not_loged_in()
 {
+	console.log("trying to access local storage");
 	const jwt = localStorage.getItem('token');
+	console.log(jwt);
 	if (typeof jwt === "object" && !is_on_login_screan())
 	{
 		// redirect to login.
