@@ -31,8 +31,8 @@
         />
         <!-- Label -->
         <label
-          class="pong-input-label absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200
-                 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-gray-400
+          class="pong-input-label absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color_accent_3)] transition-all duration-200
+                 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-[var(--color_accent_3)]
                  peer-placeholder-shown:text-base
                  peer-focus:-top-2 peer-focus:text-sm peer-focus:text-[var(--color_accent_1)]
                  pointer-events-none"
@@ -41,7 +41,7 @@
         </label>
     
         <!-- Error -->
-        <p v-if="props.error" class="text-red-600 text-sm mt-1">{{ props.error }}</p>
+        <p v-if="props.error" class="text-[var(--color_danger)] text-sm mt-1">{{ props.error }}</p>
       </div>
     </template>
     
@@ -62,7 +62,6 @@
     }
     
     .pong-input-label {
-      background-color: white; /* evita que el label se superponga al input */
       padding: 0 0.25rem;
       background-color: var(--color_background_1); 
     }
