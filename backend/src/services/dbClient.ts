@@ -1,4 +1,5 @@
 // HTTP Client para conectar con el DB Service
+import { Game } from '../modules/gamedata/gamedata.schema';
 const DB_SERVICE_URL = process.env.DB_SERVICE_URL || 'http://localhost:3001';
 const DB_API_KEY = process.env.DB_API_KEY || '';
 
@@ -145,5 +146,13 @@ static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<
     data,
   };
 }
-
+// Games related methods
+  static async createGame(game: Omit<Game, 'id'>): Promise<any> {
+    console.log('DBClient.createGame called with:', game);
+    const res = await dbFetch('/api/games', {
+      method: 'POST',
+      body: JSON.stringify(game),
+    });
+    return await res.json();
+  }
 }
