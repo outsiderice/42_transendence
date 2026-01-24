@@ -1,4 +1,15 @@
 services:
+  proxy:
+    build: ./proxy
+    image: t_proxy
+    container_name: proxy
+    ports:
+      - "443:443"
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+
   db:
     build: ./db
     image: t_db
