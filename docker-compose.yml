@@ -9,6 +9,8 @@ services:
     depends_on:
       - frontend
       - backend
+    networks:
+      -ft-transcendence
 
   db:
     build: ./db
