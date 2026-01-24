@@ -43,7 +43,7 @@ const router = createRouter({
     {
       path: '/edit_profile',
       name: 'user',
-      component: () => import('../views/404.vue'),
+      component: () => import('../views/SettingsView.vue'),
     },
     {
       path: '/test',
