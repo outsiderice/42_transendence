@@ -47,6 +47,18 @@ onMounted(() => {
 	redirect_if_not_loged_in();
 })
 
+// example using pinia.
+
+//import { useCredentialsStore } from '@/state/user_credentials.ts'
+//
+//const credentials = useCredentialsStore();
+//
+//console.log(credentials.count);
+//
+//credentials.increment();
+//
+//console.log(credentials.count);
+
 </script>
 
 <template>
