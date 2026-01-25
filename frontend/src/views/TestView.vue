@@ -33,7 +33,7 @@ const handleSubmit = () => {
 -->
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-8 text-center">Formulario de Prueba</h2>
+    <h2 class="text-3xl font-bold mb-8 text-center">Hola</h2>
 
     <PongInput
       label="Name"
