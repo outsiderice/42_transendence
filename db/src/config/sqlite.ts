@@ -35,6 +35,9 @@ export const initializeDatabase = () => {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    DROP TABLE IF EXISTS games;
+
+
     CREATE TABLE IF NOT EXISTS games (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       player1_id INTEGER NOT NULL,
