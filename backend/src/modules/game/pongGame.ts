@@ -31,34 +31,57 @@ export function player_controls(player: Player, game: Pong){
     });
   }
 
-export function game_end(game: Pong, player1: Player, player2: Player) {
+export async function game_end(game: Pong, player1: Player, player2: Player) {
   let winnerSide = game.score.whoWon();
-  let winner: Player;
-  let loser: Player;
-  let winnerPoints: number;
-  let loserPoints: number;
-  winner = player1;
-  if (winnerSide === "left") {
-    winner = player1;
-    loser = player2;
-    winnerPoints = game.score.getLeftScore();
-    loserPoints = game.score.getRightScore();
-  }
-  else if (winnerSide === "right") {
+  let winner = player1;
+  if (winnerSide === "right") {
     winner = player2;
-    loser = player1;
-    winnerPoints = game.score.getRightScore();
-    loserPoints = game.score.getLeftScore();
   }
   let winnerName = winner.userName;
-  // hacer el post a la database;
-    // HERE GOES POST
+  // Data to be send to DATABASE
+  const gameData = {
+    id: 0, // check, can give problem
+    player1_id: player1.id,
+    player2_id: player2.id,
+    winner_id: winner.id,
+    player1_score: game.score.getLeftScore(),
+    player2_score: game.score.getRightScore(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  
+ try {
+    const response = await fetch("http://localhost:3000/games", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // maybe need a tocken?
+      },
+      body: JSON.stringify(gameData),
+    });
+
+    if (response.ok) {
+      console.log("🏆 Game results saved to database successfully.");
+    } else {
+      const errorData = await response.text();
+      console.error("❌ Failed to save game results:", errorData);
+    }
+  } catch (error) {
+    console.error("❌ Network error while saving game:", error);
+  }
   // inform each front-end that the game is over
   const finalMsg = JSON.stringify({ type: "GAME_OVER", winnerName});
-  player1.webSocket.send(finalMsg);
-  player2.webSocket.send(finalMsg);
-  player1.webSocket.close();
-  player2.webSocket.close();
+  // check if the socket still open before sending, 1 == OPEN
+  [player1, player2].forEach(p => {
+    if (p.webSocket.readyState === 1) {
+      p.webSocket.send(finalMsg);
+      p.webSocket.close();
+    }
+  });
+  //player1.webSocket.send(finalMsg);
+  //player2.webSocket.send(finalMsg);
+  //player1.webSocket.close();
+  //player2.webSocket.close();
 }
 
 export function close_socket_waiting(player: Player, players: any[]) {
