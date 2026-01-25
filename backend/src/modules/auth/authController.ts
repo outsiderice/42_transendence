@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { RegisterUserBody, LoginUserBody, SafeUserResponese } from './authRoutes';
 import { DBClient } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 export const registerUserController = async (
@@ -139,17 +140,34 @@ export const refreshTokenController = async (
 ) => {
   try {
 
-    const payload = await request.jwtVerify({onlyCookie: true, }) as {
-      id: number;
-      username: string;
-      nickname:string;
-      type?: string;
-    };
+	const refreshToken = request.cookies.refreshToken;
+	
+	console.log("is there a token?\n");
+	if (!refreshToken){
+		return reply.code(401).send({error: "No refresh token"});
+	}
 
+	console.log("THERE'S A TOKEN\n");
+//    const payload = await jwt.verify(refreshToken, process.env.JWT_SECRET) as {
+//      id: number;
+//      username: string;
+//      nickname:string;
+//      type?: string;
+//    } 
+	try {
+    // ✅ This will throw if token is invalid or expired
+    payload = jwt.verify(refreshToken, process.env.JWT_SECRET) as typeof payload;
+    console.log('Payload decoded:', payload);
+  	} catch (err) {
+    console.error('Failed to verify refresh token:', err);
+    return reply.code(401).send({ error: 'Invalid or expired refresh token' });
+  	};
+
+	console.log('All cookies received:', request.cookies);
+	console.log(payload.type, " IS WRONG\n");
     if (payload.type !== 'refresh') {
       return reply.code(401).send({ error: 'Invalid refresh token' });
     }
-
     //generar nuevo token de acceso
     const newToken = await reply.jwtSign(
       { 

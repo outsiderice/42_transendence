@@ -6,6 +6,10 @@ export default fp(async function (fastify: FastifyInstance) {
 
   fastify.register(jwt, {
     secret: process.env.JWT_SECRET || 'supersecretkey',
+	cookie: {
+		cookieName: 'accessToken',
+		signed: false,
+	},
   });
 
   // --- Authenticate API requests ---
@@ -31,7 +35,6 @@ export default fp(async function (fastify: FastifyInstance) {
   fastify.decorate("authenticatePage", async function(request: FastifyRequest, reply: FastifyReply) {
     try {
       const payload = await request.jwtVerify({ onlyCookie: true }) as { id: number; username: string; type?: string; };
-      console.log("hell"); // optional debug
       if (payload.type !== 'access') {
         return reply.code(401).send({
           error: 'Invalid token type',
@@ -67,7 +70,7 @@ export default fp(async function (fastify: FastifyInstance) {
 
     this.setCookie('refreshToken', refreshToken, {
       httpOnly: true,
-      path: '/',
+      path: '/api/auth/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days
       sameSite: 'none',
       secure: true,

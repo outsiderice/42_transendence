@@ -6,6 +6,22 @@ import {useRouter} from 'vue-router';
 import {onMounted } from 'vue';
 import {onUpdated } from 'vue';
 
+//call to refresh token in case auth has expired
+const refreshAuth = async () => {
+	console.log("refresh called");
+	try {
+		const response = await fetch("https://localhost:8443/api/auth/refresh", {
+			method:	'POST',
+			credentials: 'include',
+		})
+		if (response.ok ){ 
+			console.log("refreshed successfully")
+		}
+	} catch (err) {
+		console.error("Error refreshing auth: ", err);
+	}
+}
+
 //
 //	redirecting the user to the log in screen if it is not loged in.
 //
@@ -44,6 +60,7 @@ function redirect_if_not_loged_in()
 }
 
 onMounted(() => {
+	refreshAuth();
 	redirect_if_not_loged_in();
 })
 

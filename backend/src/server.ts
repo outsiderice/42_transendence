@@ -28,8 +28,9 @@ app.register(cors, {
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
-app.register(websocket);
+
 app.register(cookie);
+app.register(websocket);
 
 app.register(oauthPlugin, {
   name: 'githubOAuth2',

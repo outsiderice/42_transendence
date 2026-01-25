@@ -7,9 +7,7 @@ export const gameController = async (
 	request: FastifyRequest,
 ) => {
 	try {
-		const payload = await request.jwtVerify<{username: string}>({
-			onlyCookie: true,
-		});
+		const payload = await request.jwtVerify<{username: string}>();
 		const {username} = payload;
 		console.log(`${username} wants to connect`);
 //		const { username } = await request.jwtVerify<{ username: string }>({
