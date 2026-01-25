@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import Friends from '../../services/dbClient';
 import {
     getAllFriendsController,
+    getAllFriendsPetitionController,
     createFriendPetitionController,
 } from './friendsController';
 
@@ -29,8 +30,20 @@ export const friendsRoutes = async (app: FastifyInstance) => {
         } as any,
     }, getAllFriendsController);
 
+    app.get<{ Querystring: { user_1: number } }>('/friendsPendant', {
+      schema: {
+          tags: ['Friends'],
+          querystring: {
+              type: 'object',
+              required: ['user_1'],
+              properties: {
+                  user_1: { type: 'number' },
+              },
+          },
+      } as any,
+  }, getAllFriendsPetitionController);
 
-   app.post<{ Body: Friends }>(
+       app.post<{ Body: Friends }>(
   '/friends',
   {
     schema: {

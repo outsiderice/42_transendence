@@ -5,6 +5,7 @@ import { GameSchema } from './gamedata.schema';
 export const gamesDataRoutes = async (app: FastifyInstance) => {
   app.post('/games', {
     schema: {
+      tags: ['PostGame'],
       body: GameSchema,
       response: {
         201: GameSchema,
