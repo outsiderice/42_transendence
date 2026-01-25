@@ -19,6 +19,9 @@ import PongLink from '../components/PongLink.vue'
 	<PongLink href="/sign_up" class="underline decoration-1 hover:decoration-2">
 		Sign Up
 	</PongLink>
+	<PongLink href="/edit_profile" class="underline decoration-1 hover:decoration-2">
+		Edit Profile
+	</PongLink>
 </footer>
 
 </template>
