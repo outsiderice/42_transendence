@@ -47,7 +47,7 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
     player2_score: Number(game.score.getRightScore())
   };
   
-try {
+  try {
     const response = await fetch("https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/games", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,6 +85,7 @@ try {
   //player2.webSocket.close();
 }
 
+
 export function close_socket_waiting(player: Player, players: any[]) {
   player.webSocket.on("close", () => {
     const index = players.indexOf(player);
@@ -99,16 +100,25 @@ export function close_socket_waiting(player: Player, players: any[]) {
   });
 }
 
-export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
+export function close_game(player: Player, gameInterval: NodeJS.Timeout, game: Pong) {
   player.webSocket.on("close", () => {
     clearInterval(gameInterval);
     // send message that the opponent disconected, coward
-    console.log(`Player ${player.userName} disconnected. Game stopped.`);
+    if (!game.endGame()){
+      console.log(`Player ${player.userName} disconnected. Game stopped.`);
+      const msg = JSON.stringify({ type: "DISCONNECTED", username: player.userName});
+      if (game.player1.webSocket.readyState === 1) {
+        game.player1.webSocket.send(msg);
+      }
+      if (game.player2.webSocket.readyState === 1) {
+        game.player2.webSocket.send(msg);
+      }
+    }
   });
 }
 
   export function start_game(player1: Player, player2: Player){
-    const game = new Pong(800, 600);
+    const game = new Pong(800, 600, player1, player2);
     player_controls(player1, game);
     player_controls(player2, game);
 
@@ -128,12 +138,13 @@ export function close_game(player: Player, gameInterval: NodeJS.Timeout) {
         type: "STATE_UPDATE",
         state: game.getGameState()
       });
+
       player1.webSocket.send(state);
       player2.webSocket.send(state);
     }, 1000 / 60);
 
-    close_game(player1, gameInterval);
-    close_game(player2, gameInterval);
+    close_game(player1, gameInterval, game);
+    close_game(player2, gameInterval, game);
   }
   
 export async function pongGame(fastify: FastifyInstance) {

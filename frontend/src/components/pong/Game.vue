@@ -49,6 +49,9 @@ onMounted(() => {
       else if (data.type === "INFO") {
         msgPong.value = data.msg;
       }
+      else if (data.type === "DISCONNECTED") {
+        msgPong.value = `${data.username} has left the game. What a coward!`;
+      }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
       }

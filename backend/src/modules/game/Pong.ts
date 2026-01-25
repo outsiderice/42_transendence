@@ -2,8 +2,12 @@ import { Platform } from "./Platform.js";
 import { Score } from "./Score.js";
 import { Ball } from "./Ball.js";
 import type { GameState } from "./GameState.js" 
+import { Player } from "./Player.js";
 
 export	class Pong {
+	// players
+	player1: Player;
+	player2: Player;
 	// field
 	height: number;
 	heightLimitPaddle: number;
@@ -19,9 +23,11 @@ export	class Pong {
 	rightPaddle: Platform;
 	score: Score;
 
-	constructor (width: number, height: number) {
+	constructor (width: number, height: number, player1: Player, player2: Player) {
 		this.height = height;
 		this.width = width;
+		this.player1 = player1;
+		this.player2 = player2;
 		this.paddlePosX = this.width / 2 - this.paddleMargin;
 		this.ball = new Ball(0, 0, 5);
 		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 20, 100, 5);
