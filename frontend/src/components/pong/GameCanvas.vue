@@ -4,7 +4,9 @@ import { Renderer } from './Renderer';
 import type { GameState } from './GameState';
 
 const props = defineProps<{
-  gameState: GameState | null
+  gameState: GameState | null,
+  leftName: string,
+  rightName: string
 }>();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -45,7 +47,7 @@ onUnmounted(() => {
 // this watcher triggers the draw function.
 watch(() => props.gameState, (newState) => {
   if (newState && renderer) {
-    renderer.draw(newState);
+    renderer.draw(newState, props.leftName, props.rightName);
   }
 });
 </script>
