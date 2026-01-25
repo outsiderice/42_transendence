@@ -40,34 +40,35 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
   let winnerName = winner.userName;
   // Data to be send to DATABASE
   const gameData = {
-    id: 0, // check, can give problem
-    player1_id: player1.id,
-    player2_id: player2.id,
-    winner_id: winner.id,
-    player1_score: game.score.getLeftScore(),
-    player2_score: game.score.getRightScore(),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    player1_id: Number(player1.id),
+    player2_id: Number(player2.id),
+    winner_id: Number(winner.id),
+    player1_score: Number(game.score.getLeftScore()),
+    player2_score: Number(game.score.getRightScore())
   };
   
- try {
-    const response = await fetch("http://localhost:3000/games", {
+try {
+    const response = await fetch("https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/games", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // maybe need a tocken?
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(gameData),
+      signal: AbortSignal.timeout(5000) // 5 second timeout so game doesn't hang forever
     });
 
     if (response.ok) {
-      console.log("🏆 Game results saved to database successfully.");
+      const savedGame = await response.json();
+      console.log(`🏆 DB Success: Game #${savedGame.id} saved.`);
     } else {
-      const errorData = await response.text();
-      console.error("❌ Failed to save game results:", errorData);
+      // Handle specific HTTP errors (400, 401, 500, etc.)
+      const errorText = await response.text();
+      console.error(`❌ DB Rejected (${response.status}):`, errorText);
     }
-  } catch (error) {
-    console.error("❌ Network error while saving game:", error);
+  } catch (err: any) {
+    if (err.name === 'TimeoutError') {
+      console.error("❌ DB Error: The request timed out.");
+    } else {
+      console.error("❌ DB Network Error: Connection refused or DNS failure.");
+    }
   }
   // inform each front-end that the game is over
   const finalMsg = JSON.stringify({ type: "GAME_OVER", winnerName});
@@ -176,8 +177,14 @@ export async function pongGame(fastify: FastifyInstance) {
         // shift first come first go and deletes the player from the array
         let player1 = players.shift()!;
         let player2 = players.shift()!;
-        player2.side = 1;    
-        start_game(player1, player2);
+        player2.side = 1;
+        const state = JSON.stringify({
+        type: "PLAY"
+        });
+      player1.webSocket.send(state);
+      player2.webSocket.send(state);
+      start_game(player1, player2);
+
       } else {
         socket.send(JSON.stringify({ type: "INFO", msg: "Waiting for opponent..." }));
 
