@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
+import PongToggleButton from '../components/PongToggleButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 
@@ -8,46 +9,59 @@ const { newsletter } = useToggles()
 
 const {
   name,
+  email,
   password,
   confirmPassword,
   touched,
   nameError,
+  emailError,
   passwordError,
   confirmPasswordError,
   validate
 } = useAuthForm()
 
 const handleSubmit = async () => {
-  if (!validate()) return
+  console.log('Submitting signup:', {
+    username: name.value,
+    email: email.value,
+    password: password.value
+  })
+
+  // if (!validate()) return
 
   try {
     const response = await fetch(
-      import.meta.env.VITE_GATEWAY_URL + '/auth/login',
+      'http://localhost:3000/auth/register',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           username: name.value,
+          email: email.value,
           password: password.value
-        }),
-        credentials: 'include'
+        })
       }
     )
 
     if (response.ok) {
+      console.log('Registered successfully ✅')
       const data = await response.json()
-      localStorage.setItem('token', data.token)
-      console.log('Login correcto ✅')
+      console.log(data)
+    } else {
+      const errorText = await response.text()
+      console.error('Register error ❌', errorText)
     }
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Network error:', error)
   }
 }
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">
+  <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
+    <h2 class="text-3xl font-bold mb-8 text-center">
       Sign Up
     </h2>
 
@@ -86,9 +100,16 @@ const handleSubmit = async () => {
       label="SEND"
       type="submit"
       :fullWidth="true"
-      :disabled="!name || !password || !confirmPassword"
+      :disabled="!name || !email || !password || !confirmPassword"
       @click="handleSubmit"
     />
+
+    <div class="mt-4">
+      <PongToggleButton
+        v-model="newsletter"
+        label="Suscribirme al newsletter"
+      />
+    </div>
   </div>
 </template>
 
