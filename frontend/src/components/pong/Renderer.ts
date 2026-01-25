@@ -13,8 +13,17 @@ export class Renderer {
         // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw ball
-        this.ctx.fillStyle = "white";
+        //Background
+        this.ctx.fillStyle = "#0d0221";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw middle line
+        this.drawNet();
+
+        // draw ball
+        //this.ctx.shadowBlur = 15;
+        //this.ctx.shadowColor = "#ffff00";
+        this.ctx.fillStyle = "#ffff00";
         this.ctx.beginPath();
         this.ctx.arc(
             gameState.ball.x + this.canvas.width / 2,
@@ -24,40 +33,60 @@ export class Renderer {
             Math.PI * 2
         );
         this.ctx.fill();
-        this.ctx.closePath();
+        //this.ctx.closePath();
 
         // Draw paddles
-        this.drawPaddle(gameState.leftPaddle);
-        this.drawPaddle(gameState.rightPaddle);
+        this.drawPaddle(gameState.leftPaddle, "#00f2ff");
+        this.drawPaddle(gameState.rightPaddle, "#ff00ff");
 
         // Draw Names and Points
-        // Set text style for UI
-        this.ctx.fillStyle = "white";
-        this.ctx.textAlign = "center";
-
-        // 1. Draw Names (Center-Top)
-        this.ctx.font = "20px Arial";
-        this.ctx.fillText(leftName, this.canvas.width / 4, 30);
-        this.ctx.fillText(rightName, (this.canvas.width / 4) * 3, 30);
-
-        // 2. Draw Scores (Slightly below names)
-        this.ctx.font = "bold 40px Arial";
-        this.ctx.fillText(`${gameState.score.left}`, this.canvas.width / 4, 75);
-        this.ctx.fillText(`${gameState.score.right}`, (this.canvas.width / 4) * 3, 75);
-
-        // Draw scores
-        //this.ctx.font = "30px Arial";
-        //this.ctx.fillText(`${gameState.score.left}`, this.canvas.width / 4, 50);
-        //this.ctx.fillText(`${gameState.score.right}`, (this.canvas.width / 4) * 3, 50);
+        this.drawUI(gameState, leftName, rightName);
     }
 
-    private drawPaddle(paddle: { x: number; y: number; width: number; height: number }): void {
-        this.ctx.fillStyle = "white";
+    private drawNet() {
+        this.ctx.strokeStyle = "rgba(112, 102, 119, 0.5)";
+        this.ctx.setLineDash([10, 15]);
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.canvas.width / 2, 0);
+        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
+        this.ctx.stroke();
+        this.ctx.setLineDash([]); // Reset dash
+    }
+
+    private drawUI(gameState: GameState, leftName: string, rightName: string) {
+        //this.ctx.shadowBlur = 10;
+        this.ctx.textAlign = "center";
+
+        // Left Player Info
+        //this.ctx.shadowColor = "#00f2ff";
+        this.ctx.fillStyle = "#00f2ff";
+        this.ctx.font = "italic 20px 'Courier New', Courier, monospace";
+        this.ctx.fillText(leftName.toUpperCase(), this.canvas.width / 4, 35);
+        this.ctx.font = "bold 50px 'Courier New'";
+        this.ctx.fillText(`${gameState.score.left}`, this.canvas.width / 4, 85);
+
+        // Right Player Info
+        //this.ctx.shadowColor = "#ff00ff";
+        this.ctx.fillStyle = "#ff00ff";
+        this.ctx.font = "italic 20px 'Courier New'";
+        this.ctx.fillText(rightName.toUpperCase(), (this.canvas.width / 4) * 3, 35);
+        this.ctx.font = "bold 50px 'Courier New'";
+        this.ctx.fillText(`${gameState.score.right}`, (this.canvas.width / 4) * 3, 85);
+
+        this.ctx.shadowBlur = 0; // Reset blur for other elements
+    }
+
+    private drawPaddle(paddle: { x: number; y: number; width: number; height: number }, color: string): void {
+        //this.ctx.shadowBlur = 20;
+        //this.ctx.shadowColor = color;
+        this.ctx.fillStyle = color; 
         this.ctx.fillRect(
             paddle.x + this.canvas.width / 2 - paddle.width / 2,
             this.canvas.height / 2 - paddle.y - paddle.height / 2,
             paddle.width,
             paddle.height
         );
+        //this.ctx.shadowBlur = 0;
     }
 }
