@@ -47,41 +47,6 @@ export	class Pong {
 		if (key === "ArrowDown")
             this.rightPaddle.moveDown = isPressed;
 	}
-	// web sockets in future
-	/*private setupControls(): void {
-		window.addEventListener("keydown", (event: KeyboardEvent) => {
-			const key = event.key;
-			if (key === "w" || key === "W") {
-            	this.leftPaddle.moveUp = true;
-        	}
-        	if (key === "s" || key === "S") {
-            	this.leftPaddle.moveDown = true;
-				console.log("Bajando bajando");
-        	}
-        	if (key === "ArrowUp") {
-            	this.rightPaddle.moveUp = true;
-        	}
-        	if (key === "ArrowDown") {
-            	this.rightPaddle.moveDown = true;
-        	}
-		});
-
-		window.addEventListener("keyup", (event: KeyboardEvent) => {
-			const key = event.key;
-			if (key === "w" || key === "W") {
-            	this.leftPaddle.moveUp = false;
-        	}
-        	if (key === "s" || key === "S") {
-            	this.leftPaddle.moveDown = false;
-        	}
-        	if (key === "ArrowUp") {
-            	this.rightPaddle.moveUp = false;
-        	}
-        	if (key === "ArrowDown") {
-            	this.rightPaddle.moveDown = false;
-        	}
-		});
-	}*/
 
 	handlePaddleBallContact(paddle: Platform ): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
@@ -121,7 +86,6 @@ export	class Pong {
 		this.handleScore();
 	}
 
-	// need proper signal handling
 	endGame(): boolean {
 		if (this.score.isMaxScoreReached()) {
 			return (true);
@@ -144,8 +108,4 @@ export	class Pong {
 			score: { left: this.score.getLeftScore(), right: this.score.getRightScore() }
 		};
 	}
-
-	//cleanup(): void {
-	//	window.removeEventListener("keydown", this.setupControls);
-	//}
 }
