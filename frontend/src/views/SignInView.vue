@@ -86,8 +86,8 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-/* Opcional: centramos el formulario y ponemos un fondo */
+
 body {
-  background-color: #f3f4f6;
+  background-color: var(--color_background_1);
 }
 </style>

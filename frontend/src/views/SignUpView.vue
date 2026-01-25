@@ -59,6 +59,14 @@ const handleSubmit = async () => {
     />
 
     <PongInput
+      label="Email"
+      type="email"
+      v-model="email"
+      :error="emailError"
+      @blur="touched.email = true"
+    />
+
+    <PongInput
       label="Password"
       type="password"
       v-model="password"
