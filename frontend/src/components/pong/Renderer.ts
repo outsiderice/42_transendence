@@ -14,7 +14,7 @@ export class Renderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         //Background
-        this.ctx.fillStyle = "#0d0221";
+        this.ctx.fillStyle = "#04000b";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw middle line
@@ -23,7 +23,7 @@ export class Renderer {
         // draw ball
         //this.ctx.shadowBlur = 15;
         //this.ctx.shadowColor = "#ffff00";
-        this.ctx.fillStyle = "#ffff00";
+        this.ctx.fillStyle = "#FFF";
         this.ctx.beginPath();
         this.ctx.arc(
             gameState.ball.x + this.canvas.width / 2,
@@ -35,16 +35,16 @@ export class Renderer {
         this.ctx.fill();
         //this.ctx.closePath();
 
-        // Draw paddles
-        this.drawPaddle(gameState.leftPaddle, "#00f2ff");
-        this.drawPaddle(gameState.rightPaddle, "#ff00ff");
+        // Draw paddles "#00f2ff" "#ff00ff"
+        this.drawPaddle(gameState.leftPaddle, "#FFF");
+        this.drawPaddle(gameState.rightPaddle, "#FFF");
 
         // Draw Names and Points
         this.drawUI(gameState, leftName, rightName);
     }
 
     private drawNet() {
-        this.ctx.strokeStyle = "rgba(112, 102, 119, 0.5)";
+        this.ctx.strokeStyle = "#FFF";
         this.ctx.setLineDash([10, 15]);
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
@@ -60,7 +60,7 @@ export class Renderer {
 
         // Left Player Info
         //this.ctx.shadowColor = "#00f2ff";
-        this.ctx.fillStyle = "#00f2ff";
+        this.ctx.fillStyle = "#FFF";
         this.ctx.font = "italic 20px 'Courier New', Courier, monospace";
         this.ctx.fillText(leftName.toUpperCase(), this.canvas.width / 4, 35);
         this.ctx.font = "bold 50px 'Courier New'";
@@ -68,7 +68,7 @@ export class Renderer {
 
         // Right Player Info
         //this.ctx.shadowColor = "#ff00ff";
-        this.ctx.fillStyle = "#ff00ff";
+        this.ctx.fillStyle = "#FFF";
         this.ctx.font = "italic 20px 'Courier New'";
         this.ctx.fillText(rightName.toUpperCase(), (this.canvas.width / 4) * 3, 35);
         this.ctx.font = "bold 50px 'Courier New'";
