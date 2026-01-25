@@ -35,7 +35,7 @@ onMounted(() => {
   const token = localStorage.getItem('token');
   console.log(token);
   socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
-  //socket = new WebSocket("ws://localhost:3000/ws/pong");
+ //socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
 
   socket.onmessage = (event) => {
     try {

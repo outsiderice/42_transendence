@@ -15,7 +15,9 @@ import jwtplugin from './plugins/jwt.plugin';
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
 import { friendsRoutes } from "./modules/Friends/friendsRoutes";
+import { gamesDataRoutes } from "./modules/gamedata/gamedata.routes.js";
 import { pongGame } from "./modules/game/pongGame.js";
+import { presenceRoutes } from "./modules/presence/presence.Routes.js";
 
 // 1. Setup the basic App
 const app = Fastify({ logger: true });
@@ -82,6 +84,9 @@ const start = async () => {
   app.register(authRoutes);
   app.register(friendsRoutes);
   app.register(pongGame);
+  app.register(presenceRoutes);
+  app.register(gamesDataRoutes);
+
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
       console.log("Server is running on http://localhost:3000");
     });

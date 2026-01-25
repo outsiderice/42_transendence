@@ -2,6 +2,8 @@ FROM node:22
 
 WORKDIR /app
 
+RUN apt update && apt install sqlite3 
+
 COPY package*.json ./
 
 RUN npm install
