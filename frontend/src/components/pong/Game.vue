@@ -10,14 +10,12 @@ let socket: WebSocket | null = null;
 
 // Send input to backend
 const sendInput = (key: string, pressed: boolean) => {
-	console.log("pressing key ", key);
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({
       type: "KEY_EVENT",
       key: key,
       pressed: pressed
     }));
-	console.log("sent key ", key);
   }
 };
 
