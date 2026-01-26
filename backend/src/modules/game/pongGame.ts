@@ -143,31 +143,25 @@ export function close_game(player: Player, gameInterval: NodeJS.Timeout, game: P
     close_game(player1, gameInterval, game);
     close_game(player2, gameInterval, game);
   }
+
+
+let players: any[] = [];
+console.log("SERVER CHECK: Multiplayer Pong logic is starting...");
   
-export async function pongGame(fastify: FastifyInstance) {
+export async function pongGame(
+	socket: any,
+	user: {
+		id: number;
+		username: string;
+		nickname: string;
+	}
+) {
 
-  let players: any[] = [];
-  console.log("SERVER CHECK: Multiplayer Pong logic is starting...");
 
-  fastify.get("/ws/pong", { websocket: true }, async (connection, req) => {
-    const socket = (connection as any).socket || connection;
-    const { token } = req.query as { token?: string };
-    
-    if (!token) {
-        fastify.log.warn("Connection attempt blocked: No token provided.");
-        connection.socket.close(1008, "Policy Violation: Token Required");
-        return;
-    }
 
-    try {
-      //VERIFY IDENTITY using fastify/jwt
-      // This will throw an error if the token is fake or expired
-      const decoded = await fastify.jwt.verify(token) as any;
-      console.log("Decoded Object:", JSON.stringify(decoded, null, 2));
-      const userId = decoded.id;
-      const isAlreadyWaiting = players.some(p => p.id === decoded.id);
+      const isAlreadyWaiting = players.some(p => p.id === user.id);
       if (isAlreadyWaiting) {
-        console.log(`⚠️ User ${decoded.username} tried to join twice.`);
+        console.log(`⚠️ User ${user.username} tried to join twice.`);
         socket.send(JSON.stringify({ 
             type: "ERROR", 
             message: "You are already in the matchmaking queue!" 
@@ -176,9 +170,9 @@ export async function pongGame(fastify: FastifyInstance) {
         socket.close();
         return;
       }
-      console.log(`✅ Verified User: ${decoded.username} (ID: ${userId})`);
+      console.log(`✅ Verified User: ${user.username} (ID: ${user.id})`);
 
-      const player = new Player(decoded.id, socket, decoded.nickname, decoded.username, -1);
+      const player = new Player(user.id, socket, user.nickname, user.username, -1);
       players.push(player);
       close_socket_waiting(player, players);
       if (players.length >= 2){
@@ -197,10 +191,5 @@ export async function pongGame(fastify: FastifyInstance) {
         socket.send(JSON.stringify({ type: "INFO", msg: "Waiting for opponent..." }));
 
       }
-    } catch (err) {
-      console.log("❌ JWT Verification Failed:", err);
-      socket.close(1008, "Invalid Token");
       return;
-    }   
-  });
-}
+    };
