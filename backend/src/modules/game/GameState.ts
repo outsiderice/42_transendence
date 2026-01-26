@@ -19,8 +19,5 @@ export interface GameState {
     score: {
         left: number;
         right: number;
-    /*
-        fds, endgame, desconection
-    */
     };
 }

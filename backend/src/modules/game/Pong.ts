@@ -2,8 +2,12 @@ import { Platform } from "./Platform.js";
 import { Score } from "./Score.js";
 import { Ball } from "./Ball.js";
 import type { GameState } from "./GameState.js" 
+import { Player } from "./Player.js";
 
 export	class Pong {
+	// players
+	player1: Player;
+	player2: Player;
 	// field
 	height: number;
 	heightLimitPaddle: number;
@@ -19,13 +23,15 @@ export	class Pong {
 	rightPaddle: Platform;
 	score: Score;
 
-	constructor (width: number, height: number) {
+	constructor (width: number, height: number, player1: Player, player2: Player) {
 		this.height = height;
 		this.width = width;
+		this.player1 = player1;
+		this.player2 = player2;
 		this.paddlePosX = this.width / 2 - this.paddleMargin;
 		this.ball = new Ball(0, 0, 5);
-		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 10, 50, 5);
-		this.rightPaddle = new Platform(this.paddlePosX, 0, 10, 50, 5);
+		this.leftPaddle = new Platform(- this.paddlePosX, 0 , 20, 100, 5);
+		this.rightPaddle = new Platform(this.paddlePosX, 0, 20, 100, 5);
 		this.heightLimitPaddle = this.height/2 - this.leftPaddle.getPadelHeight()/2;
 		this.score = new Score();
 
@@ -41,41 +47,6 @@ export	class Pong {
 		if (key === "ArrowDown")
             this.rightPaddle.moveDown = isPressed;
 	}
-	// web sockets in future
-	/*private setupControls(): void {
-		window.addEventListener("keydown", (event: KeyboardEvent) => {
-			const key = event.key;
-			if (key === "w" || key === "W") {
-            	this.leftPaddle.moveUp = true;
-        	}
-        	if (key === "s" || key === "S") {
-            	this.leftPaddle.moveDown = true;
-				console.log("Bajando bajando");
-        	}
-        	if (key === "ArrowUp") {
-            	this.rightPaddle.moveUp = true;
-        	}
-        	if (key === "ArrowDown") {
-            	this.rightPaddle.moveDown = true;
-        	}
-		});
-
-		window.addEventListener("keyup", (event: KeyboardEvent) => {
-			const key = event.key;
-			if (key === "w" || key === "W") {
-            	this.leftPaddle.moveUp = false;
-        	}
-        	if (key === "s" || key === "S") {
-            	this.leftPaddle.moveDown = false;
-        	}
-        	if (key === "ArrowUp") {
-            	this.rightPaddle.moveUp = false;
-        	}
-        	if (key === "ArrowDown") {
-            	this.rightPaddle.moveDown = false;
-        	}
-		});
-	}*/
 
 	handlePaddleBallContact(paddle: Platform ): void {
 		const	topPaddle = paddle.getY() + paddle.getPadelHeight()/2;
@@ -115,7 +86,6 @@ export	class Pong {
 		this.handleScore();
 	}
 
-	// need proper signal handling
 	endGame(): boolean {
 		if (this.score.isMaxScoreReached()) {
 			return (true);
@@ -126,10 +96,6 @@ export	class Pong {
 	update() {
 		this.ball.update( - this.height/2, this.height/2);
 		this.handleBallContacts();
-		if (this.endGame()) {
-			//parar el juego
-			console.log(this.score.whoWon());
-		}
 		this.leftPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle);
 		this.rightPaddle.update(this.heightLimitPaddle, - this.heightLimitPaddle); 
 	}
@@ -142,8 +108,4 @@ export	class Pong {
 			score: { left: this.score.getLeftScore(), right: this.score.getRightScore() }
 		};
 	}
-
-	//cleanup(): void {
-	//	window.removeEventListener("keydown", this.setupControls);
-	//}
 }

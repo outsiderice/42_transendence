@@ -2,8 +2,10 @@
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
 import PongToggleButton from '../components/PongToggleButton.vue'
+import PongAchievementCard from "../components/PongAchievements.vue";
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
+
 
 const { newsletter } = useToggles()
 
@@ -31,7 +33,7 @@ const handleSubmit = () => {
 -->
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-8 text-center">Formulario de Prueba</h2>
+    <h2 class="text-3xl font-bold mb-8 text-center">Hola</h2>
 
     <PongInput
       label="Name"
@@ -56,6 +58,14 @@ const handleSubmit = () => {
       @blur="touched.password = true"
     />
 
+    <PongInput
+      label="Confirm Password"
+      type="password"
+      v-model="confirmPassword"
+      :error="confirmPasswordError"
+      @blur="touched.confirmPassword = true"
+    />
+    
     <PongButton
 		label="SEND"
   		type="submit"
@@ -72,6 +82,36 @@ const handleSubmit = () => {
       <p><strong>Email:</strong> {{ email }}</p>
     </div>
   </div>
+
+<div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
+	<h4>Pong achievements</h4>
+
+	<div class="flex flex-col gap-[0.75rem] max-w-[50rem]">
+		<PongAchievementCard />
+
+	<PongAchievementCard
+		title="First Match"
+		icon="/icons/pong_first_match.svg"
+    description="Description one"
+		:completed="false"
+	/>
+
+	<PongAchievementCard
+		title="First Win"
+		icon="/icons/pong_first_win.svg"
+    description="Description two"
+		:completed="true"
+	/>
+
+	<PongAchievementCard
+		title="Unstoppable"
+		icon="/icons/pong_unstoppable.svg"
+    description="Description three"
+		:completed="true"
+	/>
+	</div>
+</div>
+
 </template>
 
 <style scoped>

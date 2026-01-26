@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { RegisterUserBody, LoginUserBody, SafeUserResponese } from './authRoutes';
 import { DBClient } from '../../services/dbClient';
 import * as bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 export const registerUserController = async (
@@ -64,36 +65,9 @@ export const registerUserController = async (
       email: newUser.email,
     };
 
-    //generar JWTs
-    const accessToken = await reply.jwtSign(
-      { 
-        id:       newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        type:     'access'
-      },
-      { expiresIn: '15m' }
-    );
+	await reply.generateTokens(newUser);
 
-    const refreshToken = await reply.jwtSign(
-      { 
-        id:       newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        type:     'refresh'
-      },
-      { expiresIn: '7d' }
-    );
-
-    reply.setCookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      path: '/auth/refresh',
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-      sameSite: 'lax',
-      secure: true,
-    });
-
-    reply.status(201).send({ safeUser, accessToken });
+    reply.status(201).send({ safeUser });
   } catch (error) {
     console.error('Error in createUserController:', error);
     reply.status(500).send({
@@ -139,39 +113,15 @@ export const loginUserController = async (
       });
     }
     //evita devolver el password en la respuesta
-    const { password: _, ...safeUser } = existingUsername;
 
-    //generar JWTs
-    const accessToken = await reply.jwtSign(
-      { 
-        id:       existingUsername.id,
-        username: existingUsername.username,
-        nickname: existingUsername.nickname,
-        type:     'access'
-      },
-      { expiresIn: '15m' }
-    );
-
-    const refreshToken = await reply.jwtSign(
-      { 
-        id:       existingUsername.id,
-        username: existingUsername.username,
-        nickname: existingUsername.nickname,
-        type:     'refresh'
-      },
-      { expiresIn: '7d' }
-    );
-
-    reply.setCookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      path: '/auth/refresh',
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-      sameSite: 'lax',
-      secure: true,
-    });
+    const safeUser: SafeUserResponese = {
+      username: existingUsername.username,
+      email: existingUsername.email,
+    };
+	await reply.generateTokens(existingUsername);
 
     console.log('User logged in:', safeUser);
-    reply.status(200).send({ user: safeUser, accessToken });
+    reply.status(200).send({ user: safeUser});
   } catch (error) {
     console.error('Error in loginUserController:', error);
     reply.status(500).send({
@@ -185,22 +135,34 @@ export const loginUserController = async (
  * POST /refresh - actualizar token
  */
 export const refreshTokenController = async (
-  request: FastifyRequest<{ Body: { refreshToken: string } }>,
+  request: FastifyRequest,
   reply: FastifyReply
 ) => {
   try {
 
-    const payload = await request.jwtVerify({onlyCookie: true, }) as {
-      id: number;
-      username: string;
-      nickname:string;
-      type?: string;
-    };
+	const refreshToken = request.cookies.refreshToken;
+	
+	console.log("is there a token?\n");
+	if (!refreshToken){
+		return reply.code(401).send({error: "No refresh token"});
+	}
 
+	console.log("THERE'S A TOKEN\n");
+//    const payload = await jwt.verify(refreshToken, process.env.JWT_SECRET) as {
+//      id: number;
+//      username: string;
+//      nickname:string;
+//      type?: string;
+//    } 
+	console.log(process.env.JWT_SECRET);
+    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    console.log('Payload decoded:', payload);
+
+	console.log('All cookies received:', request.cookies);
+	console.log(payload.type, " IS WRONG\n");
     if (payload.type !== 'refresh') {
       return reply.code(401).send({ error: 'Invalid refresh token' });
     }
-
     //generar nuevo token de acceso
     const newToken = await reply.jwtSign(
       { 
@@ -212,8 +174,17 @@ export const refreshTokenController = async (
       { expiresIn: '15m' }
     );
 
-    return reply.send({ accessToken: newToken });
-  } catch {
+    reply.setCookie('accessToken', newToken, {
+      httpOnly: true,
+      path: '/',
+      maxAge: 60 * 15,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return reply.code(204).send();
+  } catch(err) {
+	console.error("Somehting went bonkers: ", err);
     return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
 };

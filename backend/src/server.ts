@@ -15,7 +15,9 @@ import jwtplugin from './plugins/jwt.plugin';
 import { usersRoutes } from "./modules/users/usersRoutes";
 import { authRoutes } from "./modules/auth/authRoutes";
 import { friendsRoutes } from "./modules/Friends/friendsRoutes";
-import { pongGame } from "./modules/game/pongGame.js";
+import { gameRoutes } from "./modules/game/GameRoutes";
+import { gamesDataRoutes } from "./modules/gamedata/gamedata.routes.js";
+import { presenceRoutes } from "./modules/presence/presence.Routes.js";
 
 // 1. Setup the basic App
 const app = Fastify({ logger: true });
@@ -26,8 +28,9 @@ app.register(cors, {
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
-app.register(websocket);
+
 app.register(cookie);
+app.register(websocket);
 
 app.register(oauthPlugin, {
   name: 'githubOAuth2',
@@ -81,7 +84,10 @@ const start = async () => {
   app.register(usersRoutes);
   app.register(authRoutes);
   app.register(friendsRoutes);
-  app.register(pongGame);
+  app.register(gameRoutes);
+  app.register(presenceRoutes);
+  app.register(gamesDataRoutes);
+
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
       console.log("Server is running on http://localhost:3000");
     });

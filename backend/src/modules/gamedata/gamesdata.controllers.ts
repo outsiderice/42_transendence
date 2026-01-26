@@ -1,0 +1,66 @@
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { DBClient } from '../../services/dbClient';
+
+
+// CODIGO ANTERIOR 
+
+// no se puede poner !game porque en js es como 0 y si entra 0 como puntuacion falla
+export const createGameController = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  try {
+    const game = request.body as { player1_id: number, player2_id: number, player1_score: number, player2_score: number, winner_id: number };
+
+    if (!game || !game.player1_id || !game.player2_id || !game.player1_score || !game.player2_score || !game.winner_id) {
+      return reply.status(400).send({ error: 'player1_id, player2_id, player1_score, player2_score y winner_id son obligatorios' });
+    }
+    console.log('Creating game with player1_id:', game.player1_id, game);
+    const createdGame = await DBClient.createGame(game);
+
+
+    console.log(createdGame);
+
+    // IMPORTANT: ensure player1_id exists
+    if (!createdGame || !createdGame.player1_id) {
+      return reply.status(500).send({
+        error: 'El juego se creó pero no devolvió player1_id',
+      });
+    }
+
+    return reply.status(201).send(createdGame);
+  } catch (error) {
+    console.error('Error creating game:', error);
+    return reply.status(500).send({ error: 'Error al crear el juego' });
+  }
+};
+
+
+// posible solucion pero no se si lo hago bien para resisar JOSE
+/*export const createGameController = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const game = request.body as any;
+
+    const requiredFields = ['player1_id', 'player2_id', 'player1_score', 'player2_score', 'winner_id'];
+
+    for (const field of requiredFields) {
+      if (game[field] === undefined || game[field] === null) {
+        return reply.status(400).send({ 
+          error: `${field} is required. Received: ${game[field]}` 
+        });
+      }
+    }
+
+    console.log('Valid data received. Creating game:', game);
+    const createdGame = await DBClient.createGame(game);
+
+    if (!createdGame || !createdGame.player1_id) {
+      return reply.status(500).send({ error: 'Game created but failed to return player1_id' });
+    }
+
+    return reply.status(201).send(createdGame);
+  } catch (error) {
+    console.error('Error creating game:', error);
+    return reply.status(500).send({ error: 'Error al crear el juego' });
+  }
+};*/

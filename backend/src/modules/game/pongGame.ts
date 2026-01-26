@@ -1,67 +1,192 @@
 import { FastifyInstance } from "fastify";
 import { Pong } from "./Pong.js";
+import  { Player } from "./Player.js"
 
-
-export async function pongGame(fastify: FastifyInstance) {
-  // one game instance shared by everyone
-  const game = new Pong(800, 600);
-  let players: any[] = [];
-
-  console.log("SERVER CHECK: Multiplayer Pong logic is starting...");
-
-  fastify.get("/ws/pong", { websocket: true }, (connection, req) => {
-    const socket = (connection as any).socket || connection;
-    
-    // Check if player can join
-    if (players.length < 2) {
-      players.push(socket);
-      const isLeft = players.indexOf(socket) === 0;
-      socket.send(JSON.stringify({ type: "ASSIGN_SIDE", side: isLeft ? "LEFT" : "RIGHT" }));
-      fastify.log.info(`Player joined as ${isLeft ? "LEFT" : "RIGHT"}`);
-    } else {
-      socket.send(JSON.stringify({ type: "INFO", msg: "Game full, you are spectating" }));
-      players.push(socket);
-      fastify.log.info("Spectator joined");
-    }
-
-    // Shared Game Loop: Sends the ball/paddle positions to EVERYONE
-    const gameInterval = setInterval(() => {
-      game.update();
-      const state = JSON.stringify({
-        type: "STATE_UPDATE",
-        state: game.getGameState()
-      });
-
-      players.forEach(p => {
-        if (p.readyState === 1) p.send(state);
-      });
-    }, 1000 / 60);
-
-    socket.on("message", (message: string) => {
+export function player_controls(player: Player, game: Pong){
+    player.webSocket.on("message", (message: string) => {
       try {
         const data = JSON.parse(message.toString());
         if (data.type === "KEY_EVENT") {
           const { key, pressed } = data;
-          const playerIndex = players.indexOf(socket);
-
           // Only the correct player can move their specific paddle
-          if (playerIndex === 0) { // First person to connect (Left)
+          if (player.side === -1) { // First person to connect (Left)
             if (key === 'w' || key === 'W') game.leftPaddle.moveUp = pressed;
             if (key === 's' || key === 'S') game.leftPaddle.moveDown = pressed;
-          } else if (playerIndex === 1) { // Second person to connect (Right)
+          } else if (player.side === 1) { // Second person to connect (Right)
             if (key === 'ArrowUp') game.rightPaddle.moveUp = pressed;
             if (key === 'ArrowDown') game.rightPaddle.moveDown = pressed;
           }
         }
       } catch (e) {
-        fastify.log.error("Failed to parse message");
+        console.log("Failed to parse message");
       }
     });
+  }
 
-    socket.on("close", () => {
-      clearInterval(gameInterval);
-      players = players.filter(p => p !== socket);
-      fastify.log.info("A user disconnected");
+export async function game_end(game: Pong, player1: Player, player2: Player) {
+  let winnerSide = game.score.whoWon();
+  let winner = player1;
+  if (winnerSide === "right") {
+    winner = player2;
+  }
+  let winnerName = winner.userName;
+  // Data to be send to DATABASE
+  const gameData = {
+    player1_id: Number(player1.id),
+    player2_id: Number(player2.id),
+    winner_id: Number(winner.id),
+    player1_score: Number(game.score.getLeftScore()),
+    player2_score: Number(game.score.getRightScore())
+  };
+  
+  try {
+    const response = await fetch("https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/games", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(gameData),
+      signal: AbortSignal.timeout(5000) // 5 second timeout so game doesn't hang forever
     });
+
+    if (response.ok) {
+      const savedGame = await response.json();
+      console.log(`🏆 DB Success: Game #${savedGame.id} saved.`);
+    } else {
+      // Handle specific HTTP errors (400, 401, 500, etc.)
+      const errorText = await response.text();
+      console.error(`❌ DB Rejected (${response.status}):`, errorText);
+    }
+  } catch (err: any) {
+    if (err.name === 'TimeoutError') {
+      console.error("❌ DB Error: The request timed out.");
+    } else {
+      console.error("❌ DB Network Error: Connection refused or DNS failure.");
+    }
+  }
+  // inform each front-end that the game is over
+  const finalMsg = JSON.stringify({ type: "GAME_OVER", winnerName});
+  // check if the socket still open before sending, 1 == OPEN
+  [player1, player2].forEach(p => {
+    if (p.webSocket.readyState === 1) {
+      p.webSocket.send(finalMsg);
+      p.webSocket.close();
+    }
+  });
+  //player1.webSocket.send(finalMsg);
+  //player2.webSocket.send(finalMsg);
+  //player1.webSocket.close();
+  //player2.webSocket.close();
+}
+
+
+export function close_socket_waiting(player: Player, players: any[]) {
+  player.webSocket.on("close", () => {
+    const index = players.indexOf(player);
+
+    if (index !== -1) {
+      players.splice(index, 1);
+      console.log(`Player ${player.userName} removed from waiting list. Queue size: ${players.length}`);
+    } else {
+      // This happens if they were already moved to a game before the socket closed
+      console.log(`Player ${player.userName} disconnected, but was not in the waiting list.`);
+    }
   });
 }
+
+export function close_game(player: Player, gameInterval: NodeJS.Timeout, game: Pong) {
+  player.webSocket.on("close", () => {
+    clearInterval(gameInterval);
+    // send message that the opponent disconected, coward
+    if (!game.endGame()){
+      console.log(`Player ${player.userName} disconnected. Game stopped.`);
+      const msg = JSON.stringify({ type: "DISCONNECTED", username: player.userName});
+      if (game.player1.webSocket.readyState === 1) {
+        game.player1.webSocket.send(msg);
+      }
+      if (game.player2.webSocket.readyState === 1) {
+        game.player2.webSocket.send(msg);
+      }
+    }
+  });
+}
+
+  export function start_game(player1: Player, player2: Player){
+    const game = new Pong(800, 600, player1, player2);
+    player_controls(player1, game);
+    player_controls(player2, game);
+
+    // Inform players of their sides -- is it necessary?
+    const namesPayload = JSON.stringify({ 
+      type: "ASSIGN_SIDE", 
+      leftName: player1.userName, 
+      rightName: player2.userName 
+    });
+    player1.webSocket.send(namesPayload);
+    player2.webSocket.send(namesPayload);
+
+
+    const gameInterval = setInterval(() => {
+      game.update();
+      if (game.endGame()) {
+        game_end(game, player1, player2);
+        clearInterval(gameInterval);
+        return;
+      }
+      const state = JSON.stringify({
+        type: "STATE_UPDATE",
+        state: game.getGameState()
+      });
+
+      player1.webSocket.send(state);
+      player2.webSocket.send(state);
+    }, 1000 / 60);
+
+    close_game(player1, gameInterval, game);
+    close_game(player2, gameInterval, game);
+  }
+
+
+let players: any[] = [];
+console.log("SERVER CHECK: Multiplayer Pong logic is starting...");
+  
+export async function pongGame(
+	socket: any,
+	user: {
+		id: number;
+		username: string;
+		nickname: string;
+	}
+) {
+      const isAlreadyWaiting = players.some(p => p.id === user.id);
+      if (isAlreadyWaiting) {
+        console.log(`⚠️ User ${user.username} tried to join twice.`);
+        socket.send(JSON.stringify({ 
+            type: "ERROR", 
+            message: "You are already in the matchmaking queue!" 
+        }));
+        //close the socket maybe redirect to main page?
+        socket.close();
+        return;
+      }
+      console.log(`✅ Verified User: ${user.username} (ID: ${user.id})`);
+
+      const player = new Player(user.id, socket, user.nickname, user.username, -1);
+      players.push(player);
+      close_socket_waiting(player, players);
+      if (players.length >= 2){
+        // shift first come first go and deletes the player from the array
+        let player1 = players.shift()!;
+        let player2 = players.shift()!;
+        player2.side = 1;
+        const state = JSON.stringify({
+        type: "PLAY"
+        });
+      player1.webSocket.send(state);
+      player2.webSocket.send(state);
+      start_game(player1, player2);
+
+      } else {
+        socket.send(JSON.stringify({ type: "INFO", msg: "Waiting for opponent..." }));
+
+      }
+      return;
+    };
