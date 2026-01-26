@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode'
 
-const jwt = localStorage.getItem('token');
+//const jwt = localStorage.getItem('token');
 
-const decodedHeader = jwtDecode(jwt);
-console.log(decodedHeader);
+//const decodedHeader = jwtDecode(jwt);
+//console.log(decodedHeader);
 
 </script>
 

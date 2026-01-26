@@ -17,21 +17,23 @@ export class Ball {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
-
-		//initial movement - random in future needed for x and y
 		this.speed = 20;
+		this.reset(); // reset the ball start side and y height
 		this.speedY = 7;//Math.random();
 		this.speedX = 4;
 	}
 
 	//nuevo saque
 	reset(): void {
-		//poner randomizer
 		this.x = 0; 
-		this.y = 0; // randowm in future
+		// Math.random gives a number range between 0 and 1, this way y can be between -0.5 and +0.5 for y
+		this.y = (Math.random() - 0.5) * 300;
+		// left or right
+		const directionX = Math.random() > 0.5 ? 1 : -1;
+		this.speedX = 4 * directionX;
+		//randomize vertical angle range -3 to +3px
+		this.speedY = (Math.random() - 0.5) * 6;
 		this.speed = 20;
-		this.speedY = 7;
-		this.speedX = 4;
 	}
 
 	setX(pos: number): void {

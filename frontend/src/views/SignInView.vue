@@ -39,7 +39,7 @@ const handleSubmit = async () => {
   console.log('Submitting login:', { username: name.value, password: password.value })
   
   try {
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch('https://localhost:8443/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -53,7 +53,6 @@ const handleSubmit = async () => {
       console.log('Signed in successfully ✅', data)
 
       // Guardar token y username
-      localStorage.setItem('token', data.accessToken)
       localStorage.setItem('username', name.value)
 
       isAuthenticated.value = true
@@ -67,17 +66,18 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     console.error('Network error signing in:', error)
-  }
+	}
 }
+      
 
 // Función para cerrar sesión
 const signOut = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('username')
-  isAuthenticated.value = false
-  username.value = ''
-  console.log('After logout - username.value:', username.value)
-  console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
+	localStorage.removeItem('username')
+	isAuthenticated.values = false
+	username.value = ''
+	//hacer POST de logout aqui
+	console.log('After logout - username.value:', username.value)
+	console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
 }
 </script>
 
