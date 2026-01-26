@@ -10,12 +10,14 @@ let socket: WebSocket | null = null;
 
 // Send input to backend
 const sendInput = (key: string, pressed: boolean) => {
+	console.log("pressing key ", key);
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({
       type: "KEY_EVENT",
       key: key,
       pressed: pressed
     }));
+	console.log("sent key ", key);
   }
 };
 
@@ -35,7 +37,7 @@ onMounted(() => {
 
 //  socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
 // socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
-const socket = new WebSocket("wss://localhost:8443/api/ws/play");
+socket = new WebSocket("wss://localhost:8443/api/ws/play");
 
 /*
 const checkPrehandler = async () => {
