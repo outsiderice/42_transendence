@@ -22,17 +22,17 @@ const isAuthenticated = ref(false)
 const username = ref('')
 
 // Inicializa desde localStorage
-watchEffect(() => {
-  const token = localStorage.getItem('token')
-  const storedUsername = localStorage.getItem('username') || ''
-  isAuthenticated.value = !!token
-  username.value = storedUsername
+//watchEffect(() => {
+//  const token = localStorage.getItem('token')
+//  const storedUsername = localStorage.getItem('username') || ''
+//  isAuthenticated.value = !!token
+//  username.value = storedUsername
 
-  console.log('watchEffect token:', token)
-  console.log('watchEffect storedUsername:', storedUsername)
-  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
-  console.log('watchEffect username:', username.value)
-})
+  //console.log('watchEffect token:', token)
+//  console.log('watchEffect storedUsername:', storedUsername)
+//  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
+//  console.log('watchEffect username:', username.value)
+//})
 
 // Función para iniciar sesión
 const handleSubmit = async () => {
