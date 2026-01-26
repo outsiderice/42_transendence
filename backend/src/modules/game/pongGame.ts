@@ -156,9 +156,6 @@ export async function pongGame(
 		nickname: string;
 	}
 ) {
-
-
-
       const isAlreadyWaiting = players.some(p => p.id === user.id);
       if (isAlreadyWaiting) {
         console.log(`⚠️ User ${user.username} tried to join twice.`);
