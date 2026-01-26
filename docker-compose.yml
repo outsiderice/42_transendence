@@ -53,6 +53,7 @@ services:
           path: ./backend/package.json
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "5173:5173"
     develop:
