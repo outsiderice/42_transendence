@@ -20,6 +20,7 @@ const {
 
 // Función para gestionar envío
 const handleSubmit = async () => {
+  console.log("DEBUG ENV:", import.meta.env);
   console.log('Submitting form with:', { name: name.value, password: password.value });
  // if (validate()) {
     console.log('Form is valid, proceeding to submit...');
