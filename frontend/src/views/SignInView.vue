@@ -4,6 +4,7 @@ import PongButton from '../components/PongButton.vue'
 import PongToggleButton from '../components/PongToggleButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
+import { useRouter } from 'vue-router'
 
 const { newsletter } = useToggles()
 
@@ -33,11 +34,16 @@ const handleSubmit = async () => {
         }),
         credentials: 'include',
       });
+	  console.log(response);
       if (response.ok) {
-        console.log('Signed in successfully');
-      const data = await response.json();
-      localStorage.setItem('token', data.accessToken);
-      console.log(data.accessToken);
+        console.log('Signed in successfully!!!');
+      	const data = await response.json();
+		localStorage.setItem('token', data.accessToken);
+		console.log(data.accessToken);
+		console.log("hola");
+		let patata = useRouter();
+		patata.push({ path: '' })
+		console.log("adios");
       }
     } catch (error) {
       console.error('Error signing in:', error);
