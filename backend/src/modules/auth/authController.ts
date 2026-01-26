@@ -154,14 +154,9 @@ export const refreshTokenController = async (
 //      nickname:string;
 //      type?: string;
 //    } 
-	try {
-    // ✅ This will throw if token is invalid or expired
-    payload = jwt.verify(refreshToken, process.env.JWT_SECRET) as typeof payload;
+	console.log(process.env.JWT_SECRET);
+    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
     console.log('Payload decoded:', payload);
-  	} catch (err) {
-    console.error('Failed to verify refresh token:', err);
-    return reply.code(401).send({ error: 'Invalid or expired refresh token' });
-  	};
 
 	console.log('All cookies received:', request.cookies);
 	console.log(payload.type, " IS WRONG\n");
@@ -188,7 +183,8 @@ export const refreshTokenController = async (
     });
 
     return reply.code(204).send();
-  } catch {
+  } catch(err) {
+	console.error("Somehting went bonkers: ", err);
     return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
 };

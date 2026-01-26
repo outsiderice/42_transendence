@@ -12,6 +12,8 @@ export default fp(async function (fastify: FastifyInstance) {
 	},
   });
 
+	console.log(process.env.JWT_SECRET);
+
   // --- Authenticate API requests ---
   fastify.decorate("authenticateApi", async function(request: FastifyRequest, reply: FastifyReply) {
     try {
