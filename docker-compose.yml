@@ -56,6 +56,10 @@ services:
     container_name: frontend
     ports:
       - "5173:5173"
+    environment:
+      - PORT=${FRONTEND_PORT}
+      - HOST=${FRONTEND_HOST}
+      - PROXY=${PROXY_URL}
     develop:
       watch:
         - path: ./frontend
