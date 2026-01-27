@@ -19,7 +19,7 @@ function checkEnvVars()
 const refreshAuth = async () => {
 	console.log("refresh called");
 	try {
-		const response = await fetch("https://localhost:8443/api/auth/refresh", {
+		const response = await fetch("https" + import.meta.env.VITE_URL + "/api/auth/refresh", {
 			method:	'POST',
 			credentials: 'include',
 		})

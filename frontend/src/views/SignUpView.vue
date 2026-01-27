@@ -54,7 +54,7 @@ const handleSubmit = async () => {
 
   try {
     const response = await fetch(
-      'http://localhost:3000/auth/register',
+      'https' + import.meta.env.VITE_URL + '/auth/register',
       {
         method: 'POST',
         headers: {
