@@ -39,7 +39,7 @@ const handleSubmit = async () => {
   console.log('Submitting login:', { username: name.value, password: password.value })
   
   try {
-    const response = await fetch('https://localhost:8443/api/auth/login', {
+    const response = await fetch('https' + import.meta.env.VITE_URL + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
