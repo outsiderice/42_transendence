@@ -6,6 +6,15 @@ import {useRouter} from 'vue-router';
 import {onMounted } from 'vue';
 import {onUpdated } from 'vue';
 
+// Funcion para mirar si teneis todas las variables de entorno. Quitar antes de presentar
+function checkEnvVars()
+{
+	console.log("ENV VARS:\n");
+	console.log("PORT: ", import.meta.env.VITE_PORT);
+	console.log("HOST: ", import.meta.env.VITE_HOST);
+	console.log("URL:  ", import.meta.env.VITE_URL);
+}
+
 //call to refresh token in case auth has expired
 const refreshAuth = async () => {
 	console.log("refresh called");
@@ -60,6 +69,7 @@ function redirect_if_not_loged_in()
 }
 
 onMounted(() => {
+	checkEnvVars();
 	refreshAuth();
 	redirect_if_not_loged_in();
 })
