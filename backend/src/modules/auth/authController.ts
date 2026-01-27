@@ -142,24 +142,12 @@ export const refreshTokenController = async (
 
 	const refreshToken = request.cookies.refreshToken;
 	
-	console.log("is there a token?\n");
 	if (!refreshToken){
 		return reply.code(401).send({error: "No refresh token"});
 	}
 
-	console.log("THERE'S A TOKEN\n");
-//    const payload = await jwt.verify(refreshToken, process.env.JWT_SECRET) as {
-//      id: number;
-//      username: string;
-//      nickname:string;
-//      type?: string;
-//    } 
-	console.log(process.env.JWT_SECRET);
     const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    console.log('Payload decoded:', payload);
 
-	console.log('All cookies received:', request.cookies);
-	console.log(payload.type, " IS WRONG\n");
     if (payload.type !== 'refresh') {
       return reply.code(401).send({ error: 'Invalid refresh token' });
     }
@@ -181,10 +169,11 @@ export const refreshTokenController = async (
       sameSite: 'none',
       secure: true,
     });
-
+	
+	console.log("Auth token refreshed successfull\n");
     return reply.code(204).send();
   } catch(err) {
-	console.error("Somehting went bonkers: ", err);
+	console.error("Refresh failed: ", err);
     return reply.code(401).send({ error: 'Invalid or expired refresh token' });
   }
 };
