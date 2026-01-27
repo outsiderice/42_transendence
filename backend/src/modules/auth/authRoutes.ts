@@ -40,7 +40,7 @@ export const CreateUserSchema = {
 //controller bodies types
 export type RegisterUserBody = {
   username: string;
-  email: string;
+  email: 	string;
   password: string;
 };
 
@@ -50,8 +50,9 @@ export type LoginUserBody = {
 };
 
 export type SafeUserResponese = {
+  id:		number;
   username: string;
-  email: string;
+  email: 	string;
 };
 
 //routes

@@ -6,11 +6,20 @@ import {useRouter} from 'vue-router';
 import {onMounted } from 'vue';
 import {onUpdated } from 'vue';
 
+// Funcion para mirar si teneis todas las variables de entorno. Quitar antes de presentar
+function checkEnvVars()
+{
+	console.log("ENV VARS:\n");
+	console.log("PORT: ", import.meta.env.VITE_PORT);
+	console.log("HOST: ", import.meta.env.VITE_HOST);
+	console.log("URL:  ", import.meta.env.VITE_URL);
+}
+
 //call to refresh token in case auth has expired
 const refreshAuth = async () => {
 	console.log("refresh called");
 	try {
-		const response = await fetch("https://localhost:8443/api/auth/refresh", {
+		const response = await fetch("https" + import.meta.env.VITE_URL + "/api/auth/refresh", {
 			method:	'POST',
 			credentials: 'include',
 		})
@@ -60,6 +69,7 @@ function redirect_if_not_loged_in()
 }
 
 onMounted(() => {
+	checkEnvVars();
 	refreshAuth();
 	redirect_if_not_loged_in();
 })

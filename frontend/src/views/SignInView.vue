@@ -22,24 +22,24 @@ const isAuthenticated = ref(false)
 const username = ref('')
 
 // Inicializa desde localStorage
-watchEffect(() => {
-  const token = localStorage.getItem('token')
-  const storedUsername = localStorage.getItem('username') || ''
-  isAuthenticated.value = !!token
-  username.value = storedUsername
+//watchEffect(() => {
+//  const token = localStorage.getItem('token')
+//  const storedUsername = localStorage.getItem('username') || ''
+//  isAuthenticated.value = !!token
+//  username.value = storedUsername
 
-  console.log('watchEffect token:', token)
-  console.log('watchEffect storedUsername:', storedUsername)
-  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
-  console.log('watchEffect username:', username.value)
-})
+  //console.log('watchEffect token:', token)
+//  console.log('watchEffect storedUsername:', storedUsername)
+//  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
+//  console.log('watchEffect username:', username.value)
+//})
 
 // Función para iniciar sesión
 const handleSubmit = async () => {
   console.log('Submitting login:', { username: name.value, password: password.value })
   
   try {
-    const response = await fetch('https://localhost:8443/api/auth/login', {
+    const response = await fetch('https' + import.meta.env.VITE_URL + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
