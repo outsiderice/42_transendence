@@ -61,6 +61,7 @@ export const registerUserController = async (
   
     //evita devolver el password en la respuesta
     const safeUser: SafeUserResponese = {
+	  id:		newUser.id,
       username: newUser.username,
       email: newUser.email,
     };
@@ -115,6 +116,7 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
 
     const safeUser: SafeUserResponese = {
+	  id: existingUsername.id,
       username: existingUsername.username,
       email: existingUsername.email,
     };
