@@ -230,7 +230,7 @@ export default async (app: FastifyInstance) => {
       }
       const changes = UsersService.deleteUser(id);
 
-      if (changes === 0) {
+      if (changes === false) {
         return reply.status(404).send({
           error: 'Usuario no encontrado',
         });
