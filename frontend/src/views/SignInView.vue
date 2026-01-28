@@ -84,7 +84,7 @@ const signOut = async () => {
 			console.log("User logged out");
 		}
 	} catch (err){
-		console.error("Error loggin out: ", err);
+		console.error("Error logging out: ", err);
 	}
 	console.log('After logout - username.value:', username.value)
 	console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
