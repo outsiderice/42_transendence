@@ -1,100 +1,10 @@
 
-todo lists.
+todo list:
 
-current task.
-- [ ] make the donut char component.
-	- [ ] make the chart.
-		- [x] make some boiler plait.
-		- [ ] add semicirles.
-			- [x] make a working canvas.
-			- [ ] create a cemicircle.
-
-
-
-daily tastks.
-- [x] design properly the page.
-	- [x] components reusable components.
-		- [x] button.
-		- [x] text field.
-		- [x] toggle.
-		- [x] user card.
-		- [x] achivments progres bar.
-		- [x] achivment icon.
-		- [x] achivment card.
-		- [x] donut char for comparing wins and losses or points in a game.
-		- [x] game history card.
-		- [x] per game cards.
-- [ ] make components.
-	- [ ] user card.
-	- [ ] modal image.
-	- [ ] achivment progress bar.
-	- [ ] achivment items.
-	- [ ] achivment card.
-	- [ ] donut chart.
-	- [ ] individual game cards.
-	- [ ] game historic card.
-- [ ] merge into the main branch all the components.
-
-things to do.
-
-- [x] set up the project.
-	- [x] set up vue.js.
-	- [x] dockerize it.
-	- [x] add tailwind css.
-	- [x] add a css file with some variables for stuff like the color palet, typografy and more.
-- [ ] make pages and components.
-	- [ ] pages or views.
-		- [ ] home page.
-		- [ ] terms of service page.
-		- [ ] privacy policy page.
-		- [ ] sign in page.
-		- [ ] sign up page.
-		- [ ] local game page.
-		- [ ] online game page.
-		- [ ] user search page.
-		- [ ] profile page.
-		- [ ] profile edit page.
-	- [ ] components.
-		- [ ] title.
-		- [x] links.
-		- [x] button.
-		- [x] text field.
-		- [x] togle button.
-		- [ ] separators.
-		- [ ] user cards.
-		- [ ] achivment progress bar.
-		- [ ] achivment items.
-		- [ ] achivment card.
-		- [ ] donut chart.
-		- [ ] individual game cards.
-		- [ ] game historic card.
-		- [ ] navigation bar.
-		- [ ] scroll bar.
-
-project elements.
-
-pages or views:
-- home page.
-- terms of service page.
-- privacy policy page.
-- sign in page.
-- sign up page.
-- local game page.
-- online game page.
-- user search page.
-- profile page.
-- profile edit page.
-
-components:
-- button.
-- text field (text input).
-- togle button.
-- user cards.
-- donut chart.
-- individual games cards.
-- all games card.
-- achivment progress bar.
-- achivment items.
-- achivment card.
-- navigation bar.
-- scroll bar.
+- [x] store the sesion of the user in a pinia store.
+- [x] persist the data of the pinia store.
+- [ ] restrict all the pages except for loged in users.
+- [ ] make the front end update its online status to the backend.
+- [ ] update the token periodicaly.
+- [ ] rethink the web app layout.
+- [ ] ...

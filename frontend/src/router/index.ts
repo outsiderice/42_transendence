@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useSessionStore } from '@/state/user_session.ts'
 
 
 const router = createRouter({
@@ -70,5 +71,22 @@ const router = createRouter({
     },
   ],
 })
+
+//
+//	restricting the web app to all users that aren't signed in.
+//
+
+console.log(router);
+
+router.beforeEach((to, from) => {
+	const session = useSessionStore();
+
+	if (to.name === "signin" || to.name === "signup") {
+		return ;
+	}
+	if ((to.name !== "signin" && to.name !== "signup") && !session.getIsSignedIn) {
+		return { name: "signin" };
+	}
+});
 
 export default router

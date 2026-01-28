@@ -5,6 +5,15 @@ import FooterComponent from './components/FooterComponent.vue';
 import {useRouter} from 'vue-router';
 import {onMounted } from 'vue';
 import {onUpdated } from 'vue';
+import { useSessionStore } from '@/state/user_session.ts'
+
+console.log("this 	");
+
+const session = useSessionStore();
+
+console.log("this is the session");
+console.log(session);
+console.log(session.getIsSignedIn);
 
 // Funcion para mirar si teneis todas las variables de entorno. Quitar antes de presentar
 function checkEnvVars()
@@ -85,6 +94,11 @@ onMounted(() => {
 //credentials.increment();
 //
 //console.log(credentials.count);
+
+//import { useSessionStore } from '@/state/user_session.ts'
+//
+//const session = useSessionStore();
+//console.log(session);
 
 </script>
 
