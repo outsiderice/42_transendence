@@ -38,9 +38,9 @@ const router = useRouter();
 // Función para iniciar sesión
 const handleSubmit = async () => {
   console.log('Submitting login:', { username: name.value, password: password.value })
-  
+  console.log(window.location);
   try {
-    const response = await fetch('https' + import.meta.env.VITE_URL + '/api/auth/login', {
+    const response = await fetch('https://' + window.location.host + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -72,7 +72,7 @@ const signOut = async () => {
 	isAuthenticated.values = false
 	username.value = ''
 	try{
-		const response = await fetch("https" + import.meta.env.VITE_URL + "/api/auth/logout", {
+		const response = await fetch("https://" + window.location.host + "/api/auth/logout", {
 			method: 'POST',
 			credentials: 'include',
 		})

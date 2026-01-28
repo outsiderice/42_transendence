@@ -3,7 +3,7 @@ import { ref, computed  } from 'vue';
 
 export const useSessionStore = defineStore( 'session', () => {
 
-	fetch('https' + import.meta.env.VITE_URL + '/api/auth/refresh', {
+	fetch('https://' + window.location.host + '/api/auth/refresh', {
 		method:'POST',
 	}).then(async (response) => {
 		if (response.ok) {
@@ -11,7 +11,6 @@ export const useSessionStore = defineStore( 'session', () => {
 			setSession(result.safeUser.id, result.safeUser.username);
 		}
 	});
-	
 
 	const isSignedIn = ref(false);
 	const userName = ref('');
@@ -26,6 +25,7 @@ export const useSessionStore = defineStore( 'session', () => {
 		isSignedIn.value = true
 		userId.value = user_id;
 		userName.value = user_name;
+
 	};
 
 
