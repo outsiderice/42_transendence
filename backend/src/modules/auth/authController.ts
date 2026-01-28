@@ -189,10 +189,10 @@ export const refreshTokenController = async (
 /**
  * POST /logout - quita las cookies de session
  */
-export const logoutUserController(
+export const logoutUserController = async (
 	request:	FastifyRequest,
 	reply:		FastifyReply,
-) {
+) => {
 	reply
 	.setCookie('accessToken', '', {
 		path: '/',
@@ -210,7 +210,7 @@ export const logoutUserController(
 	})
 	.status(200)
 	.send(null)
-}
+};
 
 // /**
 //  * GET /callback - OAuth callback

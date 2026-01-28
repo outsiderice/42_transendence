@@ -1,8 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import {
- registerUserController,
-  loginUserController,
-  refreshTokenController,
+	registerUserController,
+ 	loginUserController,
+ 	refreshTokenController,
+	logoutUserController,
 //  getCallbackController
 } from './authController';
 
@@ -109,14 +110,21 @@ export const authRoutes = async (app: FastifyInstance) => {
 		},
       }, refreshTokenController);
 
-  app.post<{ } }>('/auth/logout', {
-    schema: {
-      tags: ['Auth'],
-      },
-      response: {
-              	200: { description: "User succesfully logged out", type: "null"},
-		},
-      }, logoutUserController);
+	app.post(
+ 	 '/auth/logout',
+ 	 {
+  	  schema: {
+     	 tags: ['Auth'],
+      	response: {
+        	200: {
+         	 description: 'User successfully logged out',
+          	type: 'null',
+        	},
+      	},
+    	},
+  	},
+  	logoutUserController
+	);
 
 //   // GITHUB OAUTH CALLBACK
 //   app.get('/auth/github/callback', {
