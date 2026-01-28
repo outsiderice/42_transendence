@@ -27,6 +27,15 @@ export const UserSafeSchema = {
   required: ['id', 'username', 'email'],
 };
 
+export const UserRefreshSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    username: { type: 'string' },
+  },
+  required: ['id', 'username'],
+};
+
 export const CreateUserSchema = {
   type: 'object',
   required: ['username', 'email', 'password'],
@@ -53,6 +62,11 @@ export type SafeUserResponese = {
   id:		number;
   username: string;
   email: 	string;
+};
+
+export type UserRefreshResponese = {
+  id:		number;
+  username: string;
 };
 
 //routes
@@ -90,18 +104,10 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       },
       response: {
-              204: {
-				description: "Access token refreshed succesfully",
-                type: "null",
-              },
-				401:{
-					type: "object",
-					properties: {
-						error: {type: "string"},
-				},
+              	201: {UserRefreshSchema: {type: 'object'}},
+        		401: { type: 'object', properties: { error: { type: 'string' } } },
 		},
-      },
-    },refreshTokenController);
+      }, refreshTokenController);
 
 //   // GITHUB OAUTH CALLBACK
 //   app.get('/auth/github/callback', {

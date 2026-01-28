@@ -171,12 +171,18 @@ export const refreshTokenController = async (
       sameSite: 'none',
       secure: true,
     });
+
+	const safeUser: UserRefreshResponse = {
+		id:	payload.id,
+		username: payload.username,
+	};
 	
 	console.log("Auth token refreshed successfull\n");
-    return reply.code(204).send();
+	console.log(safeUser);
+    reply.status(201).send({safeUser});
   } catch(err) {
 	console.error("Refresh failed: ", err);
-    return reply.code(401).send({ error: 'Invalid or expired refresh token' });
+    return reply.status(401).send({ error: 'Invalid or expired refresh token' });
   }
 };
 
