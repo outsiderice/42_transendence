@@ -104,10 +104,19 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       },
       response: {
-              	201: {UserRefreshSchema: {type: 'object'}},
+              	201: { UserRefreshSchema: {type: 'object'}},
         		401: { type: 'object', properties: { error: { type: 'string' } } },
 		},
       }, refreshTokenController);
+
+  app.post<{ } }>('/auth/logout', {
+    schema: {
+      tags: ['Auth'],
+      },
+      response: {
+              	200: { description: "User succesfully logged out", type: "null"},
+		},
+      }, logoutUserController);
 
 //   // GITHUB OAUTH CALLBACK
 //   app.get('/auth/github/callback', {

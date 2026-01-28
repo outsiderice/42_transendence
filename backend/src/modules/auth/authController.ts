@@ -186,6 +186,32 @@ export const refreshTokenController = async (
   }
 };
 
+/**
+ * POST /logout - quita las cookies de session
+ */
+export const logoutUserController(
+	request:	FastifyRequest,
+	reply:		FastifyReply,
+) {
+	reply
+	.setCookie('accessToken', '', {
+		path: '/',
+		httpOnly: true,
+		secure: true,
+		sameSite: true,
+		maxAge: 0,
+	})
+	.setCookie('refreshToken', '', {
+		path: '/api/auth/refresh',
+		httpOnly: true,
+		secure: true,
+		sameSite: true,
+		maxAge: 0,
+	})
+	.status(200)
+	.send(null)
+}
+
 // /**
 //  * GET /callback - OAuth callback
 //  */
