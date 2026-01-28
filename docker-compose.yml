@@ -4,7 +4,7 @@ services:
     container_name: db-service
     volumes:
       - ./db/data:/app/data
-    ports:
+    expose:
       - "3001:3001"
     environment:
       - DB_SERVICE_PORT=${DB_SERVICE_PORT}
@@ -29,8 +29,8 @@ services:
   backend:
     build: ./backend
     container_name: backend
-    ports:
-      - "3000:3000"   # change later?
+    expose:
+      - "3000:3000"
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
@@ -51,10 +51,11 @@ services:
             - Dockerfile
         - action: rebuild
           path: ./backend/package.json
+
   frontend:
     build: ./frontend
     container_name: frontend
-    ports:
+    expose:
       - "5173:5173"
     environment:
       - PORT=${FRONTEND_PORT}
