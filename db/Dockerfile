@@ -12,4 +12,5 @@ COPY . .
 
 EXPOSE 3001
 
-CMD ["npx", "tsx", "watch", "src/server.ts"]
+#CMD ["npx", "tsx", "watch", "src/server.ts"]
+CMD ["npm", "build"]

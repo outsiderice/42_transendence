@@ -26,4 +26,5 @@ COPY . .
 EXPOSE 5173
 
 # Use a default command, can be overridden in Docker compose.yml file
-CMD [ "npm", "run", "dev", "--", "--host" ]
+#CMD [ "npm", "run", "dev", "--", "--host" ]
+CMD [ "npm", "build" ]
