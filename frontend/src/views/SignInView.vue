@@ -71,11 +71,21 @@ const handleSubmit = async () => {
       
 
 // Función para cerrar sesión
-const signOut = () => {
+const signOut = async () => {
 	localStorage.removeItem('username')
 	isAuthenticated.values = false
 	username.value = ''
-	//hacer POST de logout aqui
+	try{
+		const response = await fetch("https" + import.meta.env.VITE_URL + "/api/auth/logout", {
+			method: 'POST',
+			credentials: 'include',
+		})
+		if (response.ok){
+			console.log("User logged out");
+		}
+	} catch (err){
+		console.error("Error loggin out: ", err);
+	}
 	console.log('After logout - username.value:', username.value)
 	console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
 }
