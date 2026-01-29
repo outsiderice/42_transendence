@@ -55,9 +55,9 @@ const handleTouch = (e: TouchEvent, pressed: boolean) => {
 
   if (mySide.value === "LEFT") {
     // If touch is on the left side of the physical phone (Visual T
-    sendInput(touchX < middle ? "w" : "s", true);
+    sendInput(touchX > middle ? "w" : "s", true);
   } else {
-    sendInput(touchX < middle ? "ArrowUp" : "ArrowDown", true);
+    sendInput(touchX > middle ? "ArrowUp" : "ArrowDown", true);
   }
 };
 
