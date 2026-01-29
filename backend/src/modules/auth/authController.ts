@@ -57,6 +57,7 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
+	nickname:username,	
     });
   
     //evita devolver el password en la respuesta
