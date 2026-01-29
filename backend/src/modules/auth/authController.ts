@@ -149,7 +149,11 @@ export const refreshTokenController = async (
 	}
 
     const payload = jwt.verify(refreshToken, process.env.JWT_SECRET as string);
-
+//type check because typescript is stupid
+	if (typeof payload === "string") {
+  		return reply.status(401).send({ message: "Invalid token payload" });
+	}
+//the actual check we wanted to do
     if (payload.type !== 'refresh') {
       return reply.code(401).send({ error: 'Invalid refresh token' });
     }
@@ -172,7 +176,7 @@ export const refreshTokenController = async (
       secure: true,
     });
 
-	const safeUser: UserRefreshResponse = {
+	const safeUser = {
 		id:	payload.id,
 		username: payload.username,
 	};

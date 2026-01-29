@@ -65,11 +65,6 @@ export type SafeUserResponese = {
   email: 	string;
 };
 
-export type UserRefreshResponese = {
-  id:		number;
-  username: string;
-};
-
 //routes
 export const authRoutes = async (app: FastifyInstance) => {
   // REGISTER USER
@@ -103,12 +98,12 @@ export const authRoutes = async (app: FastifyInstance) => {
   app.post<{ Body: { refreshToken: string } }>('/auth/refresh', {
     schema: {
       tags: ['Auth'],
-      },
       response: {
               	201: { UserRefreshSchema: {type: 'object'}},
         		401: { type: 'object', properties: { error: { type: 'string' } } },
+			},
 		},
-      }, refreshTokenController);
+	}, refreshTokenController);
 
 	app.post(
  	 '/auth/logout',
