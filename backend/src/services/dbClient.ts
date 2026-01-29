@@ -155,4 +155,23 @@ static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<
     });
     return await res.json();
   }
+
+  static async getAllGames(user_1: number): Promise<Game[]> {
+  try {
+    const res = await dbFetch(`/api/games?user_1=${user_1}`);
+    //if (!res.ok) return []; // fallo HTTP → array vacío
+
+    const data = await res.json();
+    console.log('Data received from /games:', data);
+    //🔒 VALIDACIÓN EN RUNTIME
+    if (Array.isArray(data)) {
+      return data as Game[];
+    }
+
+    // Si viene cualquier otra cosa (objeto vacío, undefined, etc.)
+    return [];
+  } catch {
+    return [];
+  }
+}
 }

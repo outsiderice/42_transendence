@@ -64,3 +64,28 @@ export const createGameController = async (
     return reply.status(500).send({ error: 'Error al crear el juego' });
   }
 };*/
+
+export const getAllGamesController = async (
+  request: FastifyRequest<{ Querystring: { user_1: number } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { user_1 } = request.query;
+    const user = await DBClient.getUserById(user_1);
+
+    if (!user) {
+      return reply.status(404).send({
+        error: 'Usuario no encontrado',
+      });
+    }
+    const games = await DBClient.getAllGames(user_1);
+
+    reply.status(200).send(games);
+  } catch (error) {
+    console.error('Error in getAllGamesController:', error);
+    reply.status(500).send({
+      error: 'Error al obtener juegos',
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
