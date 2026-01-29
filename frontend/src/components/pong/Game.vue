@@ -2,8 +2,10 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import GameCanvas from './GameCanvas.vue';
 import type { GameState } from './GameState';
-
 const currentGameState = ref<GameState | null>(null);
+const msgPong = ref<string | null>(null);
+const leftPlayerName = ref<string>("Loading...");
+const rightPlayerName = ref<string>("Loading...");
 let socket: WebSocket | null = null;
 
 // Send input to backend
@@ -29,18 +31,31 @@ const handleKeyUp = (e: KeyboardEvent) => sendInput(e.key, false);
 
 onMounted(() => {
   // Connect to the Fastify backend WebSocket route
-  //socket = new WebSocket("ws://0.0.0.0:3000/ws/pong");
 // Game.vue SI NO FUNCIONA CAMBIAR DIRECCION DE BACKEND, PONER LUEGO ENV VAR
-  const token = localStorage.getItem('token');
-  console.log(token);
-//  socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
- socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
+
+socket = new WebSocket("wss" + import.meta.env.VITE_URL + "/api/ws/play");
 
   socket.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
       if (data.type === "STATE_UPDATE") {
         currentGameState.value = data.state;
+      }
+      else if (data.type === "PLAY") {
+        msgPong.value = "";
+      }
+      else if (data.type === "INFO") {
+        msgPong.value = data.msg;
+      }
+      else if (data.type === "DISCONNECTED") {
+        msgPong.value = `${data.username} has left the game. What a coward!`;
+      }
+      else if (data.type === "GAME_OVER") {
+        msgPong.value = `${data.winnerName} wins!`;
+      }
+      else if (data.type === "ASSIGN_SIDE") {
+        leftPlayerName.value = data.leftName;
+        rightPlayerName.value = data.rightName;
       }
     } catch (err) {
       console.error("Error parsing WebSocket message:", err);
@@ -61,7 +76,14 @@ onUnmounted(() => {
 <template>
   <div class="game-wrapper">
     <h2>Pong Online</h2>
-    <GameCanvas :gameState="currentGameState" />
+      <h1 v-if="msgPong" class="winner-announcement">
+        {{ msgPong }}
+      </h1>
+    <GameCanvas 
+    :gameState="currentGameState"
+    :leftName="leftPlayerName" 
+    :rightName="rightPlayerName"
+    />
     <div v-if="!currentGameState" class="overlay">
       Connecting to Game Server...
     </div>

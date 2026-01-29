@@ -53,8 +53,13 @@ services:
           path: ./backend/package.json
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "5173:5173"
+    environment:
+      - PORT=${FRONTEND_PORT}
+      - HOST=${FRONTEND_HOST}
+      - PROXY=${PROXY_URL}
     develop:
       watch:
         - path: ./frontend
@@ -87,6 +92,11 @@ services:
       - proxy_certs:/certs
     networks:
       - ft-transcendence
+    develop:
+      watch:
+        - action: sync
+          path: ./proxy/conf
+          target: /etc/nginx/conf.d/
 
 volumes:
   proxy_certs:
