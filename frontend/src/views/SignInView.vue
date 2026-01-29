@@ -53,7 +53,7 @@ const handleSubmit = async () => {
       const data = await response.json()
       // inicializar la sesion del usuario.
 		console.log("done the sign in succesfully");
-		session.setSession(data.id, data.username);
+		session.setSession(data.user.id, data.user.username);
 		console.log("trying to redirect: ");
 		router.push({name: 'home'});
     } else {
