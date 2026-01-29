@@ -12,7 +12,7 @@ function checkEnvVars()
 	console.log("ENV VARS:\n");
 	console.log("PORT: ", import.meta.env.VITE_PORT);
 	console.log("HOST: ", import.meta.env.VITE_HOST);
-	console.log("URL:  ", import.meta.env.VITE_URL);
+	console.log(window.location);
 }
 
 //call to refresh token in case auth has expired
