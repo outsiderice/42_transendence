@@ -4,6 +4,8 @@ import ProgressBar from "@/components/ProgressBar.vue";
 import DonutChart from "@/components/DonutChart.vue";
 import GameStatisticsCard from "@/components/GameStatisticsCard.vue";
 import GameHistoricStatisticsCard from "@/components/GameHistoricStatisticsCard.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
+import LinkComponent from "@/components/LinkComponent.vue";
 </script>
 <!--
 	https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png
@@ -50,6 +52,9 @@ import GameHistoricStatisticsCard from "@/components/GameHistoricStatisticsCard.
 	<ProgressBar :progress="112" :total="120" />
 	<ProgressBar :progress="12" :total="120" />
 	<ProgressBar :progress="82" :total="120" />
+
+	<ButtonComponent @click="$router.push({name: 'home'})" label="click me!"/>
+	<LinkComponent href="/test" label="click this link!" />
 	<div />
 </section>
 </template>

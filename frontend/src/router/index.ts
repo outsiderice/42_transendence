@@ -86,6 +86,7 @@ router.beforeEach((to, from) => {
 	}
 	if ((to.name !== "signin" && to.name !== "signup") && !session.getIsSignedIn) {
 		return { name: "signin" };
+		return ;
 	}
 });
 
