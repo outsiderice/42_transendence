@@ -148,7 +148,7 @@ export const refreshTokenController = async (
 		return reply.code(401).send({error: "No refresh token"});
 	}
 
-    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET as string);
 
     if (payload.type !== 'refresh') {
       return reply.code(401).send({ error: 'Invalid refresh token' });
