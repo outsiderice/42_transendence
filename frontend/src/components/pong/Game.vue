@@ -6,6 +6,7 @@ const currentGameState = ref<GameState | null>(null);
 const msgPong = ref<string | null>(null);
 const leftPlayerName = ref<string>("Loading...");
 const rightPlayerName = ref<string>("Loading...");
+const mySide = ref<string | null>(null);
 let socket: WebSocket | null = null;
 
 // Send input to backend
@@ -28,6 +29,37 @@ const handleKeyDown = (e: KeyboardEvent) => {
 };
 
 const handleKeyUp = (e: KeyboardEvent) => sendInput(e.key, false);
+
+// to check if it is tactile device
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+const handleTouch = (e: TouchEvent, pressed: boolean) => {
+  if (!isTouchDevice || !socket || !currentGameState.value || !mySide.value) return;
+  if (e.cancelable) e.preventDefault();
+
+  if (!pressed) {
+    const upKey = mySide.value === "LEFT" ? "w" : "ArrowUp";
+    const downKey = mySide.value === "LEFT" ? "s" : "ArrowDown";
+    sendInput(upKey, false);
+    sendInput(downKey, false);
+    return;
+  }
+
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+  
+  /* Because the wrapper is rotated 90 degrees:
+     Physical Right/Left (clientX) = Visual Up/Down
+  */
+  const touchX = e.touches[0].clientX - rect.left;
+  const middle = rect.width / 2;
+
+  if (mySide.value === "LEFT") {
+    // If touch is on the left side of the physical phone (Visual T
+    sendInput(touchX < middle ? "w" : "s", true);
+  } else {
+    sendInput(touchX < middle ? "ArrowUp" : "ArrowDown", true);
+  }
+};
 
 onMounted(() => {
   // Connect to the Fastify backend WebSocket route
@@ -56,6 +88,7 @@ socket = new WebSocket("wss" + import.meta.env.VITE_URL + "/api/ws/play");
       else if (data.type === "ASSIGN_SIDE") {
         leftPlayerName.value = data.leftName;
         rightPlayerName.value = data.rightName;
+        mySide.value = data.side;
       }
     } catch (err) {
       console.error("Error parsing WebSocket message:", err);
@@ -64,6 +97,9 @@ socket = new WebSocket("wss" + import.meta.env.VITE_URL + "/api/ws/play");
 
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
+  // check this for status offline
+  //window.addEventListener('online', () => console.log('Became online'));
+  //window.addEventListener('offline', () => console.log('Became offline'));
 });
 
 onUnmounted(() => {
@@ -74,7 +110,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="game-wrapper">
+  <div class="game-wrapper"
+    @touchstart="handleTouch($event, true)"
+    @touchend="handleTouch($event, false)">
+  
     <h2>Pong Online</h2>
       <h1 v-if="msgPong" class="winner-announcement">
         {{ msgPong }}
@@ -99,5 +138,36 @@ onUnmounted(() => {
 .overlay {
   margin-top: 20px;
   color: #888;
+}
+
+/*MOBILE ROTATION*/
+
+/* Only on tactile devices (pointer: coarse) held vertically (portrait) */
+@media (pointer: coarse) and (orientation: portrait) {
+  .game-wrapper {
+    /* Rotate the game to fit the long side of the phone */
+    transform: rotate(90deg);
+    
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100vh; /* Width becomes the phone's height */
+    height: 100vw; /* Height becomes the phone's width */
+    margin-left: -50vh; 
+    margin-top: -50vw;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: #0d0221;
+    touch-action: none; /* no scrolling/bouncing */
+  }
+
+  /* no PONG title */
+  h2 {
+    display: none;
+  }
 }
 </style>

@@ -114,16 +114,14 @@ export function close_game(player: Player, gameInterval: NodeJS.Timeout, game: P
     player_controls(player1, game);
     player_controls(player2, game);
 
-    // Inform players of their sides -- is it necessary?
-    const namesPayload = JSON.stringify({ 
+    const namesPayload = { 
       type: "ASSIGN_SIDE", 
       leftName: player1.userName, 
-      rightName: player2.userName 
-    });
-    player1.webSocket.send(namesPayload);
-    player2.webSocket.send(namesPayload);
-
-
+      rightName: player2.userName
+    };
+    
+    player1.webSocket.send(JSON.stringify({...namesPayload, side: "LEFT"}));
+    player2.webSocket.send(JSON.stringify({...namesPayload, side: "RIGHT"}));;
     const gameInterval = setInterval(() => {
       game.update();
       if (game.endGame()) {
