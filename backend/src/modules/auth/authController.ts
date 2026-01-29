@@ -25,7 +25,7 @@ export const registerUserController = async (
       });
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return reply.status(400).send({
         error: 'password debe tener al menos 6 caracteres',
       });

@@ -32,4 +32,10 @@ export class GamesService {
       id: Number(result.lastInsertRowid)   
     }
   }
+
+   static getAllGames(user_1: number): GameDB[] {
+       const stmt = db.prepare('SELECT * FROM games WHERE player1_id = ? OR player2_id = ?');
+       const rows = stmt.all(user_1, user_1) as GameDB[];
+       return Array.isArray(rows) ? rows : [];
+   }
 }
