@@ -58,8 +58,8 @@ services:
     expose:
       - "5173:5173"
     environment:
-      - PORT=${FRONTEND_PORT}
-      - HOST=${FRONTEND_HOST}
+      - PORT=${VITE_PORT}
+      - HOST=${VITE_HOST}
       - PROXY=${PROXY_URL}
     develop:
       watch:
