@@ -17,9 +17,9 @@ declare module 'fastify' {
   }
 	interface FastifyReply {
 	generateTokens(user:{ 
-		id: string;
+		id?: number;
 		username: string;
-		nickname: string;
+		nickname?: string;
 	}): Promise<void>;
 	}
 }
