@@ -5,6 +5,8 @@ import PongButton from '../components/PongButton.vue'
 import PongToggleButton from '../components/PongToggleButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
+import { useSessionStore } from '@/state/user_session.ts'
+import { useRouter } from 'vue-router';
 
 const { newsletter } = useToggles()
 
@@ -17,9 +19,7 @@ const {
   validate 
 } = useAuthForm()
 
-// Estado reactivo
-const isAuthenticated = ref(false)
-const username = ref('')
+const session = useSessionStore();
 
 // Inicializa desde localStorage
 //watchEffect(() => {
@@ -34,12 +34,13 @@ const username = ref('')
 //  console.log('watchEffect username:', username.value)
 //})
 
+const router = useRouter();
 // Función para iniciar sesión
 const handleSubmit = async () => {
   console.log('Submitting login:', { username: name.value, password: password.value })
-  
+  console.log(window.location);
   try {
-    const response = await fetch('https' + import.meta.env.VITE_URL + '/api/auth/login', {
+    const response = await fetch('https://' + window.location.host + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -50,16 +51,11 @@ const handleSubmit = async () => {
 
     if (response.ok) {
       const data = await response.json()
-      console.log('Signed in successfully ✅', data)
-
-      // Guardar token y username
-      localStorage.setItem('username', name.value)
-
-      isAuthenticated.value = true
-      username.value = name.value
-
-      console.log('Post login - username.value:', username.value)
-      console.log('Post login - isAuthenticated.value:', isAuthenticated.value)
+      // inicializar la sesion del usuario.
+		console.log("done the sign in succesfully");
+		session.setSession(data.user.id, data.user.username);
+		console.log("trying to redirect: ");
+		router.push({name: 'home'});
     } else {
       const errorText = await response.text()
       console.error('Login error ❌', errorText)
@@ -76,7 +72,7 @@ const signOut = async () => {
 	isAuthenticated.values = false
 	username.value = ''
 	try{
-		const response = await fetch("https" + import.meta.env.VITE_URL + "/api/auth/logout", {
+		const response = await fetch("https://" + window.location.host + "/api/auth/logout", {
 			method: 'POST',
 			credentials: 'include',
 		})

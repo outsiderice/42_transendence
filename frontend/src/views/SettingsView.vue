@@ -38,7 +38,7 @@ const fetchUserSettings = async () => {
   if (!token) return
 
   try {
-    const res = await fetch('http://localhost:3000/auth/me', {
+    const res = await fetch('http://' + window.location.host + '/auth/me', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ const handleSubmit = async () => {
   if (!token || !userId.value) return alert('No estás autenticado')
 
   try {
-    const res = await fetch(`http://localhost:3000/users/${userId.value}`, {
+    const res = await fetch(`https://` + window.location.host + `/users/${userId.value}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
