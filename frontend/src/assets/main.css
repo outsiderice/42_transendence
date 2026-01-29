@@ -15,11 +15,6 @@
 	--color_accent_link_visited: hsl(268, 82%, 44%);
 	
 }
-* {
-	font-family: "Oswald", sans-serif;
-	font-optical-sizing: auto;
-	font-style: normal;
-}
 
 @media (prefers-color-scheme: dark) {:root {
 	--color_background_1: hsl(0, 0%, 15%);

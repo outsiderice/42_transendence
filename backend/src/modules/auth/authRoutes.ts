@@ -1,8 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import {
- registerUserController,
-  loginUserController,
-  refreshTokenController,
+	registerUserController,
+ 	loginUserController,
+ 	refreshTokenController,
+	logoutUserController,
 //  getCallbackController
 } from './authController';
 
@@ -25,6 +26,15 @@ export const UserSafeSchema = {
     email: { type: 'string' },
   },
   required: ['id', 'username', 'email'],
+};
+
+export const UserRefreshSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    username: { type: 'string' },
+  },
+  required: ['id', 'username'],
 };
 
 export const CreateUserSchema = {
@@ -53,6 +63,11 @@ export type SafeUserResponese = {
   id:		number | undefined;
   username: string;
   email: 	string;
+};
+
+export type UserRefreshResponese = {
+  id:		number;
+  username: string;
 };
 
 //routes
@@ -90,18 +105,26 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       },
       response: {
-              204: {
-				description: "Access token refreshed succesfully",
-                type: "null",
-              },
-				401:{
-					type: "object",
-					properties: {
-						error: {type: "string"},
-				},
+              	201: { UserRefreshSchema: {type: 'object'}},
+        		401: { type: 'object', properties: { error: { type: 'string' } } },
 		},
-      },
-    },refreshTokenController);
+      }, refreshTokenController);
+
+	app.post(
+ 	 '/auth/logout',
+ 	 {
+  	  schema: {
+     	 tags: ['Auth'],
+      	response: {
+        	200: {
+         	 description: 'User successfully logged out',
+          	type: 'null',
+        	},
+      	},
+    	},
+  	},
+  	logoutUserController
+	);
 
 //   // GITHUB OAUTH CALLBACK
 //   app.get('/auth/github/callback', {
