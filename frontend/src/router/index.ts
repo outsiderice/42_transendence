@@ -34,7 +34,7 @@ const router = createRouter({
     {
       path: '/users',
       name: 'users',
-      component: () => import('../views/404.vue'),
+      component: () => import('../views/UserListing.vue'),
     },
     {
       path: '/user/:id',
