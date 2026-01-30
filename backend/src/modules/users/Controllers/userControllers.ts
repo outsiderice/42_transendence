@@ -278,8 +278,17 @@ export const updateUserController = async (
     for (const key of allowedFields) {
       const value = request.body[key];
       if (value !== undefined) {
-        // Cast seguro para evitar error de TypeScript
-        (fieldsToUpdate as any)[key] = value;
+        if (key === 'password') {
+          if (typeof value !== 'string' || value.length < 8) {
+            return reply.status(400).send({ error: 'La contraseña debe tener al menos 8 caracteres' });
+          }
+          const saltRounds = 10;
+          const password: string = value as string;
+          const hash = bcrypt.hashSync(password, saltRounds);
+          (fieldsToUpdate as any)[key] = hash;
+        } else {
+          (fieldsToUpdate as any)[key] = value;
+        }
       }
     }
 

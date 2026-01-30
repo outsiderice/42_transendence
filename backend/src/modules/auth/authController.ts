@@ -49,8 +49,7 @@ export const registerUserController = async (
     // generar contraseña hasheada 
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
-    console.log('Hashed password:', hash);
-    console.log('Original password:', password);
+    
         
     // Crear el usuario con la contraseña hasheada
     const newUser = await DBClient.createUser({
