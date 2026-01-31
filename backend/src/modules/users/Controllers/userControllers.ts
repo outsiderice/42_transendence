@@ -272,17 +272,32 @@ export const updateUserController = async (
       return reply.status(404).send({ error: 'Usuario no encontrado' });
     }
 
-    const allowedFields: (keyof User)[] = ['username', 'email', 'password', 'nickname', 'avatar'];
+    const allowedFields: (keyof User)[] = ['username', 'email', 'password','oldpassword', 'nickname', 'avatar'];
     const fieldsToUpdate: Partial<User> = {};
-
+    const passwordtocheck: string = allowedFields.includes('oldpassword') && request.body.oldpassword ? request.body.oldpassword : '';
     for (const key of allowedFields) {
       const value = request.body[key];
       if (value !== undefined) {
-        // Cast seguro para evitar error de TypeScript
-        (fieldsToUpdate as any)[key] = value;
+        if (key === 'password') {
+          if (typeof value !== 'string' || value.length < 8 ) {
+            return reply.status(400).send({ error: 'La contraseña debe tener al menos 8 caracteres' });
+          }
+          if (!passwordtocheck || passwordtocheck.trim() === '') {
+            return reply.status(400).send({ error: 'La contraseña antigua es requerida para cambiar la contraseña' });
+          }
+          const isOldPasswordCorrect = bcrypt.compareSync(passwordtocheck, existingUser.password);
+          if (!isOldPasswordCorrect) {
+            return reply.status(401).send({ error: 'La contraseña antigua es incorrecta' });
+          }
+          const saltRounds = 10;
+          const password: string = value as string;
+          const hash = bcrypt.hashSync(password, saltRounds);
+          (fieldsToUpdate as any)[key] = hash;
+        } else {
+          (fieldsToUpdate as any)[key] = value;
+        }
       }
     }
-
     const updatedUser = await DBClient.updateUser(id, fieldsToUpdate);
 
     if (!updatedUser) {
@@ -297,7 +312,8 @@ export const updateUserController = async (
       details: error instanceof Error ? error.message : String(error),
     });
   }
-};
+}
+
 
 /**
  * DELETE /users/:id - Eliminar usuario
@@ -342,3 +358,4 @@ export const deleteUserController = async (
     });
   }
 };
+

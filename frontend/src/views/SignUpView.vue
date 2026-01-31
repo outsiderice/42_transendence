@@ -1,13 +1,27 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
 import PongToggleButton from '../components/PongToggleButton.vue'
+
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
+import { useSessionStore } from '@/state/user_session.ts'
+import { useRouter } from 'vue-router'
 
+// -------------------------
+// Store / Router
+// -------------------------
+const session = useSessionStore()
+const router = useRouter()
+
+// -------------------------
+// Toggles
+// -------------------------
 const { newsletter } = useToggles()
 
+// -------------------------
+// Formulario
+// -------------------------
 const {
   name,
   email,
@@ -21,45 +35,23 @@ const {
   validate
 } = useAuthForm()
 
-// Estado reactivo
-const isAuthenticated = ref(false)
-const username = ref('')
-
-// --- DEBUG inicial ---
-console.log('Inicial username:', username.value)
-console.log('Inicial isAuthenticated:', isAuthenticated.value)
-
-// watchEffect para mantener username e isAuthenticated reactivos
-watchEffect(() => {
-  const token = localStorage.getItem('token')
-  const storedUsername = localStorage.getItem('username') || ''
-  isAuthenticated.value = !!token
-  username.value = storedUsername
-
-  console.log('watchEffect token:', token)
-  console.log('watchEffect storedUsername:', storedUsername)
-  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
-  console.log('watchEffect username:', username.value)
-})
-
-// Función para registrarse
+// -------------------------
+// Registro (Sign Up)
+// -------------------------
 const handleSubmit = async () => {
   console.log('Submitting signup:', {
     username: name.value,
-    email: email.value,
-    password: password.value
+    email: email.value
   })
 
   // if (!validate()) return
 
   try {
     const response = await fetch(
-      'https://' + window.location.host + '/api/auth/register',
+      `https://${window.location.host}/api/auth/register`,
       {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: name.value,
           email: email.value,
@@ -70,58 +62,44 @@ const handleSubmit = async () => {
 
     if (response.ok) {
       const data = await response.json()
-      console.log('Registered successfully ✅', data)
 
-      // Guardar token y username en localStorage
-      const token = data.accessToken ?? 'dummy-token'
-      localStorage.setItem('token', token)
-      localStorage.setItem('username', name.value)
+      console.log('Sign up successful ✅', data)
 
-      // Actualizar reactive state
-      isAuthenticated.value = true
-      username.value = name.value
+      // Inicializar sesión igual que en Sign In
+      session.setSession(data.user.id, data.user.username)
 
-      console.log('Post register - username.value:', username.value)
-      console.log('Post register - isAuthenticated.value:', isAuthenticated.value)
+      // Redirección
+      router.push({ name: 'home' })
     } else {
       const errorText = await response.text()
       console.error('Register error ❌', errorText)
     }
   } catch (error) {
-    console.error('Network error:', error)
+    console.error('Network error signing up:', error)
   }
 }
 
-// Función para cerrar sesión
+// -------------------------
+// Logout
+// -------------------------
 const signOut = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('username')
-
-  isAuthenticated.value = false
-  username.value = ''
-
-  console.log('After logout - username.value:', username.value)
-  console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
+  session.logout()
 }
-
-// Opcional: al montar, podrías hacer un fetch al backend para validar token
-// onMounted(() => {
-//   fetchUser()
-// })
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
+
     <!-- DEBUG TEMPORAL -->
-    <pre>
-isAuthenticated: {{ isAuthenticated }}
-username: {{ username }}
+    <pre class="mb-4 text-xs">
+isAuthenticated: {{ session.isAuthenticated }}
+username: {{ session.username }}
     </pre>
 
     <!-- USUARIO AUTENTICADO -->
-    <div v-if="isAuthenticated">
+    <div v-if="session.isAuthenticated">
       <h2 class="text-2xl font-bold mb-6 text-center">
-        Hola, {{ username }}
+        Hola, {{ session.username }}
       </h2>
 
       <PongButton

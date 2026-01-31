@@ -33,6 +33,8 @@ fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
 	const result = await response.json();
 	if (result.nickname !== "") {
 		nickName.value = result.nickname;
+	} else {
+		nickName.value = "no nickname";
 	}
 	userName.value = result.username;
 	if (result.avatar !== '') {
@@ -45,7 +47,6 @@ function sign_out()
 {
 	session.$reset();
 	router.push({name: 'signin'});
-	console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!");
 }
 
 </script>
