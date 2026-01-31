@@ -64,7 +64,6 @@ export const registerUserController = async (
     const safeUser: SafeUserResponese = {
 	  id:		newUser.id,
       username: newUser.username,
-      email: newUser.email,
     };
 
 	await reply.generateTokens(newUser);
@@ -119,7 +118,6 @@ export const loginUserController = async (
     const safeUser: SafeUserResponese = {
 	  id: existingUsername.id,
       username: existingUsername.username,
-      email: existingUsername.email,
     };
 	await reply.generateTokens(existingUsername);
 

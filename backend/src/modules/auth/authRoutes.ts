@@ -62,12 +62,6 @@ export type LoginUserBody = {
 export type SafeUserResponese = {
   id:		number;
   username: string;
-  email: 	string;
-};
-
-export type UserRefreshResponese = {
-  id:		number;
-  username: string;
 };
 
 //routes
@@ -105,7 +99,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       },
       response: {
-              	201: { UserRefreshSchema: {type: 'object'}},
+              	201: { UserSafeSchema: {type: 'object'}},
         		401: { type: 'object', properties: { error: { type: 'string' } } },
 		},
       }, refreshTokenController);
@@ -127,12 +121,12 @@ export const authRoutes = async (app: FastifyInstance) => {
 	);
 
    // GITHUB OAUTH CALLBACK
-   app.get('/auth/github/callback', {
-     schema: {
-       tags: ['Auth'],
-       response: { 
-         200: UserSchema,           
-         },
-       },
-     },getCallbackController);
+//   app.get('/auth/github/callback', {
+//     schema: {
+//       tags: ['Auth'],
+//       response: { 
+//         200: { UserSafeSchema: {type: 'object'}},           
+//         },
+//       },
+//     },getCallbackController);
 }
