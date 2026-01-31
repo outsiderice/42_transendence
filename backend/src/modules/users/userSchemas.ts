@@ -28,6 +28,7 @@ export const UpdateUserSchema = {
     username: { type: 'string' },
     email: { type: 'string' },
     password: { type: 'string' },
+    oldpassword: { type: 'string' },
     nickname: { type: 'string' },
     avatar: { type: 'string' },
   },
