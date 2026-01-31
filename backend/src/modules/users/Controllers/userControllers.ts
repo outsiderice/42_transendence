@@ -298,6 +298,21 @@ export const updateUserController = async (
         }
       }
     }
+    const updatedUser = await DBClient.updateUser(id, fieldsToUpdate);
+
+    if (!updatedUser) {
+      return reply.status(500).send({ error: 'No se pudo actualizar el usuario' });
+    }
+
+    reply.status(200).send(updatedUser);
+  } catch (error) {
+    console.error('Error in updateUserController:', error);
+    reply.status(500).send({
+      error: 'Error al actualizar usuario',
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
 
 
 /**
@@ -343,3 +358,4 @@ export const deleteUserController = async (
     });
   }
 };
+
