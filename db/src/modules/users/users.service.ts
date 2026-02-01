@@ -46,6 +46,12 @@ export class UsersService {
     return stmt.get(username) as User | undefined;
   }
 
+  // READ ONE BY GITHUBID
+    static getUserByGithubId(githubid: string): User | undefined {
+    const stmt = db.prepare('SELECT * FROM users WHERE githubid = ?');
+    return stmt.get(githubid) as User | undefined;
+  }
+
   // READ ONE BY EMAIL
   static getUserByEmail(email: string): User | undefined {
     const stmt = db.prepare('SELECT * FROM users WHERE email = ?');

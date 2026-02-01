@@ -150,6 +150,38 @@ export default async (app: FastifyInstance) => {
     }
   });
 
+    // READ ONE BY GITHUBID
+  app.get<{ Params: { username: string; }; }>('/users/by-githubid/:githubid', {
+    schema: {
+      tags: ['Users'],
+      params: {
+        type: 'object',
+        properties: {
+          githubid: { type: 'string' },
+        },
+      },
+    } as any,
+  }, async (request: FastifyRequest<{ Params: { githubid: string; }; }>, reply: FastifyReply) => {
+    try {
+      const { githubid } = request.params;
+
+      const user = UsersService.getUserByGithubId(githubid);
+
+      if (!user) {
+        return reply.status(404).send({
+          error: 'Usuario no encontrado',
+        });
+      }
+
+      return reply.send(user);
+    } catch (error) {
+      return reply.status(500).send({
+        error: 'Error al obtener usuario',
+        details: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
   // UPDATE
   app.put<{ Params: { id: number; }; Body: Partial<User>; }>('/users/:id', {
     schema: {
