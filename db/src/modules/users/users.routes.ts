@@ -63,6 +63,73 @@ export default async (app: FastifyInstance) => {
     }
   });
 
+  // CREATE GITHUB USER
+  app.post<{ Body: User; }>('/githubusers', {
+    schema: {
+      tags: ['Users'],
+      body: {
+        type: 'object',
+        required: ['username', 'gihubid'],
+        properties: {
+          username: { type: 'string' },
+          githubid: { type: 'string' },
+          email: { type: 'string' },
+          nickname: { type: 'string' },
+          avatar: { type: 'string' },
+        },
+      },
+    } as any,
+  }, async (request: FastifyRequest<{ Body: User; }>, reply: FastifyReply) => {
+    try {
+      const { username, githubid, email, nickname, avatar } = request.body;
+
+      // Validación básica
+      if (!username || !githubid ) {
+        return reply.status(400).send({
+          error: 'username y githubid son requeridos',
+        });
+      }
+
+      // Verificar si el usuario ya existe
+      const existingGithubUser = UsersService.getUserByGithubId(githubid);
+      if (existingGithubUser) {
+        return reply.status(409).send({
+          error: 'Usuario ya esta registrado',
+        });
+      }
+
+      const existingUsername = UsersService.getUserByUsername(username);
+      if (existingUsername) {
+        return reply.status(409).send({
+          error: 'El username ya esta en uso',
+        });
+      }
+
+      const existingEmail = UsersService.getUserByEmail(email);
+      if (existingEmail) {
+        return reply.status(409).send({
+          error: 'El email ya está registrado',
+        });
+      }
+
+      const newUser = UsersService.createUser({
+        username,
+        githubid,
+        email,
+        nickname,
+        avatar,
+      });
+
+      return reply.status(201).send(newUser);
+    } catch (error) {
+      console.log(error);
+      return reply.status(500).send({
+        error: 'Error al crear usuario mamon',
+        details: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
   // READ ALL
   app.get('/users', {
     schema: {
