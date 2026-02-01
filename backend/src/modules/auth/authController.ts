@@ -61,7 +61,7 @@ export const registerUserController = async (
   
     //evita devolver el password en la respuesta
     const safeUser: SafeUserResponese = {
-	  id:		newUser.id,
+	    id:		newUser.id,
       username: newUser.username,
     };
 
@@ -115,7 +115,7 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
 
     const safeUser: SafeUserResponese = {
-	  id: existingUsername.id,
+	    id: existingUsername.id,
       username: existingUsername.username,
     };
 	await reply.generateTokens(existingUsername);
@@ -170,7 +170,7 @@ export const refreshTokenController = async (
       secure: true,
     });
 
-	const safeUser: UserRefreshResponse = {
+	const safeUser: SafeUserResponese = {
 		id:	payload.id,
 		username: payload.username,
 	};

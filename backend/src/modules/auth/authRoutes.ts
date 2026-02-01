@@ -4,7 +4,7 @@ import {
  	loginUserController,
  	refreshTokenController,
 	logoutUserController,
-	getCallbackController
+	getCallbackController,
 } from './authController';
 
 
@@ -60,7 +60,7 @@ export type LoginUserBody = {
 };
 
 export type SafeUserResponese = {
-  id:		number;
+  id:		number | undefined ;
   username: string;
 };
 
