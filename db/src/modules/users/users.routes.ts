@@ -151,7 +151,7 @@ export default async (app: FastifyInstance) => {
   });
 
     // READ ONE BY GITHUBID
-  app.get<{ Params: { username: string; }; }>('/users/by-githubid/:githubid', {
+  app.get<{ Params: { githubid: string; }; }>('/users/by-githubid/:githubid', {
     schema: {
       tags: ['Users'],
       params: {
@@ -166,6 +166,38 @@ export default async (app: FastifyInstance) => {
       const { githubid } = request.params;
 
       const user = UsersService.getUserByGithubId(githubid);
+
+      if (!user) {
+        return reply.status(404).send({
+          error: 'Usuario no encontrado',
+        });
+      }
+
+      return reply.send(user);
+    } catch (error) {
+      return reply.status(500).send({
+        error: 'Error al obtener usuario',
+        details: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
+    // READ ONE BY EMAIL
+  app.get<{ Params: { email: string; }; }>('/users/by-emial/:email', {
+    schema: {
+      tags: ['Users'],
+      params: {
+        type: 'object',
+        properties: {
+          email: { type: 'string' },
+        },
+      },
+    } as any,
+  }, async (request: FastifyRequest<{ Params: { email: string; }; }>, reply: FastifyReply) => {
+    try {
+      const { email } = request.params;
+
+      const user = UsersService.getUserByEmail(email);
 
       if (!user) {
         return reply.status(404).send({
