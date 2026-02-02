@@ -83,20 +83,10 @@ const handleSubmit = async () => {
 // -------------------------
 const handleGithubOauth = async () => {
 	try {
-		const response = await fetch(
-		`https://${window.location.host}/api/login/github`,
-			{
-				method: 'GET',
-			}
-		)
-		if (response.ok)
-		{
-			const data = await response.json()	
-      		session.setSession(data.user.id, data.user.username)
-      		router.push({ name: 'home' })
-		}
+		window.location.href = 
+		`https://${window.location.host}/api/login/github`;
 	} catch (error){
-		console.error('Network error signing up:', error)
+		console.error('Error during Github OAuth:', error)
 	}
 }
 // -------------------------
