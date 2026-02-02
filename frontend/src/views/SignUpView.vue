@@ -78,7 +78,27 @@ const handleSubmit = async () => {
     console.error('Network error signing up:', error)
   }
 }
-
+// -------------------------
+// Registro mediante Github
+// -------------------------
+const handleGithubOauth = async () => {
+	try {
+		const response = await fetch(
+		`https://${window.location.host}/api/auth/github/callback`,
+			{
+				method: 'GET',
+			}
+		)
+		if (response.ok)
+		{
+			const data = await response.json()	
+      		session.setSession(data.user.id, data.user.username)
+      		router.push({ name: 'home' })
+		}
+	} catch (error){
+		console.error('Network error signing up:', error)
+	}
+}
 // -------------------------
 // Logout
 // -------------------------
@@ -153,7 +173,14 @@ username: {{ session.username }}
         :disabled="!name || !email || !password || !confirmPassword"
         @click="handleSubmit"
       />
-
+      <div class="mt-2">
+      <PongButton
+        label="Sign up with Github"
+        type="submit"
+        :fullWidth="true"
+        @click="handleGithubOauth"
+      />
+      </div>
       <div class="mt-4">
         <PongToggleButton
           v-model="newsletter"
