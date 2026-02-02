@@ -6,8 +6,9 @@ const DB_API_KEY = process.env.DB_API_KEY || '';
 export interface User {
   id?: number;
   username: string;
-  email: string;
-  password: string;
+  githubid?: string;
+  email?: string;
+  password?: string;
   nickname?: string;
   avatar?: string;
   created_at?: string;
