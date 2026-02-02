@@ -249,11 +249,16 @@ export const getCallbackController = async (
       email: email,
       avatar: githubUser.avatar,
     });
+	
+	const safeUser: SafeUserResponese = {
+		id:			user.id,
+		username:	user.username,
+	}
 
     //generar JWTs
 	await reply.generateTokens(user);
 
-    reply.status(200).send({ user, accessToken: jwtAccessToken });
+    reply.status(200).send({ safeUser });
   } catch (error) {
     console.error('Error in getCallbackController:', error);
     reply.status(500).send({
