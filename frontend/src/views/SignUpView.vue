@@ -84,7 +84,7 @@ const handleSubmit = async () => {
 const handleGithubOauth = async () => {
 	try {
 		const response = await fetch(
-		`https://${window.location.host}/api/auth/github/callback`,
+		`https://${window.location.host}/api/login/github`,
 			{
 				method: 'GET',
 			}

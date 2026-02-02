@@ -210,6 +210,14 @@ export const logoutUserController = async (
 	.status(200)
 	.send(null)
 };
+/**
+ * GET /callback - OAuth callback
+ */
+//export const getCallbackController = async (
+//  request: FastifyRequest,
+//  reply: FastifyReply
+//) => {
+//  try {
 
 /**
  * GET /callback - OAuth callback
@@ -220,7 +228,7 @@ export const getCallbackController = async (
 ) => {
   try {
     //get user info from github
-    const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+    const accessToken = await this.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
     
     const githubUserRes = await fetch('https://api.github.com/user', {
       headers: {

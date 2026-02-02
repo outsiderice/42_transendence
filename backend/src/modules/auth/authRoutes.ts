@@ -110,8 +110,21 @@ export const authRoutes = async (app: FastifyInstance) => {
   	},
   	logoutUserController
 	);
-
-   // GITHUB OAUTH CALLBACK
+/*
+   // LOGIN WITH GITHUB
+   app.get('/auth/githublogin', {}, (req, reply) => {
+		app.githubOAuth2.generateAuthorizationUri(
+		req,
+		reply,
+		(err, authorizationEndpoint) => {
+			if (err) 
+				console.error(err)
+			reply.redirect(authorizationEndpoint)
+			}
+		);
+	});
+  */ 
+   // GITHUB CALLBACK
    app.get('/auth/github/callback', {
      schema: {
        tags: ['Auth'],

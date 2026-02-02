@@ -43,10 +43,11 @@ app.register(oauthPlugin, {
     },
     auth: oauthPlugin.GITHUB_CONFIGURATION,
   },
-  startRedirectPath: '/auth/github/login',
-  callbackUri: 'http://localhost:3000/auth/github/callback',
+  startRedirectPath: '/login/github',
+  callbackUri: 'https://localhost:8443/auth/github/callback',
   cookie: {
     secure: true,
+	sameSite: 'none'
   }
 });
 
