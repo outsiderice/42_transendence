@@ -28,15 +28,6 @@ export const UserSafeSchema = {
   required: ['id', 'username', 'email'],
 };
 
-export const UserRefreshSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'integer' },
-    username: { type: 'string' },
-  },
-  required: ['id', 'username'],
-};
-
 export const CreateUserSchema = {
   type: 'object',
   required: ['username', 'email', 'password'],
@@ -121,12 +112,12 @@ export const authRoutes = async (app: FastifyInstance) => {
 	);
 
    // GITHUB OAUTH CALLBACK
-//   app.get('/auth/github/callback', {
-//     schema: {
-//       tags: ['Auth'],
-//       response: { 
-//         200: { UserSafeSchema: {type: 'object'}},           
-//         },
-//       },
-//     },getCallbackController);
+   app.get('/auth/github/callback', {
+     schema: {
+       tags: ['Auth'],
+       response: { 
+         200: { UserSafeSchema: {type: 'object'}},           
+         },
+       },
+     },getCallbackController);
 }
