@@ -5,16 +5,19 @@ import PongButton from '../components/PongButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
+import { useRouter } from 'vue-router';
+import { useSessionStore } from '@/state/user_session.ts'
 
-// Toggle del newsletter
-const { newsletter } = useToggles()
-
-// Avatar y status
 const profilePicture = ref<string | undefined>(undefined)
 const onlineIndicatorColor = "var(--color_accent_success)"
 
-// Token del usuario
-const token = localStorage.getItem('token')
+const session = useSessionStore();
+const router = useRouter();
+
+//const nickName = ref<string | undefined >(undefined);
+//const userName = ref<string | undefined >(undefined);
+const online = ref<boolean | undefined >(undefined);
+//const profilePicture = ref<string | undefined>(undefined);
 const userId = ref<number | null>(null)
 
 // Campos del formulario
@@ -28,38 +31,67 @@ const {
   nameError, 
   emailError, 
   passwordError,
-  nicknameError, 
   confirmPasswordError,
   validate 
 } = useAuthForm()
 
 // --- GET: traer datos del usuario usando token ---
 const fetchUserSettings = async () => {
-  if (!token) return
+  console.log("DEBUG: Starting fetchUserSettings");
+  console.log("DEBUG: session object:", session);
+  console.log("DEBUG: session.getUserId:", session.getUserId);
 
   try {
-    const res = await fetch('http://' + window.location.host + '/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+    console.log("DEBUG: Fetch URL:", url);
 
-    if (res.ok) {
-      const data = await res.json()
-      userId.value = data.id
-      name.value = data.username
-      email.value = data.email
-      nickname.value = data.nickname
-      profilePicture.value = data.avatar || undefined
-      console.log('User settings loaded:', data)
-    } else {
-      console.error('Error fetching user settings:', await res.text())
+    const res = await fetch(url, {
+      method: 'GET',
+      credentials: 'include', // 🔑 enviar cookies
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log("DEBUG: Response object:", res);
+    console.log("DEBUG: Response status:", res.status);
+
+    if (!res.ok) {
+      console.warn("DEBUG: Usuario no autenticado o error backend, reseteando sesión");
+      console.log("DEBUG: Resetting session");
+      session.$reset();
+      console.log("DEBUG: Redirecting to signin page");
+      router.push({ name: 'signin' });
+      return;
     }
+
+    const result = await res.json();
+    console.log("DEBUG: Parsed user data:", result);
+
+    nickname.value = result.nickname || "no nickname";
+    console.log("DEBUG: nickName.value set to:", nickname.value);
+
+    name.value = result.username || "no username";
+    console.log("DEBUG: userName.value set to:", name.value);
+
+    email.value = result.email || "no email";
+    console.log("DEBUG: email.value set to:", email.value);
+
+    profilePicture.value = result.avatar || defaultProfilePicture;
+    console.log("DEBUG: profilePicture.value set to:", profilePicture.value);
+
+    online.value = true;
+    console.log("DEBUG: online.value set to true");
+
   } catch (error) {
-    console.error('Network error fetching settings:', error)
+    console.error("DEBUG: Network error fetching user:", error);
+    console.log("DEBUG: Resetting session due to error");
+    session.$reset();
+    console.log("DEBUG: Redirecting to signin page due to error");
+    router.push({ name: 'signin' });
   }
-}
+};
+
 
 // --- PUT: actualizar usuario ---
 const handleSubmit = async () => {
@@ -133,7 +165,7 @@ onMounted(fetchUserSettings)
         </g>
 
         <!-- user avatar -->
-        <image v-else width="60" height="60" :href="profilePicture" mask="url(#profileMask)" />
+        <image v-else width="60" height="60" fill="var(--color_accent_1)" :href="profilePicture" mask="url(#profileMask)" />
 
         <!-- status -->
         <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor" />
@@ -151,7 +183,7 @@ onMounted(fetchUserSettings)
       @blur="touched.nickname = true"
       />
       <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
-      <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong> {{ email }}</p>
+      <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong></p>
       <PongInput
         label="Type Old Password"
         type="password"
@@ -163,7 +195,6 @@ onMounted(fetchUserSettings)
       <PongInput
         label="Type New Password"
         type="password"
-        v-model="confirmPassword"
         :error="confirmPasswordError"
         @blur="touched.confirmPassword = true"
       />
