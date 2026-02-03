@@ -234,7 +234,7 @@ export const getCallbackController = async (
     const githubEmailRes = await fetch('https://api.github.com/user/emails', {
 	  method: 'GET',
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
 		'User-Agent': 'fastify-oauth-test',
 		Accept: 'application/vnd.github+json',
       },
