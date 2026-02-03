@@ -47,6 +47,7 @@ app.register(oauthPlugin, {
   callbackUri: 'https://localhost:8443/api/auth/github/callback',
   cookie: {
     secure: true,
+	path: '/api/auth/github/callback',
   }
 });
 

@@ -210,14 +210,6 @@ export const logoutUserController = async (
 	.status(200)
 	.send(null)
 };
-/**
- * GET /callback - OAuth callback
- */
-//export const getCallbackController = async (
-//  request: FastifyRequest,
-//  reply: FastifyReply
-//) => {
-//  try {
 
 /**
  * GET /callback - OAuth callback
