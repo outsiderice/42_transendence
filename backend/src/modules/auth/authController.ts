@@ -227,8 +227,9 @@ export const getCallbackController = async (
   reply: FastifyReply
 ) => {
   try {
+	  console.log(request.query);
     //get user info from github
-    const accessToken = await this.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+    const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
     
     const githubUserRes = await fetch('https://api.github.com/user', {
       headers: {
