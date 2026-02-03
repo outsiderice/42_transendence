@@ -222,7 +222,6 @@ export const getCallbackController = async (
 	  console.log(request.query);
     //get user info from github
     const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
-	console.log("accestoken: ", accessToken);
 	const token = accessToken.token.access_token    
     const githubUserRes = await fetch('https://api.github.com/user', {
       headers: {
@@ -230,12 +229,9 @@ export const getCallbackController = async (
 		Accept: 'application/vnd.github+json',
       },
     });
-	console.log("\nuser res: ", githubUserRes);    
     const githubEmailRes = await fetch('https://api.github.com/user/emails', {
-	  method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
-		'User-Agent': 'fastify-oauth-test',
 		Accept: 'application/vnd.github+json',
       },
     });
