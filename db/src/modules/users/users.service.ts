@@ -105,8 +105,14 @@ export class UsersService {
 
   // DELETE
   static deleteUser(id: number): boolean {
+	try{
     const stmt = db.prepare('DELETE FROM users WHERE id = ?');
     const result = stmt.run(id);
+	console.log('DB DELETE RESULT:', result); 
     return (result.changes as number) > 0;
+	} catch (err){
+	console.error('RAW DB ERROR in deleteUser:', err); // <-- log full DB error
+    throw err;
+	}
   }
 }

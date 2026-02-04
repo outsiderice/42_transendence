@@ -373,7 +373,7 @@ export default async (app: FastifyInstance) => {
 
     } catch (error) {
       return reply.status(500).send({
-    error: 'Error al eliminar usuario',
+    error: 'Error al eliminar usuario dbERROR',
     details: error instanceof Error ? error.message : String(error),
   });
     }
