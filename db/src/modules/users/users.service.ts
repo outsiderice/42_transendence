@@ -16,14 +16,15 @@ export class UsersService {
   // CREATE
   static createUser(user: User): User {
     const stmt = db.prepare(`
-      INSERT INTO users (username, email, password, nickname, avatar)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO users (username, githubid, email, password, nickname, avatar)
+      VALUES (?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
       user.username,
-      user.email,
-      user.password,
+	  user.githubid || null,
+      user.email || null,
+      user.password || null,
       user.nickname || null,
       user.avatar || null
     );

@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { RegisterUserBody, LoginUserBody, SafeUserResponese } from './authRoutes';
+import { RegisterUserBody, LoginUserBody, SafeUserResponese, GithubEmail } from './authRoutes';
 import { DBClient } from '../../services/dbClient';
 import { findOrCreateGithubUser } from './githubOauth';
 import * as bcrypt from 'bcrypt';
@@ -238,7 +238,7 @@ export const getCallbackController = async (
 
 	console.log("\nemail res: ", githubEmailRes);    
     const githubUser = await githubUserRes.json();
-    const githubEmails = await githubEmailRes.json();
+    const githubEmails = await githubEmailRes.json() as GithubEmail[];
 
     const email = githubEmails.find(
       (emailObj: any) => emailObj.primary

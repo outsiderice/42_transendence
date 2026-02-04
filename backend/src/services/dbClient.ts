@@ -111,6 +111,14 @@ export class DBClient {
     return await res.json();
   }
 
+  static async createGithubUser(user: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
+    const res = await dbFetch('/api/githubusers', {
+      method: 'POST',
+      body: JSON.stringify(user),
+    });
+    return await res.json();
+  }
+
 static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<Friends> {
   const res = await dbFetch('/api/friends', {
     method: 'POST',

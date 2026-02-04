@@ -55,6 +55,13 @@ export type SafeUserResponese = {
   username: string;
 };
 
+export type GithubEmail = {
+  email: string;
+  primary: boolean;
+  verified: boolean;
+  visibility?: string;
+};
+
 //routes
 export const authRoutes = async (app: FastifyInstance) => {
   // REGISTER USER
