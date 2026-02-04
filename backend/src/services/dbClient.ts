@@ -85,6 +85,12 @@ export class DBClient {
     return await res.json();
   }
 
+  static async getUserByGithubId(githubid: string): Promise<User | null> {
+    const res = await dbFetch(`/api/users/${githubid}`, { method: 'GET' });
+    if (res.status === 404) return null;
+    return await res.json();
+  }
+
   static async getUserByUsername(username: string): Promise<User | null> {
     const res = await dbFetch(`/api/users/by-username/${username}`, { method: 'GET' });
     if (res.status === 404) return null;
