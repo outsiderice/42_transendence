@@ -69,7 +69,7 @@ export default async (app: FastifyInstance) => {
       tags: ['Users'],
       body: {
         type: 'object',
-        required: ['username', 'gihubid'],
+        required: ['username', 'githubid'],
         properties: {
           username: { type: 'string' },
           githubid: { type: 'string' },
