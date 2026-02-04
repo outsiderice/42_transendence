@@ -85,6 +85,8 @@ const handleGithubOauth = async () => {
 	try {
 		window.location.href = 
 		`https://${window.location.host}/api/login/github`;
+    
+    router.push({ name: 'home' })
 	} catch (error){
 		console.error('Error during Github OAuth:', error)
 	}
