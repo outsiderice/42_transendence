@@ -12,7 +12,7 @@ export async function findOrCreateGithubUser(
     input: findOrCreateGithubUser
 ): Promise<User> {
     const {githubId, username, email, avatar} = input;
-    let user = await DBClient.getUserbyGithubId(githubId);
+    let user = await DBClient.getUserByGithubId(githubId);
 
     //user already exists
     if (user)
