@@ -39,6 +39,7 @@ export async function findOrCreateGithubUser(
         password: null,
         githubid,
         avatar,
+		nickname:username,
     });
 
     return user;
