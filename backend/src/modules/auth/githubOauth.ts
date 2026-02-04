@@ -2,7 +2,7 @@ import { DBClient } from "../../services/dbClient";
 import { User } from "../../services/dbClient";
 
 type findOrCreateGithubUser = {
-    githubId: string;
+    githubid: string;
     username: string;
     email: string | null;
     avatar: string;
@@ -11,8 +11,8 @@ type findOrCreateGithubUser = {
 export async function findOrCreateGithubUser(
     input: findOrCreateGithubUser
 ): Promise<User> {
-    const {githubId, username, email, avatar} = input;
-    let user = await DBClient.getUserByGithubId(githubId);
+    const {githubid, username, email, avatar} = input;
+    let user = await DBClient.getUserByGithubId(githubid);
 
     //user already exists
     if (user)
@@ -38,7 +38,7 @@ export async function findOrCreateGithubUser(
         username,
         email: email ? email : null,
         password: null,
-        githubId,
+        githubid,
         avatar,
     });
 
