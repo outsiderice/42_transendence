@@ -144,40 +144,36 @@ onMounted(fetchUserSettings)
     <div class="mt-6 text-[var(--color_accent_2)]">
       <p><strong class="text-[var(--color_accent_1)]">Name:</strong> {{ name }}</p>
       <p><strong class="text-[var(--color_accent_1)]">Nickname:</strong> {{ nickname }}</p>
-      <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
-    </div>
-
-    <!-- Formulario -->
-    <PongInput
+      <PongInput
       label="Change Nickname"
       v-model="nickname"
       :error="nicknameError"
       @blur="touched.nickname = true"
-    />
+      />
+      <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
+      <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong> {{ email }}</p>
+      <PongInput
+        label="Type Old Password"
+        type="password"
+        v-model="password"
+        :error="passwordError"
+        @blur="touched.password = true"
+      />
 
-    <PongInput
-      label="Change Email"
-      type="email"
-      v-model="email"
-      :error="emailError"
-      @blur="touched.email = true"
-    />
+      <PongInput
+        label="Type New Password"
+        type="password"
+        v-model="confirmPassword"
+        :error="confirmPasswordError"
+        @blur="touched.confirmPassword = true"
+      />
 
-    <PongInput
-      label="Change Password"
-      type="password"
-      v-model="password"
-      :error="passwordError"
-      @blur="touched.password = true"
-    />
+    </div>
 
-    <PongInput
-      label="Confirm New Password"
-      type="password"
-      v-model="confirmPassword"
-      :error="confirmPasswordError"
-      @blur="touched.confirmPassword = true"
-    />
+    <!-- Formulario -->
+    
+
+    
 
     <div class="flex flex-col gap-4 mt-4">
       <PongButton
