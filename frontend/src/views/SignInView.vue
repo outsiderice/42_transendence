@@ -64,7 +64,17 @@ const handleSubmit = async () => {
     console.error('Network error signing in:', error)
 	}
 }
-      
+//github signin
+const handleGithubOauth = async () => {
+	try {
+		window.location.href = 
+		`https://${window.location.host}/api/login/github`;
+    
+    router.push({ name: 'home' })
+	} catch (error){
+		console.error('Error during Github OAuth:', error)
+	}
+}
 
 // Función para cerrar sesión
 const signOut = async () => {
@@ -134,6 +144,14 @@ username: {{ username }}
         :disabled="!name || !password"
         @click="handleSubmit"
       />
+      <div class="mt-2">
+      <PongButton
+        label="Sign in with Github"
+        type="submit"
+        :fullWidth="true"
+        @click="handleGithubOauth"
+      />
+      </div>
 
       <div class="mt-4">
         <PongToggleButton v-model="newsletter" label="Suscribirme al newsletter" />
