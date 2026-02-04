@@ -12,51 +12,17 @@ import {
 // Schemas para Fastify + Swagger
 export const UserSchema = {
   type: 'object',
-  required: ['id', 'username', 'email', 'password'],
+  required: ['id', 'username'],
   properties: {
     id: { type: 'number' },
     username: { type: 'string' },
+    githubid: { type: 'string' },
     email: { type: 'string' },
     password: { type: 'string' },
     nickname: { type: 'string' },
     avatar: { type: 'string' },
     created_at: { type: 'string' },
     updated_at: { type: 'string' },
-  },
-};
-
-export const LoginUserSchema = {
-  type: 'object',
-  required: ['username', 'password'],
-  properties: {
-    username: { type: 'string' },
-    password: { type: 'string' },
-  },
-};
-
-export const UserSafeSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'integer' },
-    username: { type: 'string' },
-    email: { type: 'string' },
-    nickname: { type: 'string' },
-    avatar: { type: 'string' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' },
-  },
-  required: ['id', 'username', 'email', 'created_at', 'updated_at'],
-};
-
-export const CreateUserSchema = {
-  type: 'object',
-  required: ['username', 'email', 'password'],
-  properties: {
-    username: { type: 'string' },
-    email: { type: 'string' },
-    password: { type: 'string' },
-    nickname: { type: 'string' },
-    avatar: { type: 'string' },
   },
 };
 
