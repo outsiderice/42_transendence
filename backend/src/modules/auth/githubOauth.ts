@@ -32,7 +32,6 @@ export async function findOrCreateGithubUser(
         if (existingUsername)
             throw new Error('Username already in use');
     }
-    
     //create new user
     user = await DBClient.createGithubUser({
         username,

@@ -219,7 +219,6 @@ export const getCallbackController = async (
   reply: FastifyReply
 ) => {
   try {
-	  console.log(request.query);
     //get user info from github
     const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
 	const token = accessToken.token.access_token    
@@ -236,7 +235,6 @@ export const getCallbackController = async (
       },
     });
 
-	console.log("\nemail res: ", githubEmailRes);    
     const githubUser = await githubUserRes.json();
     const githubEmails = await githubEmailRes.json() as GithubEmail[];
 
@@ -245,7 +243,7 @@ export const getCallbackController = async (
     )?.email ?? null;
 
     const user = await findOrCreateGithubUser({
-      githubId: githubUser.id,
+      githubid: githubUser.id,
       username: githubUser.login,
       email: email,
       avatar: githubUser.avatar,
