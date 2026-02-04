@@ -5,7 +5,6 @@ import {
   getAllUsersController,
   getUserByIdController,
   getUserByUsernameController,
-  createUserController,
   updateUserController,
   deleteUserController
 } from './Controllers/userControllers';
