@@ -84,7 +84,7 @@ const handleTouch = (e: TouchEvent, pressed: boolean) => {
 onMounted(() => {
   // Connect to the Fastify backend WebSocket route
 
-socket = new WebSocket("wss" + import.meta.env.VITE_URL + "/api/ws/play");
+socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 
   socket.onmessage = (event) => {
     try {
