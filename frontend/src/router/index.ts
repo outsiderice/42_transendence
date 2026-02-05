@@ -78,13 +78,16 @@ const router = createRouter({
 
 console.log(router);
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
+	const result = await fetch('https://' + window.location.host + '/api/auth/refresh', {
+		method:'POST',
+	});
 	const session = useSessionStore();
 
 	if (to.name === "signin" || to.name === "signup") {
 		return ;
 	}
-	if ((to.name !== "signin" && to.name !== "signup") && !session.getIsSignedIn) {
+	if ((to.name !== "signin" && to.name !== "signup") && !result.ok) {
 		return { name: "signin" };
 		return ;
 	}
