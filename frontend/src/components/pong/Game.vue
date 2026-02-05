@@ -2,12 +2,32 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import GameCanvas from './GameCanvas.vue';
 import type { GameState } from './GameState';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const currentGameState = ref<GameState | null>(null);
 const msgPong = ref<string | null>(null);
 const leftPlayerName = ref<string>("Loading...");
 const rightPlayerName = ref<string>("Loading...");
 const mySide = ref<string | null>(null);
-let socket: WebSocket | null = null;
+let   socket: WebSocket | null = null;
+//timer variables
+const gameEnded = ref(false);
+let   postWinTimer = null;
+
+// timer for redirection to main after endGame is reached
+const startPostGameRoutine = () => {
+  // clear time just in case
+  if (postWinTimer) clearInterval(postWinTimer);
+
+  console.log("Win signal received. Starting 15s interval..."); // delete later
+  
+  postWinTimer = setInterval(() => {
+    console.log("15 seconds passed: Refreshing leaderboard or rewards..."); // delete later
+    router.push({name: 'home'}); //redirection to home
+    
+  }, 15000);
+};
 
 // Send input to backend
 const sendInput = (key: string, pressed: boolean) => {
@@ -66,8 +86,9 @@ onMounted(() => {
   //socket = new WebSocket("ws://0.0.0.0:3000/ws/pong");
   //Game.vue SI NO FUNCIONA CAMBIAR DIRECCION DE BACKEND, PONER LUEGO ENV VAR
   const token = localStorage.getItem('token');
-  console.log(token);
+  //console.log(token);
   socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
+
  //socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
 
   socket.onmessage = (event) => {
@@ -87,6 +108,7 @@ onMounted(() => {
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
+        startPostGameRoutine();
       }
       else if (data.type === "ASSIGN_SIDE") {
         leftPlayerName.value = data.leftName;
@@ -109,6 +131,8 @@ onUnmounted(() => {
   if (socket) socket.close();
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
+  //clear timer
+  clearInterval(postWinTimer);
 });
 </script>
 
