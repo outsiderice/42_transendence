@@ -118,21 +118,25 @@ onUnmounted(() => {
     @touchend="handleTouch($event, false)">
   
     <h2>Pong Online</h2>
-      <h1 v-if="msgPong" class="winner-announcement">
-        {{ msgPong }}
-      </h1>
+    
+    <h1 v-if="msgPong" class="winner-announcement status-msg">
+      {{ msgPong }}
+    </h1>
+
     <GameCanvas 
-    :gameState="currentGameState"
-    :leftName="leftPlayerName" 
-    :rightName="rightPlayerName"
+      :gameState="currentGameState"
+      :leftName="leftPlayerName" 
+      :rightName="rightPlayerName"
     />
-    <div v-if="!currentGameState" class="overlay">
+
+    <div v-if="!currentGameState" class="overlay status-msg">
       Connecting to Game Server...
     </div>
   </div>
 </template>
 
 <style scoped>
+/* PC VERSION - REMAINING UNTOUCHED */
 .game-wrapper {
   text-align: center;
   color: white;
@@ -143,7 +147,7 @@ onUnmounted(() => {
   color: #888;
 }
 
-/*MOBILE ROTATION*/
+/* MOBILE VERSION - TARGETED IMPROVEMENTS */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-wrapper {
     position: fixed;
@@ -156,25 +160,32 @@ onUnmounted(() => {
     align-items: center;
     overflow: hidden;
     touch-action: none;
+    z-index: 9999;
   }
 
-  .game-wrapper > div:not(.overlay) {
+  /* Your successful generous sizing */
+  .game-wrapper > div:not(.status-msg) {
     transform: rotate(90deg);
-    
-    /* 1. Master Dimension: Fill the phone's height */
     width: 100svh; 
-    /* 2. Lock the height to exactly 3/4 of the width */
     height: 75svh; 
-    
-    /* 3. The "Anti-Square" Safety: 
-       If the phone is too thin, cap the size so the scores don't bleed off */
     max-width: 133.33svw; 
     max-height: 100svw;
-
     aspect-ratio: 4 / 3;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  /* This fixes the cropping: messages float OVER the canvas */
+  .status-msg {
+    position: absolute;
+    z-index: 100;
+    transform: rotate(90deg); /* Rotate text to match game */
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border: 1px solid white;
+    margin: 0; /* Reset margins that push layout */
+    pointer-events: none;
   }
 
   :deep(canvas) {
