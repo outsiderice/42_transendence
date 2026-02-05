@@ -144,33 +144,46 @@ onUnmounted(() => {
 }
 
 /*MOBILE ROTATION*/
-
-/* Only on tactile devices (pointer: coarse) held vertically (portrait) */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-wrapper {
-    /* Rotate the game to fit the long side of the phone */
-    transform: rotate(90deg);
-    
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 100vh; /* Width becomes the phone's height */
-    height: 100vw; /* Height becomes the phone's width */
-    margin-left: -50vh; 
-    margin-top: -50vw;
-    
+    top: 0; left: 0;
+    width: 100svw;
+    height: 100svh;
+    background-color: #000;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    
-    background-color: #0d0221;
-    touch-action: none; /* no scrolling/bouncing */
+    overflow: hidden;
+    touch-action: none;
   }
 
-  /* no PONG title */
-  h2 {
-    display: none;
+  .game-wrapper > div:not(.overlay) {
+    transform: rotate(90deg);
+    
+    /* 1. Master Dimension: Fill the phone's height */
+    width: 100svh; 
+    /* 2. Lock the height to exactly 3/4 of the width */
+    height: 75svh; 
+    
+    /* 3. The "Anti-Square" Safety: 
+       If the phone is too thin, cap the size so the scores don't bleed off */
+    max-width: 133.33svw; 
+    max-height: 100svw;
+
+    aspect-ratio: 4 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
+
+  :deep(canvas) {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    object-fit: contain;
+  }
+
+  h2 { display: none; }
 }
 </style>
