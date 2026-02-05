@@ -135,7 +135,7 @@ const handleSubmit = async () => {
 
       console.log("DEBUG: Clearing password fields");
       password.value = '';
-      confirmPassword.value = '';
+      oldpassword.value = '';
 
       console.log("DEBUG: handleSubmit SUCCESS END");
     } else {
@@ -208,17 +208,16 @@ onMounted(fetchUserSettings)
       <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong></p>
       <PongInput
         label="Type Old Password"
-        type="oldpassword"
-        :error="passwordError"
-        @blur="touched.password = true"
+        type="password"
+        v-model="oldpassword"
+        @blur="touched.oldpassword = true"
       />
 
       <PongInput
         label="Type New Password"
         type="password"
         v-model="password"
-        :error="confirmPasswordError"
-        @blur="touched.confirmPassword = true"
+        @blur="touched.password = true"
       />
 
     </div>
