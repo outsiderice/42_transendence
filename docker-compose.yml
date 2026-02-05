@@ -32,7 +32,7 @@ services:
     ports:
       - "3000:3000"   # change later?
     volumes:
-      - avatars:/avatars
+      - avatars:/uploads/avatars
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
