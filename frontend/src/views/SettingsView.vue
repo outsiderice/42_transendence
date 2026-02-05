@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
 import { useRouter } from 'vue-router';
@@ -10,30 +9,16 @@ import { useSessionStore } from '@/state/user_session.ts'
 
 const profilePicture = ref<string | undefined>(undefined)
 const onlineIndicatorColor = "var(--color_accent_success)"
-
+const oldpassword = ref<string | undefined>(undefined)
+const password = ref<string | undefined>(undefined)
 const session = useSessionStore();
 const router = useRouter();
-
-//const nickName = ref<string | undefined >(undefined);
-//const userName = ref<string | undefined >(undefined);
+const name = ref<string | undefined>(undefined)
+const email = ref<string | undefined>(undefined)
+const nickname = ref<string | undefined>(undefined)
 const online = ref<boolean | undefined >(undefined);
-//const profilePicture = ref<string | undefined>(undefined);
 const userId = ref<number | null>(null)
 
-// Campos del formulario
-const { 
-  name, 
-  email, 
-  password, 
-  confirmPassword,
-  nickname,
-  touched, 
-  nameError, 
-  emailError, 
-  passwordError,
-  confirmPasswordError,
-  validate 
-} = useAuthForm()
 
 // --- GET: traer datos del usuario usando token ---
 const fetchUserSettings = async () => {
@@ -77,7 +62,7 @@ const fetchUserSettings = async () => {
     email.value = result.email || "no email";
     console.log("DEBUG: email.value set to:", email.value);
 
-    profilePicture.value = result.avatar || defaultProfilePicture;
+    profilePicture.value = result.avatar || undefined;
     console.log("DEBUG: profilePicture.value set to:", profilePicture.value);
 
     online.value = true;
@@ -95,42 +80,79 @@ const fetchUserSettings = async () => {
 
 // --- PUT: actualizar usuario ---
 const handleSubmit = async () => {
-  if (!validate()) return
-  if (!token || !userId.value) return alert('No estás autenticado')
+  console.log("DEBUG: handleSubmit START");
+
+  console.log("DEBUG: Current form values:", {
+    userId: userId.value,
+    name: name.value,
+    email: email.value,
+    nickname: nickname.value,
+    password: password.value,
+    oldpassword: oldpassword.value,
+    avatar: profilePicture.value,
+  });
+
+  //const isValid = validate();
+  //console.log("DEBUG: validate() result:", isValid);
+  //if (!isValid) {
+    //console.warn("DEBUG: Form validation failed. Aborting submit.");
+    //return;
+  //}
 
   try {
-    const res = await fetch(`https://` + window.location.host + `/users/${userId.value}`, {
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+    console.log("DEBUG: PUT URL:", url);
+
+    const payload = {
+      username: name.value,
+      email: email.value,
+      password: password.value || undefined,
+      oldpassword: oldpassword.value,
+      nickname: nickname.value,
+      avatar: profilePicture.value
+    };
+
+    console.log("DEBUG: Payload being sent:", payload);
+
+    const res = await fetch(url, {
       method: 'PUT',
+      credentials: 'include', // 🔑 enviar cookies
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        username: name.value,
-        email: email.value,
-        password: password.value || undefined,
-        nickname: nickname.value,
-        avatar: profilePicture.value
-      })
-    })
+      body: JSON.stringify(payload)
+    });
+
+    console.log("DEBUG: Response object:", res);
+    console.log("DEBUG: Response status:", res.status);
+    console.log("DEBUG: Response ok?:", res.ok);
 
     if (res.ok) {
-      const data = await res.json()
-      console.log('User settings updated:', data)
-      alert('Cambios guardados ✅')
-      // Limpiar passwords
-      password.value = ''
-      confirmPassword.value = ''
+      const data = await res.json();
+      console.log("DEBUG: Parsed response JSON:", data);
+
+      alert('Cambios guardados ✅');
+
+      console.log("DEBUG: Clearing password fields");
+      password.value = '';
+      confirmPassword.value = '';
+
+      console.log("DEBUG: handleSubmit SUCCESS END");
     } else {
-      const errorText = await res.text()
-      console.error('Error updating settings:', errorText)
-      alert('Error al guardar los cambios ❌')
+      const errorText = await res.text();
+      console.error("DEBUG: Error response text:", errorText);
+
+      alert('Error al guardar los cambios ❌');
+      console.log("DEBUG: handleSubmit ERROR END (res not ok)");
     }
+
   } catch (error) {
-    console.error('Network error updating settings:', error)
-    alert('Error de red al guardar cambios ❌')
+    console.error('DEBUG: Network error updating settings:', error);
+    alert('Error de red al guardar cambios ❌');
+    console.log("DEBUG: handleSubmit ERROR END (catch)");
   }
-}
+};
+
 
 // Cargar datos al montar
 onMounted(fetchUserSettings)
@@ -186,8 +208,7 @@ onMounted(fetchUserSettings)
       <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong></p>
       <PongInput
         label="Type Old Password"
-        type="password"
-        v-model="password"
+        type="oldpassword"
         :error="passwordError"
         @blur="touched.password = true"
       />
@@ -195,6 +216,7 @@ onMounted(fetchUserSettings)
       <PongInput
         label="Type New Password"
         type="password"
+        v-model="password"
         :error="confirmPasswordError"
         @blur="touched.confirmPassword = true"
       />
