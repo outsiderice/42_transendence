@@ -31,6 +31,8 @@ services:
     container_name: backend
     ports:
       - "3000:3000"   # change later?
+    volumes:
+      - avatars:/avatars
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
@@ -100,6 +102,7 @@ services:
 
 volumes:
   proxy_certs:
+  avatarts:
 
 networks:
   ft-transcendence:
