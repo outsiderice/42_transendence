@@ -4,7 +4,6 @@ import { ref, computed, reactive } from 'vue';
 export const useOnlineUsersStore = defineStore( 'online users', () => {
 
 	setInterval(async () => {
-		console.log("requesting online status of users.");
 		const response = await fetch("https://" + window.location.host + "/api/presence", {
 			method: 'GET',
 		}).then( async (response) => {
@@ -21,14 +20,12 @@ export const useOnlineUsersStore = defineStore( 'online users', () => {
 			{
 				usersIds.push(result.pop());
 			}
-			console.log("this is the user listing.");
-			console.log(usersIds);
 		});
-	}, 2000);
+	}, 5000);
 
 	const usersIds = reactive<numbers[]>(Array());
 
-	const getUsersIds = computed(() => {return userIds});
+	const getUsersIds = computed(() => {return usersIds});
 
 	return {
 		usersIds, 
