@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { useSessionStore } from '@/state/user_session.ts'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +39,11 @@ const router = createRouter({
       path: '/user/:id',
       name: 'user',
       component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/my_profile_design', // change the name and add id !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      name: 'my-profile-design',
+      component: () => import('../views/ProfileView.vue'),
     },
     {
       path: '/edit_profile',
