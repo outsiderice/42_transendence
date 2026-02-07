@@ -7,7 +7,7 @@ import oauthPlugin from "@fastify/oauth2";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import websocket from "@fastify/websocket";
-import multipart from '@fastify/multipart';
+import multipart, { fastifyMultipart } from '@fastify/multipart';
 
 //our plugins
 import jwtplugin from './plugins/jwt.plugin';
@@ -33,7 +33,11 @@ app.register(cors, {
 
 app.register(cookie);
 app.register(websocket);
-app.register(multipart);
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  }
+});
 
 app.register(oauthPlugin, {
   name: 'githubOAuth2',
