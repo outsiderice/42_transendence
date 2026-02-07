@@ -12,9 +12,11 @@ export const useSessionStore = defineStore( 'session', () => {
 		}
 	});
 
-	const isSignedIn = ref(false);
-	const userName = ref('');
-	const userId = ref(0);
+	const is_signed_in = localStorage.getItem('user_name') !== null ? true : false;
+
+	const isSignedIn = ref(is_signed_in);
+	const userName = ref(is_signed_in ? localStorage.getItem('user_name') : '');
+	const userId = ref(is_signed_in ? localStorage.getItem('user_id') : -1);
 	const refreshAccessTokenIntervalId = ref(0);
 	const updateOnlineIntervalId = ref(0);
 
@@ -24,6 +26,8 @@ export const useSessionStore = defineStore( 'session', () => {
 
 	function setSession(user_id: number, user_name: string) {
 		console.log("refresh access token.");
+		localStorage.setItem('user_id', user_id);
+		localStorage.setItem('user_name', user_name);
 		isSignedIn.value = true
 		userId.value = user_id;
 		userName.value = user_name;
@@ -45,6 +49,7 @@ export const useSessionStore = defineStore( 'session', () => {
 		isSignedIn.value = false;
 		userName.value = "";
 		userId.value = 0;
+		localStorage.clear();
 
 		if (refreshAccessTokenIntervalId.value != 0) {
 			clearInterval(refreshAccessTokenIntervalId.value);
@@ -52,6 +57,16 @@ export const useSessionStore = defineStore( 'session', () => {
 		if (updateOnlineIntervalId.value != 0) {
 			clearInterval(updateOnlineIntervalId.value);
 		}
+		fetch("https://" + window.location.host + "/api/auth/logout", {
+			method: 'POST',
+			credentials: 'include',
+		}).then(response => {
+			if (!response.ok)
+			{
+				console.log('unable to sign out.');
+			}
+		});
+
 		// future code cleaning any resourese that may be allocated.
 	}
 	return {

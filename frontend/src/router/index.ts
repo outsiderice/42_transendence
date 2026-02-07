@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { useSessionStore } from '@/state/user_session.ts'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -34,12 +33,17 @@ const router = createRouter({
     {
       path: '/users',
       name: 'users',
-      component: () => import('../views/404.vue'),
+      component: () => import('../views/UserListing.vue'),
     },
     {
       path: '/user/:id',
       name: 'user',
       component: () => import('../views/404.vue'),
+    },
+    {
+      path: '/my_profile_design', // change the name and add id !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      name: 'my-profile-design',
+      component: () => import('../views/ProfileView.vue'),
     },
     {
       path: '/edit_profile',
@@ -79,12 +83,22 @@ const router = createRouter({
 console.log(router);
 
 router.beforeEach((to, from) => {
+//	const result = await fetch('https://' + window.location.host + '/api/auth/refresh', {
+//		method:'POST',
+//	});
+//	console.log(result);
 	const session = useSessionStore();
 
 	if (to.name === "signin" || to.name === "signup") {
 		return ;
 	}
-	if ((to.name !== "signin" && to.name !== "signup") && !session.getIsSignedIn) {
+	if (
+		(to.name !== "signin" 
+		 	&& to.name !== "signup" 
+			&& to.name !== 'privacy policy'
+			&& to.name !== 'terms of service') 
+		&& !session.getIsSignedIn) {
+		console.log("aaaaaaaaaa");
 		return { name: "signin" };
 	}
 });

@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
 :root {
 	--color_background_1: hsl(0, 0%, 95%);
@@ -29,6 +28,7 @@
 body {
 	background-color: var(--color_background_1);
 	color: var(--color_accent_1);
+	font-family: 'Oswald', sans-serif;
 }
 
 a {

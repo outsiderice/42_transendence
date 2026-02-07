@@ -2,103 +2,157 @@
 import { ref, onMounted } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
+import { useRouter } from 'vue-router';
+import { useSessionStore } from '@/state/user_session.ts'
 
-// Toggle del newsletter
-const { newsletter } = useToggles()
-
-// Avatar y status
 const profilePicture = ref<string | undefined>(undefined)
 const onlineIndicatorColor = "var(--color_accent_success)"
-
-// Token del usuario
-const token = localStorage.getItem('token')
+const oldpassword = ref<string | undefined>(undefined)
+const password = ref<string | undefined>(undefined)
+const session = useSessionStore();
+const router = useRouter();
+const name = ref<string | undefined>(undefined)
+const email = ref<string | undefined>(undefined)
+const nickname = ref<string | undefined>(undefined)
+const online = ref<boolean | undefined >(undefined);
 const userId = ref<number | null>(null)
 
-// Campos del formulario
-const { 
-  name, 
-  email, 
-  password, 
-  confirmPassword,
-  nickname,
-  touched, 
-  nameError, 
-  emailError, 
-  passwordError,
-  nicknameError, 
-  confirmPasswordError,
-  validate 
-} = useAuthForm()
 
 // --- GET: traer datos del usuario usando token ---
 const fetchUserSettings = async () => {
-  if (!token) return
+  console.log("DEBUG: Starting fetchUserSettings");
+  console.log("DEBUG: session object:", session);
+  console.log("DEBUG: session.getUserId:", session.getUserId);
 
   try {
-    const res = await fetch('http://' + window.location.host + '/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+    console.log("DEBUG: Fetch URL:", url);
 
-    if (res.ok) {
-      const data = await res.json()
-      userId.value = data.id
-      name.value = data.username
-      email.value = data.email
-      nickname.value = data.nickname
-      profilePicture.value = data.avatar || undefined
-      console.log('User settings loaded:', data)
-    } else {
-      console.error('Error fetching user settings:', await res.text())
+    const res = await fetch(url, {
+      method: 'GET',
+      credentials: 'include', // 🔑 enviar cookies
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log("DEBUG: Response object:", res);
+    console.log("DEBUG: Response status:", res.status);
+
+    if (!res.ok) {
+      console.warn("DEBUG: Usuario no autenticado o error backend, reseteando sesión");
+      console.log("DEBUG: Resetting session");
+      session.$reset();
+      console.log("DEBUG: Redirecting to signin page");
+      router.push({ name: 'signin' });
+      return;
     }
+
+    const result = await res.json();
+    console.log("DEBUG: Parsed user data:", result);
+
+    nickname.value = result.nickname || "no nickname";
+    console.log("DEBUG: nickName.value set to:", nickname.value);
+
+    name.value = result.username || "no username";
+    console.log("DEBUG: userName.value set to:", name.value);
+
+    email.value = result.email || "no email";
+    console.log("DEBUG: email.value set to:", email.value);
+
+    profilePicture.value = result.avatar || undefined;
+    console.log("DEBUG: profilePicture.value set to:", profilePicture.value);
+
+    online.value = true;
+    console.log("DEBUG: online.value set to true");
+
   } catch (error) {
-    console.error('Network error fetching settings:', error)
+    console.error("DEBUG: Network error fetching user:", error);
+    console.log("DEBUG: Resetting session due to error");
+    session.$reset();
+    console.log("DEBUG: Redirecting to signin page due to error");
+    router.push({ name: 'signin' });
   }
-}
+};
+
 
 // --- PUT: actualizar usuario ---
 const handleSubmit = async () => {
-  if (!validate()) return
-  if (!token || !userId.value) return alert('No estás autenticado')
+  console.log("DEBUG: handleSubmit START");
+
+  console.log("DEBUG: Current form values:", {
+    userId: userId.value,
+    name: name.value,
+    email: email.value,
+    nickname: nickname.value,
+    password: password.value,
+    oldpassword: oldpassword.value,
+    avatar: profilePicture.value,
+  });
+
+  //const isValid = validate();
+  //console.log("DEBUG: validate() result:", isValid);
+  //if (!isValid) {
+    //console.warn("DEBUG: Form validation failed. Aborting submit.");
+    //return;
+  //}
 
   try {
-    const res = await fetch(`https://` + window.location.host + `/users/${userId.value}`, {
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+    console.log("DEBUG: PUT URL:", url);
+
+    const payload = {
+      username: name.value,
+      email: email.value,
+      password: password.value || undefined,
+      oldpassword: oldpassword.value,
+      nickname: nickname.value,
+      avatar: profilePicture.value
+    };
+
+    console.log("DEBUG: Payload being sent:", payload);
+
+    const res = await fetch(url, {
       method: 'PUT',
+      credentials: 'include', // 🔑 enviar cookies
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        username: name.value,
-        email: email.value,
-        password: password.value || undefined,
-        nickname: nickname.value,
-        avatar: profilePicture.value
-      })
-    })
+      body: JSON.stringify(payload)
+    });
+
+    console.log("DEBUG: Response object:", res);
+    console.log("DEBUG: Response status:", res.status);
+    console.log("DEBUG: Response ok?:", res.ok);
 
     if (res.ok) {
-      const data = await res.json()
-      console.log('User settings updated:', data)
-      alert('Cambios guardados ✅')
-      // Limpiar passwords
-      password.value = ''
-      confirmPassword.value = ''
+      const data = await res.json();
+      console.log("DEBUG: Parsed response JSON:", data);
+
+      alert('Cambios guardados ✅');
+
+      console.log("DEBUG: Clearing password fields");
+      password.value = '';
+      oldpassword.value = '';
+
+      console.log("DEBUG: handleSubmit SUCCESS END");
     } else {
-      const errorText = await res.text()
-      console.error('Error updating settings:', errorText)
-      alert('Error al guardar los cambios ❌')
+      const errorText = await res.text();
+      console.error("DEBUG: Error response text:", errorText);
+
+      alert('Error al guardar los cambios ❌');
+      console.log("DEBUG: handleSubmit ERROR END (res not ok)");
     }
+
   } catch (error) {
-    console.error('Network error updating settings:', error)
-    alert('Error de red al guardar cambios ❌')
+    console.error('DEBUG: Network error updating settings:', error);
+    alert('Error de red al guardar cambios ❌');
+    console.log("DEBUG: handleSubmit ERROR END (catch)");
   }
-}
+};
+
 
 // Cargar datos al montar
 onMounted(fetchUserSettings)
@@ -133,7 +187,7 @@ onMounted(fetchUserSettings)
         </g>
 
         <!-- user avatar -->
-        <image v-else width="60" height="60" :href="profilePicture" mask="url(#profileMask)" />
+        <image v-else width="60" height="60" fill="var(--color_accent_1)" :href="profilePicture" mask="url(#profileMask)" />
 
         <!-- status -->
         <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor" />
@@ -144,40 +198,34 @@ onMounted(fetchUserSettings)
     <div class="mt-6 text-[var(--color_accent_2)]">
       <p><strong class="text-[var(--color_accent_1)]">Name:</strong> {{ name }}</p>
       <p><strong class="text-[var(--color_accent_1)]">Nickname:</strong> {{ nickname }}</p>
-      <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
-    </div>
-
-    <!-- Formulario -->
-    <PongInput
+      <PongInput
       label="Change Nickname"
       v-model="nickname"
       :error="nicknameError"
       @blur="touched.nickname = true"
-    />
+      />
+      <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
+      <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong></p>
+      <PongInput
+        label="Type Old Password"
+        type="password"
+        v-model="oldpassword"
+        @blur="touched.oldpassword = true"
+      />
 
-    <PongInput
-      label="Change Email"
-      type="email"
-      v-model="email"
-      :error="emailError"
-      @blur="touched.email = true"
-    />
+      <PongInput
+        label="Type New Password"
+        type="password"
+        v-model="password"
+        @blur="touched.password = true"
+      />
 
-    <PongInput
-      label="Change Password"
-      type="password"
-      v-model="password"
-      :error="passwordError"
-      @blur="touched.password = true"
-    />
+    </div>
 
-    <PongInput
-      label="Confirm New Password"
-      type="password"
-      v-model="confirmPassword"
-      :error="confirmPasswordError"
-      @blur="touched.confirmPassword = true"
-    />
+    <!-- Formulario -->
+    
+
+    
 
     <div class="flex flex-col gap-4 mt-4">
       <PongButton

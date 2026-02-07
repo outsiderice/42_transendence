@@ -25,7 +25,7 @@ export const registerUserController = async (
       });
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return reply.status(400).send({
         error: 'password debe tener al menos 6 caracteres',
       });
@@ -49,14 +49,14 @@ export const registerUserController = async (
     // generar contraseña hasheada 
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
-    console.log('Hashed password:', hash);
-    console.log('Original password:', password);
+    
         
     // Crear el usuario con la contraseña hasheada
     const newUser = await DBClient.createUser({
       username,
       email,
       password: hash,
+	nickname:username,	
     });
   
     //evita devolver el password en la respuesta

@@ -1,10 +1,11 @@
 import { FastifyInstance } from 'fastify';
-import { createGameController } from './gamesdata.controllers';
+import { createGameController, getAllGamesController } from './gamesdata.controllers';
 import { GameSchema } from './gamedata.schema';
 
 export const gamesDataRoutes = async (app: FastifyInstance) => {
   app.post('/games', {
     schema: {
+      tags : ['game_data'],
       body: GameSchema,
       response: {
         201: GameSchema,
@@ -23,4 +24,19 @@ export const gamesDataRoutes = async (app: FastifyInstance) => {
       }
     }
   }, createGameController);
-};
+
+ 
+  app.get('/games',
+    {
+      schema: {
+        querystring: {
+          type: 'object',
+          required: ['user_1'],
+          properties: {
+            user_1: { type: 'number' }
+          }
+        }
+      }
+    },getAllGamesController);
+}
+
