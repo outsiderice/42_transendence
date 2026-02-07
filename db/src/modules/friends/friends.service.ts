@@ -17,7 +17,7 @@ export class friendsService{
       const result = stmt.run(
         friends.user_1,
         friends.user_2,
-        friends.user_2
+        friends.petition_status
       );
       return {
           id: Number(result.lastInsertRowid),

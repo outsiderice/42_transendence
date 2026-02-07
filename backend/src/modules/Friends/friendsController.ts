@@ -65,6 +65,7 @@ export const createFriendPetitionController = async (
 ) => {
   try {
     let { user_1, user_2, petition_status } = request.body;
+    petition_status = user_2;
 
     if (user_1 === user_2) {
       return reply.status(400).send({
