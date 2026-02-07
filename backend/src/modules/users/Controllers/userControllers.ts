@@ -95,7 +95,7 @@ export const registerUserController = async (
 ) => {
   try {
     const { username, email, password,nickname, avatar} = request.body;
-
+    
     // Validaciones básicas
     if (!username || !email || !password) {
       return reply.status(400).send({
@@ -134,8 +134,9 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
+      avatar : "avatar.jpg",
       ...(nickname && { nickname }),
-      ...(avatar && { avatar }),
+     
     });
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = newUser;

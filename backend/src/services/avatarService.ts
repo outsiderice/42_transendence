@@ -49,12 +49,10 @@ export const avatarService = {
     },
 
     //is passed the image stream (or whatever) from a route controller and returns bool
-    async validateAvatar(file: any )
+    async validateAvatar(mimetype: string): Promise<boolean>
     {
         const allowedTypes = ['image/jpeg', 'image/png'];
-        if (!allowedTypes.includes(file.mimetype)){
-            return (false);
-        }
-        return (true);
+        return allowedTypes.includes(mimetype);
     }
+
 }

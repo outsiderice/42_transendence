@@ -50,7 +50,7 @@ export default async (app: FastifyInstance) => {
         email,
         password,
         nickname,
-        avatar,
+        avatar : "avatar.jpg",
       });
 
       return reply.status(201).send(newUser);
