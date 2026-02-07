@@ -41,6 +41,11 @@ const router = createRouter({
       component: () => import('../views/404.vue'),
     },
     {
+      path: '/my_profile_design', // change the name and add id !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      name: 'my-profile-design',
+      component: () => import('../views/ProfileView.vue'),
+    },
+    {
       path: '/edit_profile',
       name: 'user',
       component: () => import('../views/SettingsView.vue'),
