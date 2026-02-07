@@ -159,7 +159,7 @@ onMounted(fetchUserSettings)
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
+  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_1)] rounded-xl shadow-md">
     <!-- Avatar y status -->
     <div class="flex justify-center mb-6">
       <svg
