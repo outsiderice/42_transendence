@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import something from '../components/something.vue'
 </script>
 
 <template>
