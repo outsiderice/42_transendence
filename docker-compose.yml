@@ -4,8 +4,6 @@ services:
     container_name: db-service
     volumes:
       - ./db/data:/app/data
-    expose:
-      - "3001:3001"
     environment:
       - DB_SERVICE_PORT=${DB_SERVICE_PORT}
       - DB_SERVICE_HOST=${DB_SERVICE_HOST}
@@ -29,8 +27,6 @@ services:
   backend:
     build: ./backend
     container_name: backend
-    expose:
-      - "3000:3000"
     volumes:
       - ./backend/public/avatars:/app/public/avatars
     environment:
@@ -57,8 +53,6 @@ services:
   frontend:
     build: ./frontend
     container_name: frontend
-    expose:
-      - "5173:5173"
     environment:
       - PORT=${VITE_PORT}
       - HOST=${VITE_HOST}
