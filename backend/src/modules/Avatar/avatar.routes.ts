@@ -28,8 +28,7 @@ export async function avatarRoutes(app: FastifyInstance) {
         return reply.status(404).send({ error: "User has no avatar" })
       }
 
-     //filename prueba
-     
+         
      const filename = `${user.avatar}`
      const stream = await avatarService.getAvatar(filename)
 
