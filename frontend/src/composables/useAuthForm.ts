@@ -5,7 +5,7 @@ export function useAuthForm() {
   const email = ref('')
   const password = ref('')
   const confirmPassword = ref('')
-
+  const nickname = ref(' ') 
   const touched = ref({
     name: false,
     email: false,
@@ -73,6 +73,7 @@ export function useAuthForm() {
     emailError,
     passwordError,
     confirmPasswordError,
+    nickname,
     validate
   }
 }

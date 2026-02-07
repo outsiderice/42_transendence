@@ -1,8 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import {
- registerUserController,
-  loginUserController,
-  refreshTokenController,
+	registerUserController,
+ 	loginUserController,
+ 	refreshTokenController,
+	logoutUserController,
 //  getCallbackController
 } from './authController';
 
@@ -27,6 +28,15 @@ export const UserSafeSchema = {
   required: ['id', 'username', 'email'],
 };
 
+export const UserRefreshSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    username: { type: 'string' },
+  },
+  required: ['id', 'username'],
+};
+
 export const CreateUserSchema = {
   type: 'object',
   required: ['username', 'email', 'password'],
@@ -40,7 +50,7 @@ export const CreateUserSchema = {
 //controller bodies types
 export type RegisterUserBody = {
   username: string;
-  email: string;
+  email: 	string;
   password: string;
 };
 
@@ -50,8 +60,14 @@ export type LoginUserBody = {
 };
 
 export type SafeUserResponese = {
+  id:		number;
   username: string;
-  email: string;
+  email: 	string;
+};
+
+export type UserRefreshResponese = {
+  id:		number;
+  username: string;
 };
 
 //routes
@@ -63,7 +79,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       body: CreateUserSchema,
       response: {
-        201: {UserSafeSchema: {type: 'object'}, accessToken: { type: 'string' }},
+        201: {UserSafeSchema: {type: 'object'}},
         400: { type: 'object', properties: { error: { type: 'string' } } },
         409: { type: 'object', properties: { error: { type: 'string' } } },
       },
@@ -76,7 +92,7 @@ export const authRoutes = async (app: FastifyInstance) => {
       tags: ['Auth'],
       body: LoginUserSchema,
       response: {
-        200: {UserSafeSchema: {type: 'object'}, accessToken: { type: 'string' }},
+        200: {UserSafeSchema: {type: 'object'}},
         400: { type: 'object', properties: { error: { type: 'string' } } },
         404: { type: 'object', properties: { error: { type: 'string' } } },
       },
@@ -87,23 +103,28 @@ export const authRoutes = async (app: FastifyInstance) => {
   app.post<{ Body: { refreshToken: string } }>('/auth/refresh', {
     schema: {
       tags: ['Auth'],
-      body: {
-        type: "object",
-        required: ["refreshToken"],
-        properties: {
-          refreshToken: { type: "string" },
-        },
       },
       response: {
-              200: {
-                type: "object",
-                properties: {
-                  accessToken: { type: "string" },
-                },
-              },
-      },
-    },
-  },refreshTokenController);
+              	201: { UserRefreshSchema: {type: 'object'}},
+        		401: { type: 'object', properties: { error: { type: 'string' } } },
+		},
+      }, refreshTokenController);
+
+	app.post(
+ 	 '/auth/logout',
+ 	 {
+  	  schema: {
+     	 tags: ['Auth'],
+      	response: {
+        	200: {
+         	 description: 'User successfully logged out',
+          	type: 'null',
+        	},
+      	},
+    	},
+  	},
+  	logoutUserController
+	);
 
 //   // GITHUB OAUTH CALLBACK
 //   app.get('/auth/github/callback', {

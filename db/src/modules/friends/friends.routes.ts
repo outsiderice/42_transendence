@@ -25,7 +25,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
       reply.status(400).send({ error: (error as Error).message });
     }
   });
-    // READ ALL Friends
+    // READ ALL Friends by user_1 id
     app.get<{ Querystring: { user_1: number } }>('/friends', {
       schema: { 
         tags: ['Friends'],
@@ -46,4 +46,48 @@ export const friendsRoutes = async (app: FastifyInstance) => {
         reply.status(400).send({ error: (error as Error).message });
       }
     });
-}
+
+      // ACCEPT Friend Petition
+    app.put<{ Querystring: { id: number } }>('/friends/accept', {
+      schema: {
+        tags: ['Friends'],
+        querystring: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: { type: 'number' },
+          },
+        },
+      } as any,
+    }, async (request: FastifyRequest<{ Querystring: { id: number } }>, reply: FastifyReply) => {
+      try {
+        const { id } = request.query;
+        await friendsService.AcceptFriendPetition(id);
+        reply.status(200).send({ message: 'Friend petition accepted' });
+      } catch (error) {
+        reply.status(400).send({ error: (error as Error).message });
+      }
+    });
+
+    // DELETE Friend Petition
+    app.delete<{ Querystring: { id: number } }>('/friends', {
+      schema: {
+        tags: ['Friends'],
+        querystring: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: { type: 'number' },
+          },
+        },
+      } as any,
+    }, async (request: FastifyRequest<{ Querystring: { id: number } }>, reply: FastifyReply) => {
+      try {
+        const { id } = request.query;
+        await friendsService.DeleteFriendPetition(id);
+        reply.status(200).send({ message: 'Friend petition deleted' });
+      } catch (error) {
+        reply.status(400).send({ error: (error as Error).message });
+      }
+    });
+} 

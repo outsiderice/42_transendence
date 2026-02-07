@@ -83,13 +83,8 @@ const handleTouch = (e: TouchEvent, pressed: boolean) => {
 
 onMounted(() => {
   // Connect to the Fastify backend WebSocket route
-  //socket = new WebSocket("ws://0.0.0.0:3000/ws/pong");
-  //Game.vue SI NO FUNCIONA CAMBIAR DIRECCION DE BACKEND, PONER LUEGO ENV VAR
-  const token = localStorage.getItem('token');
-  //console.log(token);
-  socket = new WebSocket(`wss://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/ws/pong?token=${token}`);
 
- //socket = new WebSocket("ws://localhost:3000/ws/pong?token=${token}");
+socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 
   socket.onmessage = (event) => {
     try {
