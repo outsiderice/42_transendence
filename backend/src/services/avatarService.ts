@@ -1,4 +1,5 @@
 import { WriteStream, createReadStream, createWriteStream } from "fs";
+import * as fs from "fs";
 import path from "path";
 import { Readable } from 'stream';
 
@@ -32,7 +33,18 @@ export const avatarService = {
     async deleteAvatar(filename: string): Promise<boolean>
     {
         const filepath = avatarsPath + filename;
-        
+        fs.unlink(filepath, 
+            (err => {
+                if (err) {
+                    console.log(err);
+                    return (false);
+                }
+                else{
+                    console.log("Deleted file: ", filename);
+                }
+                }
+            )
+        )
         return (true);
     },
 
