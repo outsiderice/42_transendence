@@ -3,14 +3,14 @@ import { ref, computed  } from 'vue';
 
 export const useSessionStore = defineStore( 'session', () => {
 
-//	fetch('https://' + window.location.host + '/api/auth/refresh', {
-//		method:'POST',
-//	}).then(async (response) => {
-//		if (response.ok) {
-//			const result = await response.json();
-//			setSession(result.safeUser.id, result.safeUser.username);
-//		}
-//	});
+	fetch('https://' + window.location.host + '/api/auth/refresh', {
+		method:'POST',
+	}).then(async (response) => {
+		if (response.ok) {
+			const result = await response.json();
+			setSession(result.safeUser.id, result.safeUser.username);
+		}
+	});
 
 	const is_signed_in = localStorage.getItem('user_name') !== null ? true : false;
 

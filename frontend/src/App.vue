@@ -9,6 +9,9 @@ import { useSessionStore } from '@/state/user_session.ts'
 
 const session = useSessionStore();
 
+import { useOnlineUsersStore } from '@/state/online_users.ts'
+
+const onlineUsers = useOnlineUsersStore();
 </script>
 
 <template>
