@@ -14,9 +14,6 @@ const userName = ref<string | undefined >(undefined);
 const online = ref<boolean | undefined >(undefined);
 const profilePicture = ref<string | undefined>(undefined);
 
-console.log("DEBUG:");
-console.log(session);
-console.log(session.getUserId);
 
 fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
 	method: 'GET',
@@ -56,13 +53,14 @@ function sign_out()
 	<UserCard 
 		:nickName="nickName" 
 		:userName="userName" 
-		:online="online" 
+		:online="true" 
 		:profilePicture="profilePicture" 
 		class="my-[4rem]"
 	/>
 	<ButtonComponent label="play" @click="$router.push({name: 'game'})"/>
 	<ButtonComponent label="profile" @click="$router.push({name: 'profile'})"/>
 	<ButtonComponent label="users" @click="$router.push({name: 'users'})"/>
+	<ButtonComponent label="leaderboards" @click="$router.push({name: 'leaderboards'})"/>
 	<ButtonComponent label="sign out" @click="sign_out()"/>
 </section>
 </template>
