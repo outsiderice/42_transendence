@@ -8,6 +8,12 @@ export const useSessionStore = defineStore( 'session', () => {
 	}).then(async (response) => {
 		if (response.ok) {
 			const result = await response.json();
+			fetch('https://' + window.location.host + '/api/auth/refresh', {
+				method: 'POST',
+			});
+			fetch('https://' + window.location.host + '/api/presence/heartbeat/' + getUserId.value, {
+				method: 'POST',
+			});
 			setSession(result.safeUser.id, result.safeUser.username);
 		}
 	});
@@ -25,20 +31,17 @@ export const useSessionStore = defineStore( 'session', () => {
 	const getUserId = computed(() => {return userId.value});
 
 	function setSession(user_id: number, user_name: string) {
-		console.log("refresh access token.");
 		localStorage.setItem('user_id', user_id);
 		localStorage.setItem('user_name', user_name);
 		isSignedIn.value = true
 		userId.value = user_id;
 		userName.value = user_name;
 		refreshAccessTokenIntervalId.value = setInterval(() => {
-			console.log("refreshing the access token.");
 			fetch('https://' + window.location.host + '/api/auth/refresh', {
 				method: 'POST',
 			});
 		}, 600000);
 		updateOnlineIntervalId.value = setInterval(() => {
-			console.log("updating the user online status.");
 			fetch('https://' + window.location.host + '/api/presence/heartbeat/' + getUserId.value, {
 				method: 'POST',
 			});
@@ -63,7 +66,6 @@ export const useSessionStore = defineStore( 'session', () => {
 		}).then(response => {
 			if (!response.ok)
 			{
-				console.log('unable to sign out.');
 			}
 		});
 
