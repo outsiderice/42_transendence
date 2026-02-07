@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 3000
 
-#CMD ["npx", "tsx", "watch", "src/server.ts"]
-RUN npm run build
-CMD ["npm", "start"]
+CMD ["npx", "tsx", "watch", "src/server.ts"]
+#RUN npm run build
+#CMD ["npm", "start"]
 
