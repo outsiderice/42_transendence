@@ -20,6 +20,7 @@ import { gameRoutes } from "./modules/game/GameRoutes";
 import { gamesDataRoutes } from "./modules/gamedata/gamedata.routes.js";
 import { presenceRoutes } from "./modules/presence/presence.Routes.js";
 import { dashboardRoutes } from './modules/gamestats/gamestats.routes.js';
+import { avatarRoutes } from './modules/Avatar/avatar.routes';
 
 // 1. Setup the basic App
 const app = Fastify({ logger: true });
@@ -95,6 +96,7 @@ const start = async () => {
   app.register(presenceRoutes);
   app.register(gamesDataRoutes);
   app.register(dashboardRoutes);
+  app.register(avatarRoutes);
 
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
       console.log("Server is running on http://localhost:3000");

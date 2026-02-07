@@ -3,12 +3,7 @@ import path from "path"
 import { randomUUID } from "crypto"
 import { Readable } from "stream"
 import { User, DBClient}from "./../../services/dbClient"
-import ServiceAvatar from "./../services/avatarService"
-
-
-const avatarService = new ServiceAvatar()
-
-const AVATAR_DIR = path.join(process.cwd(), "uploads", "avatars")
+import {avatarService} from "./../../services/avatarService"
 
 export async function avatarRoutes(app: FastifyInstance) {
 
@@ -33,8 +28,10 @@ export async function avatarRoutes(app: FastifyInstance) {
         return reply.status(404).send({ error: "User has no avatar" })
       }
 
-     
-      const stream = await avatarService.download(user.avatar)
+     //filename prueba
+     const extension = ".jpg";
+     const filename = `${user.avatar}${extension}`
+     const stream = await avatarService.getAvatar(filename)
 
       reply.type("application/octet-stream")
       return reply.send(stream)
@@ -68,7 +65,7 @@ export async function avatarRoutes(app: FastifyInstance) {
       const buffer = await part.toBuffer()
       const validationStream = Readable.from(buffer)
 
-      const isValid = await avatarService.validate(validationStream)
+      const isValid = await avatarService.validateAvatar(validationStream)
 
       if (!isValid) {
         return reply.status(415).send({ error: "Invalid image file" })
@@ -81,7 +78,7 @@ export async function avatarRoutes(app: FastifyInstance) {
 
       if (user.avatar) {
         try {
-          await avatarService.delete(user.avatar)
+          await avatarService.deleteAvatar(user.avatar)
         } catch (err) {
           console.warn("Old avatar delete failed:", err)
         }
@@ -92,7 +89,7 @@ export async function avatarRoutes(app: FastifyInstance) {
       const filename = `${safeUsername}_${randomUUID()}${extension}`
       const uploadStream = Readable.from(buffer)
 
-      await avatarService.upload(uploadStream, filename)
+      await avatarService.uploadAvatar(uploadStream, filename)
 
       const updatedUser: Partial<User> = {
         avatar: filename

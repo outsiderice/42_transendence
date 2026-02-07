@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import { Readable } from 'stream';
 
-const   avatarsPath= path.join(__dirname, '../../public/avatars');
+const   avatarsPath= path.join(__dirname, '../../public/avatars/');
 
 export const avatarService = {
     //is passed file path from a route controller and returns image stream
