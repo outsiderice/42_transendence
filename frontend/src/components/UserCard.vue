@@ -6,12 +6,14 @@ import UserAvatar from '@/components/UserAvatar.vue';
 //	prop handeling. 
 interface userCardInfo {
 	profilePicture?: string,
-	nickName?: string,
-	userName?: string,
-	online?: boolean,
+	nickName: string,
+	userName: string,
+	online: boolean,
 };
 
 const props = defineProps<userCardInfo>();
+
+console.log(props.online);
 
 const profilePicture = computed(() => {
 	return props.profilePicture === undefined ? defaultProfilePicture : props.profilePicture;
@@ -31,8 +33,7 @@ const onlineStatus = computed(() => {
 });
 
 const onlineIndicatorColor = computed(() => {
-	return	props.userName === undefined ? "var(--color_accent_3)" :
-			props.online ? "var(--color_accent_success)" : "var(--color_accent_danger)";
+	return props.online ? "var(--color_accent_success)" : "var(--color_accent_danger)";
 });
 
 //	user actions.
@@ -62,7 +63,7 @@ function redirectToUserProfilePage(): void{
 	
 	<UserAvatar 
 		:profilePicture="props.profilePicture"
-		:onlineStatus="true"
+		:online="props.online"
 	/>
 	<div class="panelUserCardText flex flex-col gap-[0.3rem] w-full">
 		<p 

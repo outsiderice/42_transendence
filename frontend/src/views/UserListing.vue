@@ -25,9 +25,6 @@ const users = reactive
 	}[]
 > ([]);
 
-console.log("DEBUG:");
-console.log(session);
-console.log(session.getUserId);
 
 fetch("https://" + window.location.host + "/api/users" , {
 	method: 'GET',

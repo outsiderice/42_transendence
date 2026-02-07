@@ -16,9 +16,9 @@ interface leaderboardCardInfo {
 const props = defineProps<leaderboardCardInfo>();
 
 const ranking_ordinal_num = computed(() => {
-	if (props.ranking === 1) { return ('1st#'); }
-	if (props.ranking === 2) { return ('2nd#'); }
-	if (props.ranking === 3) { return ('3rd#'); }
+	if (props.ranking == 1) { return ('1st'); }
+	if (props.ranking == 2) { return ('2nd'); }
+	if (props.ranking == 3) { return ('3rd'); }
 });
 
 //	user actions.
@@ -52,7 +52,7 @@ function redirectToUserProfilePage(): void{
 	</div>
 	<UserAvatar 
 		:profilePicture="props.profilePicture"
-		:onlineStatus="props.online"
+		:online="props.online"
 	/>
 	<div class="panelUserCardText flex flex-col gap-[0.3rem] w-full">
 		<p 
