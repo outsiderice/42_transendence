@@ -2,107 +2,63 @@
 import { ref, onMounted } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import { useToggles } from '../composables/useToggles'
 import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 import { useSessionStore } from '@/state/user_session.ts'
+import { Cropper, CircleStencil } from 'vue-advanced-cropper'
+import 'vue-advanced-cropper/dist/style.css'
 
+// --- Datos del usuario ---
 const profilePicture = ref<string | undefined>(undefined)
 const onlineIndicatorColor = "var(--color_accent_success)"
 const oldpassword = ref<string | undefined>(undefined)
 const password = ref<string | undefined>(undefined)
-const session = useSessionStore();
-const router = useRouter();
+const session = useSessionStore()
+const router = useRouter()
 const name = ref<string | undefined>(undefined)
 const email = ref<string | undefined>(undefined)
 const nickname = ref<string | undefined>(undefined)
-const online = ref<boolean | undefined >(undefined);
+const online = ref<boolean | undefined >(undefined)
 const userId = ref<number | null>(null)
 
+// --- Avatar upload state ---
+const imageToCrop = ref<string | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null)
+const cropper = ref<any>(null)
 
 // --- GET: traer datos del usuario usando token ---
 const fetchUserSettings = async () => {
-  console.log("DEBUG: Starting fetchUserSettings");
-  console.log("DEBUG: session object:", session);
-  console.log("DEBUG: session.getUserId:", session.getUserId);
-
   try {
-    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
-    console.log("DEBUG: Fetch URL:", url);
-
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId
     const res = await fetch(url, {
       method: 'GET',
-      credentials: 'include', // 🔑 enviar cookies
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log("DEBUG: Response object:", res);
-    console.log("DEBUG: Response status:", res.status);
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
 
     if (!res.ok) {
-      console.warn("DEBUG: Usuario no autenticado o error backend, reseteando sesión");
-      console.log("DEBUG: Resetting session");
-      session.$reset();
-      console.log("DEBUG: Redirecting to signin page");
-      router.push({ name: 'signin' });
-      return;
+      session.$reset()
+      router.push({ name: 'signin' })
+      return
     }
 
-    const result = await res.json();
-    console.log("DEBUG: Parsed user data:", result);
-
-    nickname.value = result.nickname || "no nickname";
-    console.log("DEBUG: nickName.value set to:", nickname.value);
-
-    name.value = result.username || "no username";
-    console.log("DEBUG: userName.value set to:", name.value);
-
-    email.value = result.email || "no email";
-    console.log("DEBUG: email.value set to:", email.value);
-
-    profilePicture.value = result.avatar || undefined;
-    console.log("DEBUG: profilePicture.value set to:", profilePicture.value);
-
-    online.value = true;
-    console.log("DEBUG: online.value set to true");
-
+    const result = await res.json()
+    nickname.value = result.nickname || "no nickname"
+    name.value = result.username || "no username"
+    email.value = result.email || "no email"
+    profilePicture.value = result.avatar || undefined
+    online.value = true
   } catch (error) {
-    console.error("DEBUG: Network error fetching user:", error);
-    console.log("DEBUG: Resetting session due to error");
-    session.$reset();
-    console.log("DEBUG: Redirecting to signin page due to error");
-    router.push({ name: 'signin' });
+    console.error(error)
+    session.$reset()
+    router.push({ name: 'signin' })
   }
-};
-
+}
 
 // --- PUT: actualizar usuario ---
 const handleSubmit = async () => {
-  console.log("DEBUG: handleSubmit START");
-
-  console.log("DEBUG: Current form values:", {
-    userId: userId.value,
-    name: name.value,
-    email: email.value,
-    nickname: nickname.value,
-    password: password.value,
-    oldpassword: oldpassword.value,
-    avatar: profilePicture.value,
-  });
-
-  //const isValid = validate();
-  //console.log("DEBUG: validate() result:", isValid);
-  //if (!isValid) {
-    //console.warn("DEBUG: Form validation failed. Aborting submit.");
-    //return;
-  //}
-
   try {
-    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
-    console.log("DEBUG: PUT URL:", url);
-
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId
     const payload = {
       username: name.value,
       email: email.value,
@@ -110,61 +66,79 @@ const handleSubmit = async () => {
       oldpassword: oldpassword.value,
       nickname: nickname.value,
       avatar: profilePicture.value
-    };
-
-    console.log("DEBUG: Payload being sent:", payload);
+    }
 
     const res = await fetch(url, {
       method: 'PUT',
-      credentials: 'include', // 🔑 enviar cookies
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    });
-
-    console.log("DEBUG: Response object:", res);
-    console.log("DEBUG: Response status:", res.status);
-    console.log("DEBUG: Response ok?:", res.ok);
+    })
 
     if (res.ok) {
-      const data = await res.json();
-      console.log("DEBUG: Parsed response JSON:", data);
-
-      alert('Cambios guardados ✅');
-
-      console.log("DEBUG: Clearing password fields");
-      password.value = '';
-      oldpassword.value = '';
-
-      console.log("DEBUG: handleSubmit SUCCESS END");
+      const data = await res.json()
+      alert('Cambios guardados ✅')
+      password.value = ''
+      oldpassword.value = ''
     } else {
-      const errorText = await res.text();
-      console.error("DEBUG: Error response text:", errorText);
-
-      alert('Error al guardar los cambios ❌');
-      console.log("DEBUG: handleSubmit ERROR END (res not ok)");
+      const errorText = await res.text()
+      alert('Error al guardar los cambios ❌')
+      console.error(errorText)
     }
-
   } catch (error) {
-    console.error('DEBUG: Network error updating settings:', error);
-    alert('Error de red al guardar cambios ❌');
-    console.log("DEBUG: handleSubmit ERROR END (catch)");
+    alert('Error de red al guardar cambios ❌')
+    console.error(error)
   }
-};
+}
 
+// --- Avatar upload functions ---
+const openPicker = () => {
+  fileInput.value?.click()
+}
 
-// Cargar datos al montar
+const onFileSelected = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+  imageToCrop.value = URL.createObjectURL(file)
+}
+
+const cancelCrop = () => {
+  imageToCrop.value = null
+}
+
+const cropAndUpload = async () => {
+  const { canvas } = cropper.value.getResult()
+
+  canvas.toBlob(async (blob: Blob) => {
+    const formData = new FormData()
+    formData.append('avatar', blob, 'avatar.jpg')
+
+    const res = await fetch('https://' + window.location.host + '/api/upload-avatar', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData
+    })
+
+    const data = await res.json()
+    profilePicture.value = data.avatar
+    imageToCrop.value = null
+  }, 'image/jpeg')
+}
+
+// --- Montaje ---
 onMounted(fetchUserSettings)
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
+
     <!-- Avatar y status -->
-    <div class="flex justify-center mb-6">
+    <div class="flex justify-center mb-6 relative">
       <svg
         viewBox="0 0 60 60"
-        class="profilePictureContainer w-[7rem] h-[7rem] flex-none hover:scale-110 transition duration-200"
+        class="profilePictureContainer w-[7rem] h-[7rem] flex-none hover:scale-110 transition duration-200 cursor-pointer"
+        @click="openPicker"
       >
         <defs>
           <mask id="statusIndicatorHole">
@@ -192,6 +166,30 @@ onMounted(fetchUserSettings)
         <!-- status -->
         <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor" />
       </svg>
+
+      <!-- input oculto -->
+      <input ref="fileInput" type="file" accept="image/*" hidden @change="onFileSelected" />
+    </div>
+
+    <!-- Cropper Modal -->
+    <div
+      v-if="imageToCrop"
+      class="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-4 rounded">
+        <Cropper
+          :src="imageToCrop"
+          :stencil-component="CircleStencil"
+          :stencil-props="{ aspectRatio: 1 }"
+          :ref="cropper"
+          class="w-[300px] h-[300px]"
+        />
+
+        <div class="flex gap-2 mt-4 justify-end">
+          <button @click="cancelCrop">Cancelar</button>
+          <button @click="cropAndUpload">Guardar</button>
+        </div>
+      </div>
     </div>
 
     <!-- Info actual -->
@@ -199,10 +197,8 @@ onMounted(fetchUserSettings)
       <p><strong class="text-[var(--color_accent_1)]">Name:</strong> {{ name }}</p>
       <p><strong class="text-[var(--color_accent_1)]">Nickname:</strong> {{ nickname }}</p>
       <PongInput
-      label="Change Nickname"
-      v-model="nickname"
-      :error="nicknameError"
-      @blur="touched.nickname = true"
+        label="Change Nickname"
+        v-model="nickname"
       />
       <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
       <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong></p>
@@ -210,23 +206,15 @@ onMounted(fetchUserSettings)
         label="Type Old Password"
         type="password"
         v-model="oldpassword"
-        @blur="touched.oldpassword = true"
       />
-
       <PongInput
         label="Type New Password"
         type="password"
         v-model="password"
-        @blur="touched.password = true"
       />
-
     </div>
 
     <!-- Formulario -->
-    
-
-    
-
     <div class="flex flex-col gap-4 mt-4">
       <PongButton
         label="Save Changes"
@@ -234,7 +222,6 @@ onMounted(fetchUserSettings)
         :disabled="!name || !email"
         @click="handleSubmit"
       />
-
       <PongButton
         label="Discard Changes"
         :fullWidth="true"

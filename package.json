@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@fontsource/oswald": "^5.2.8"
+    "@fontsource/oswald": "^5.2.8",
+    "vue-advanced-cropper": "^2.8.9"
   }
 }
