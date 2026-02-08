@@ -10,19 +10,6 @@ services:
       - DB_PATH=/app/data/app.db
     networks:
       - ft-transcendence
-    develop:
-      watch:
-        - action: sync
-          path: ./db
-          target: /app
-          ignore:
-            - node_modules/
-            - "*.log"
-            - .dockerignore
-            - Dockerfile
-            - data/
-        - action: rebuild
-          path: ./db/package.json
 
   backend:
     build: ./backend
@@ -37,18 +24,6 @@ services:
       - db
     networks:
       - ft-transcendence
-    develop:
-      watch:
-        - action: sync
-          path: ./backend
-          target: /app
-          ignore:
-            - node_modules/
-            - "*.log"
-            - .dockerignore
-            - Dockerfile
-        - action: rebuild
-          path: ./backend/package.json
 
   frontend:
     build: ./frontend
@@ -57,43 +32,15 @@ services:
       - PORT=${VITE_PORT}
       - HOST=${VITE_HOST}
       - PROXY=${PROXY_URL}
-    develop:
-      watch:
-        - path: ./frontend
-          target: /app
-          action: sync
-          ignore: 
-            - node_modules/
-            - "*.log"
-            - .dockerignore
-            - Dockerfile
-        - path: ./frontend/package.json
-          target: /app/package.json
-          action: restart
-        - path: ./frontend/vite.config.js
-          target: /app/vite.config.js
-          action: restart
-    networks:
-      - ft-transcendence
-
-  proxy:
-    build: ./proxy
-    container_name: proxy
     ports:
       - "8443:443"
     restart: always
     depends_on:
-      - frontend
       - backend
     volumes:
       - proxy_certs:/certs
     networks:
       - ft-transcendence
-    develop:
-      watch:
-        - action: sync
-          path: ./proxy/conf
-          target: /etc/nginx/conf.d/
 
 volumes:
   proxy_certs:
