@@ -101,6 +101,5 @@ app.delete<{ Querystring: { id: number } }>(
 );
 
 
-}
-
+};
 

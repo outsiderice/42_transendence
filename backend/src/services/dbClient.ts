@@ -8,6 +8,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  oldpassword?: string;
   nickname?: string;
   avatar?: string;
   created_at?: string;

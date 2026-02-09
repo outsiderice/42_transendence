@@ -2,6 +2,8 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
+
+
 const AVATAR_PREFIX = 'api/public/avatars';
 
 function buildAvatarUrl(filename?: string): string {
@@ -26,6 +28,32 @@ export const getAllUsersController = async (request: FastifyRequest, reply: Fast
     });
   }
 };
+
+
+
+export const getUserFriendsController = async (
+  request: FastifyRequest<{ Params: { id: number } }>,
+  reply: FastifyReply
+) => {
+  const userId = request.params.id;
+
+  const relations = await DBClient.getAllFriends (userId);
+
+  const friendIds = [
+    ...new Set(
+      relations.map(r =>
+        r.user_1 === userId ? r.user_2 : r.user_1
+      )
+    )
+  ];
+
+  const users = (await Promise.all(
+    friendIds.map(id => DBClient.getUserById(id))
+  )).filter(Boolean);
+
+  return users;
+};
+
 
 /**
  * GET /users/:id - Obtener usuario por ID
