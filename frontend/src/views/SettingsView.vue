@@ -59,8 +59,7 @@ const uploadAvatar = async () => {
   }
 
   const data = await res.json()
-  profilePicture.value = data.avatar + '?t=' + Date.now()
-
+  profilePicture.value = data.avatar
 }
 
 // --- GET usuario ---
@@ -85,7 +84,7 @@ const fetchUserSettings = async () => {
     nickname.value = result.nickname;
     name.value = result.username;
     email.value = result.email;
-    profilePicture.value = result.avatar + '?t=' + Date.now();
+    profilePicture.value = result.avatar;
     online.value = true;
 
   } catch (error) {
