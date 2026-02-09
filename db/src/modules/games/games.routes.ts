@@ -36,6 +36,7 @@ app.get<{ Querystring: { user_1: number } }>('/games', {
       try {
         const { user_1 } = request.query;
         const games = await GamesService.getAllGames(user_1);
+		console.log(games);
         reply.status(200).send(games);
       } catch (error) {
         reply.status(400).send({ error: (error as Error).message });
