@@ -59,6 +59,8 @@ const uploadAvatar = async () => {
   }
 
   const data = await res.json()
+
+  // 🔹 Usamos la URL que nos devuelve el backend
   profilePicture.value = data.avatar
 }
 
@@ -93,7 +95,7 @@ const fetchUserSettings = async () => {
   }
 };
 
-// --- PUT usuario ---
+// --- PUT usuario + refrescar avatar ---
 const handleSubmit = async () => {
   try {
     // 1️⃣ Subir avatar si cambió
@@ -124,6 +126,14 @@ const handleSubmit = async () => {
       password.value = '';
       oldpassword.value = '';
       avatarFile.value = null
+
+      // 🔹 Refrescar avatar desde backend para evitar imagen rota
+      const refreshRes = await fetch(`https://${window.location.host}/api/users/${session.getUserId}`, { credentials: 'include' })
+      if (refreshRes.ok) {
+        const data = await refreshRes.json()
+        profilePicture.value = data.avatar
+      }
+
     } else {
       alert('Error al guardar los cambios ❌');
     }
@@ -176,7 +186,6 @@ onMounted(fetchUserSettings)
       </svg>
     </div>
 
-    <!-- input oculto -->
     <input
       ref="fileInputRef"
       type="file"
@@ -190,39 +199,18 @@ onMounted(fetchUserSettings)
       <p><strong>Name:</strong> {{ name }}</p>
       <p><strong>Nickname:</strong> {{ nickname }}</p>
 
-      <PongInput
-        label="Change Nickname"
-        v-model="nickname"
-      />
+      <PongInput label="Change Nickname" v-model="nickname" />
 
       <p><strong>Email:</strong> {{ email }}</p>
 
-      <PongInput
-        label="Old Password"
-        type="password"
-        v-model="oldpassword"
-      />
-
-      <PongInput
-        label="New Password"
-        type="password"
-        v-model="password"
-      />
+      <PongInput label="Old Password" type="password" v-model="oldpassword" />
+      <PongInput label="New Password" type="password" v-model="password" />
     </div>
 
     <!-- BOTONES -->
     <div class="flex flex-col gap-4 mt-4">
-      <PongButton
-        label="Save Changes"
-        :fullWidth="true"
-        @click="handleSubmit"
-      />
-
-      <PongButton
-        label="Discard Changes"
-        :fullWidth="true"
-        @click="fetchUserSettings"
-      />
+      <PongButton label="Save Changes" :fullWidth="true" @click="handleSubmit" />
+      <PongButton label="Discard Changes" :fullWidth="true" @click="fetchUserSettings" />
     </div>
   </div>
 </template>
