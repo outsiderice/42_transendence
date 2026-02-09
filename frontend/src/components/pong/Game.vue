@@ -26,7 +26,7 @@ const startPostGameRoutine = () => {
     console.log("15 seconds passed: Refreshing leaderboard or rewards..."); // delete later
     router.push({name: 'home'}); //redirection to home
     
-  }, 15000);
+  }, 5000);
 };
 
 // Send input to backend
@@ -100,6 +100,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
       }
       else if (data.type === "DISCONNECTED") {
         msgPong.value = `${data.username} has left the game. What a coward!`;
+        startPostGameRoutine(); //check
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;

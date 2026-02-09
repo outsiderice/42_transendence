@@ -2,6 +2,15 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
+const AVATAR_PREFIX = 'api/public/avatars';
+
+function buildAvatarUrl(filename?: string): string {
+  if (!filename) { 
+    return ''; 
+  }
+  return `${AVATAR_PREFIX}/${filename}`;
+}
+
 /**
  * GET /users - Obtener todos los usuarios
  */
@@ -41,6 +50,7 @@ export const getUserByIdController = async (
         error: 'Usuario no encontrado',
       });
     }
+    user.avatar = buildAvatarUrl(user.avatar);
 
     reply.status(200).send(user);
   } catch (error) {
@@ -75,6 +85,7 @@ export const getUserByUsernameController = async (
         error: 'Usuario no encontrado',
       });
     }
+    user.avatar = buildAvatarUrl(user.avatar);
 
     reply.status(200).send(user);
   } catch (error) {

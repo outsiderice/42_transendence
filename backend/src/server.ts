@@ -8,6 +8,8 @@ import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import websocket from "@fastify/websocket";
 import multipart, { fastifyMultipart } from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+import path from 'path';
 
 //our plugins
 import jwtplugin from './plugins/jwt.plugin';
@@ -38,6 +40,11 @@ app.register(fastifyMultipart, {
   limits: {
     fileSize: 1024 * 1024 * 5
   }
+});
+
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '../public'),
+  prefix: '/public/',
 });
 
 app.register(oauthPlugin, {

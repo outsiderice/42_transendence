@@ -7,42 +7,6 @@ import {avatarService} from "./../../services/avatarService"
 
 export async function avatarRoutes(app: FastifyInstance) {
 
-  /*      GET AVATAR    */
-
-  app.get("/avatar/:id", async (request, reply) => {
-    try {
-      const { id } = request.params as { id: string }
-      const numericId = Number(id)
-
-      if (Number.isNaN(numericId)) {
-        return reply.status(400).send({ error: "Invalid user id" })
-      }
-
-      const user = await DBClient.getUserById(numericId)
-
-      if (!user) {
-        return reply.status(404).send({ error: "User not found" })
-      }
-
-      if (!user.avatar) {
-        return reply.status(404).send({ error: "User has no avatar" })
-      }
-
-         
-     const filename = `${user.avatar}`
-     const stream = await avatarService.getAvatar(filename)
-
-      reply.type("application/octet-stream")
-      return reply.send(stream)
-
-    } catch (error) {
-      console.error("Get avatar error:", error)
-      return reply.status(500).send({
-        error: "Error retrieving avatar"
-      })
-    }
-  })
-
   /*    POST AVATAR  */
 
   app.post(

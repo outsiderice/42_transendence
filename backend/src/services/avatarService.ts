@@ -6,12 +6,6 @@ import { Readable } from 'stream';
 const   avatarsPath= path.join(__dirname, '../../public/avatars/');
 
 export const avatarService = {
-    //is passed file path from a route controller and returns image stream
-    async getAvatar(filename: string): Promise < Readable >
-    {
-        const filepath = avatarsPath + filename;
-        return createReadStream(filepath)
-    },
 
     //is passed the image stream (or whatever) and it's file path from a route controller and returns bool
     async uploadAvatar( file: any , filename: string): Promise<boolean>
