@@ -83,6 +83,11 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../components/pong/Game.vue'),
     },
+    {
+      path: '/friendship_requests',
+      name: 'friendship_requests',
+      component: () => import('../views/FriendshipRequests.vue'),
+    },
   ],
 })
 
