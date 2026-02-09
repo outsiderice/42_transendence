@@ -52,18 +52,18 @@ Modules:
 
 ## Modules
 
-| Module                                                             | Points  |  Members              |
-| ------------------------------------------------------------------ | ------- | --------              |
-| Use a framework for both the frontend and backend                  | 2       |  Everyone             |
-| Implement real-time features using WebSockets or similar technology| 2       |  kkoval               |
-| A public API to interact with the database with a secured API key  | 2       |  josorteg, amagnell   |
-| Custom-made design system with reusable components                 | 1       |  tatahere, andmart2   |
-| Standard user management and authentication                        | 2       |  josorteg, amagnell   |
-| Game statistics and match history                                  | 1       |  josorteg, tathere    |
-| Implement remote authentication with OAuth 2.0.                    | 1       |  amagnell             |
-| Implement a web-based game where users can play against each other | 2       |  kkoval               |
-| Remote players                                                     | 2       |  kkoval               |
-| **TOTAL**                                                          | **15**  |    ^_^                |
+| Module                                                             | Points  |  Members                                        |
+| ------------------------------------------------------------------ | ------- | --------                                        |
+| Use a framework for both the frontend and backend                  | 2       |  Everyone                                       |
+| Implement real-time features using WebSockets or similar technology| 2       |  kkoval                                         |
+| A public API to interact with the database with a secured API key  | 2       |  josorteg, amagnell                             |
+| Custom-made design system with reusable components                 | 1       |  tatahere, andmart2                             |
+| Standard user management and authentication                        | 2       |  josorteg, amagnell                             |
+| Game statistics and match history                                  | 1       |  josorteg, tathere                              |
+| Implement remote authentication with OAuth 2.0.                    | 1       |  amagnell                                       |
+| Implement a web-based game where users can play against each other | 2       |  kkoval                                         |
+| Remote players                                                     | 2       |  kkoval                                         |
+| **TOTAL**                                                          | **15**  |  ＼(^o^)／＼(^o^)／＼(^o^)／＼(^o^)／＼(^o^)/      |
 
 This project began with the old requirements then we decided to adapt it to the new subject, which we thought would make for a more solid project. 
 
