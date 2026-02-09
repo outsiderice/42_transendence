@@ -5,28 +5,27 @@ import type { GameState } from './GameState';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+let   socket: WebSocket | null = null;
 const currentGameState = ref<GameState | null>(null);
 const msgPong = ref<string | null>(null);
 const leftPlayerName = ref<string>("Loading...");
 const rightPlayerName = ref<string>("Loading...");
 const mySide = ref<string | null>(null);
-let   socket: WebSocket | null = null;
+
 //timer variables
 const gameEnded = ref(false);
-let   postWinTimer = null;
+let postWinTimer: ReturnType<typeof setTimeout> | null = null;
 
 // timer for redirection to main after endGame is reached
 const startPostGameRoutine = () => {
   // clear time just in case
-  if (postWinTimer) clearInterval(postWinTimer);
-
-  console.log("Win signal received. Starting 15s interval..."); // delete later
+  if (postWinTimer)
+    return;
+  console.log("Win signal received. Starting 5s interval..."); // delete later
   
-  postWinTimer = setInterval(() => {
-    console.log("15 seconds passed: Refreshing leaderboard or rewards..."); // delete later
-    router.push({name: 'home'}); //redirection to home
-    
-  }, 15000);
+  postWinTimer = setTimeout(() => {
+    router.push({name: 'home'});
+  }, 5000);
 };
 
 // Send input to backend
@@ -82,8 +81,7 @@ const handleTouch = (e: TouchEvent, pressed: boolean) => {
 };
 
 onMounted(() => {
-  // Connect to the Fastify backend WebSocket route
-
+// Connect to the Fastify backend WebSocket route
 socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 
   socket.onmessage = (event) => {
@@ -100,6 +98,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
       }
       else if (data.type === "DISCONNECTED") {
         msgPong.value = `${data.username} has left the game. What a coward!`;
+        startPostGameRoutine();
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
@@ -111,7 +110,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
         mySide.value = data.side;
       }
     } catch (err) {
-      console.error("Error parsing WebSocket message:", err);
+      console.error("Error parsing WebSocket message:", err); // should not be visible on browser
     }
   };
 
@@ -123,11 +122,18 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 });
 
 onUnmounted(() => {
-  if (socket) socket.close();
+  if (socket) {
+    socket.onmessage = null;
+    socket.close();
+    socket = null;
+  } 
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
-  //clear timer
-  clearInterval(postWinTimer);
+  //clear timeout
+  if (postWinTimer) {
+    clearTimeout(postWinTimer);
+    postWinTimer = null;
+  }
 });
 </script>
 
