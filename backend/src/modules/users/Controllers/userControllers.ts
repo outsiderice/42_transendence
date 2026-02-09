@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
-const AVATAR_PREFIX = 'public/avatars';
+const AVATAR_PREFIX = 'api/public/avatars';
 
 function buildAvatarUrl(filename?: string): string {
   if (!filename) { 
@@ -85,6 +85,7 @@ export const getUserByUsernameController = async (
         error: 'Usuario no encontrado',
       });
     }
+    user.avatar = buildAvatarUrl(user.avatar);
 
     reply.status(200).send(user);
   } catch (error) {
