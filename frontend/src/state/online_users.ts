@@ -3,6 +3,24 @@ import { ref, computed, reactive } from 'vue';
 
 export const useOnlineUsersStore = defineStore( 'online users', () => {
 
+	fetch("https://" + window.location.host + "/api/presence", {
+		method: 'GET',
+	}).then( async (response) => {
+		if (!response.ok)
+		{
+			return ;
+		}
+		const result = await response.json();
+		while (usersIds.length != 0)
+		{
+			usersIds.pop();
+		}
+		while (result.length != 0)
+		{
+			usersIds.push(result.pop());
+		}
+	});
+
 	setInterval(async () => {
 		const response = await fetch("https://" + window.location.host + "/api/presence", {
 			method: 'GET',
@@ -18,10 +36,10 @@ export const useOnlineUsersStore = defineStore( 'online users', () => {
 			}
 			while (result.length != 0)
 			{
-				usersIds.push(result.pop());
+				usersIds.push(Number(result.pop()));
 			}
 		});
-	}, 5000);
+	}, 2000);
 
 	const usersIds = reactive<numbers[]>(Array());
 

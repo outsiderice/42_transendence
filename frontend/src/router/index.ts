@@ -31,6 +31,11 @@ const router = createRouter({
       component: () => import('../views/SignUpView.vue'),
     },
     {
+      path: '/leaderboards',
+      name: 'leaderboards',
+      component: () => import('../views/Leaderboards.vue'),
+    },
+    {
       path: '/users',
       name: 'users',
       component: () => import('../views/UserListing.vue'),
@@ -85,13 +90,11 @@ const router = createRouter({
 //	restricting the web app to all users that aren't signed in.
 //
 
-console.log(router);
 
 router.beforeEach((to, from) => {
 //	const result = await fetch('https://' + window.location.host + '/api/auth/refresh', {
 //		method:'POST',
 //	});
-//	console.log(result);
 	const session = useSessionStore();
 
 	if (to.name === "signin" || to.name === "signup") {
@@ -103,7 +106,6 @@ router.beforeEach((to, from) => {
 			&& to.name !== 'privacy policy'
 			&& to.name !== 'terms of service') 
 		&& !session.getIsSignedIn) {
-		console.log("aaaaaaaaaa");
 		return { name: "signin" };
 	}
 });

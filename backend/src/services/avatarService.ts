@@ -6,12 +6,6 @@ import { Readable } from 'stream';
 const   avatarsPath= path.join(__dirname, '../../public/avatars/');
 
 export const avatarService = {
-    //is passed file path from a route controller and returns image stream
-    async getAvatar(filename: string): Promise < Readable >
-    {
-        const filepath = avatarsPath + filename;
-        return createReadStream(filepath)
-    },
 
     //is passed the image stream (or whatever) and it's file path from a route controller and returns bool
     async uploadAvatar( file: any , filename: string): Promise<boolean>
@@ -49,12 +43,10 @@ export const avatarService = {
     },
 
     //is passed the image stream (or whatever) from a route controller and returns bool
-    async validateAvatar(file: any )
+    async validateAvatar(mimetype: string): Promise<boolean>
     {
         const allowedTypes = ['image/jpeg', 'image/png'];
-        if (!allowedTypes.includes(file.mimetype)){
-            return (false);
-        }
-        return (true);
+        return allowedTypes.includes(mimetype);
     }
+
 }
