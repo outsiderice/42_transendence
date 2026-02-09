@@ -86,8 +86,20 @@ The Pong game implementation was mainly inspired and followed the logic of the o
 
 This module was another natural choice as basic user management was already required and adding the features needed simply filled out the feature. 
 
+Users can see their information in their user page and modify their nickname and or avatar in their setting page.
+
 Users can upload avatars which are saved in our server and the route to the image is saved in our database which the frontend uses to render it on the client.
+
+### Game statistics and match history
+
+The pong games played are stored in a database with score, winner, difference in point. This data is used to show a user's game history on their profile and also keep a leaderboard of the players with the most ranking points, something calculated by their number of wins and multiplier factor.
+
+### Remote authentication with OAuth 2.0
+
+Github OAuth 2.0 has been implemented, there's an option to instead of registering via email and password to sign up with Github. After you've signed up with it you can sign with it in the sign in page. It was implemented with @fastify/oauth2 plugin plus the @fastify/cookie plugin. To implement it, the users entity in the database had to be slightly modified, the password and email were made nullable and a githubid field was added. The logic of login and registration of github users and normal users is separated.
+
 ## Individual Contributions
+
 
 ## Resources
 
