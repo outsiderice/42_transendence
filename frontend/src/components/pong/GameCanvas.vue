@@ -27,8 +27,6 @@ const resizeCanvas = () => {
   canvas.style.height = `${targetHeight}px`;
   canvas.width = 800;
   canvas.height = 600;
-
-
 }
 
 onMounted(() => {
@@ -64,13 +62,12 @@ watch(() => props.gameState, (newState) => {
 <style scoped>
 .canvas-container {
   width: 100%;
-  max-width: 1000px; /* maybe limit the size?*/
+  max-width: 1000px;
   margin: 0 auto;
 }
 .pong-canvas {
   background: black;
   border: 4px solid #333;
   display: block;
-  /*margin: 0 auto;*/
 }
 </style>

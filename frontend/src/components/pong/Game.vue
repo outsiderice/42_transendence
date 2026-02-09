@@ -18,11 +18,9 @@ let postWinTimer: ReturnType<typeof setTimeout> | null = null;
 
 // timer for redirection to main after endGame is reached
 const startPostGameRoutine = () => {
-  // clear time just in case
   if (postWinTimer)
     return;
-  console.log("Win signal received. Starting 5s interval..."); // delete later
-  
+  //console.log("Win signal received. Starting 5s interval...");
   postWinTimer = setTimeout(() => {
     router.push({name: 'home'});
   }, 5000);
@@ -110,7 +108,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
         mySide.value = data.side;
       }
     } catch (err) {
-      console.error("Error parsing WebSocket message:", err); // should not be visible on browser
+      //console.error("Error parsing WebSocket message:", err); // should be logger in future
     }
   };
 
@@ -161,7 +159,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* PC VERSION - REMAINING UNTOUCHED */
+/* PC VERSION */
 .game-wrapper {
   text-align: center;
   color: white;
@@ -172,7 +170,7 @@ onUnmounted(() => {
   color: #888;
 }
 
-/* MOBILE VERSION - TARGETED IMPROVEMENTS */
+/* MOBILE VERSION */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-wrapper {
     position: fixed;
@@ -188,7 +186,6 @@ onUnmounted(() => {
     z-index: 9999;
   }
 
-  /* Your successful generous sizing */
   .game-wrapper > div:not(.status-msg) {
     transform: rotate(90deg);
     width: 100svh; 
@@ -209,7 +206,7 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
     border: 1px solid white;
-    margin: 0; /* Reset margins that push layout */
+    margin: 0;
     pointer-events: none;
   }
 
