@@ -37,16 +37,16 @@ export class GamesService {
     }
   }
 
-   static getAllGames(user_1: number): GameDB[] {
+   static getAllGames(userId: number): GameDB[] {
        const stmt = db.prepare(`
 			SELECT
 				g.id,
 				g.player1_id,
-				u1.player1_username AS player1_username,
-				u1.player1_nickname AS player1_nickname,
+				u1.username AS player1_username,
+				u1.nickname AS player1_nickname,
 				g.player2_id,
-				u2.player2_username AS player2_username,
-				u2.player2_nickname AS player2_nickname,
+				u2.username AS player2_username,
+				u2.nickname AS player2_nickname,
 				g.player1_score,
 				g.player2_score,
 				g.winner_id,
@@ -58,7 +58,7 @@ export class GamesService {
 			WHERE g.player1_id = ? OR g.player2_id = ?
 			ORDER BY g.created_at DESC
 		`);
-       const rows = stmt.all(user_1, user_1) as GameDB[];
-       return Array.isArray(rows) ? rows : [];
+       const rows = stmt.all(userId, userId) as GameDB[];
+       return rows;
    }
 }

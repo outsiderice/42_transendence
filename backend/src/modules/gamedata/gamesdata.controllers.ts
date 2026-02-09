@@ -80,6 +80,7 @@ export const getAllGamesController = async (
     }
     const games = await DBClient.getAllGames(user_1);
 
+	console.log(games);
     reply.status(200).send(games);
   } catch (error) {
     console.error('Error in getAllGamesController:', error);
