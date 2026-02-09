@@ -1,19 +1,47 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import ButtonComponent from "@/components/ButtonComponent.vue"; // Importing existing button
+import ButtonComponent from "@/components/ButtonComponent.vue";
 import  DefaultPic from "@/assets/defaultProfilePicture.svg"
 
 // Re-using the Interface from UserCard
 interface UserRequestProps {
+    relationshipId: number;
     profilePicture?: string;
     nickName: string;
     online: boolean;
 }
 
 const props = defineProps<UserRequestProps>();
-const emit = defineEmits(['reject', 'accept']);
+const emit = defineEmits(['statusUpdated']);
 
-//rellenamos la info
+const API_BASE = "https://" + window.location.host;
+
+async function handleAccept() {
+    try {
+        const response = await fetch(`${API_BASE}/friends/accept?id=${props.relationshipId}`, {
+            method: 'PUT'
+        });
+        if (response.ok) {
+            emit('statusUpdated', props.relationshipId);
+        }
+    } catch (error) {
+        console.error("Failed to accept:", error);
+    }
+}
+
+async function handleReject() {
+    try {
+        const response = await fetch(`${API_BASE}/friends?id=${props.relationshipId}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            emit('statusUpdated', props.relationshipId);
+        }
+    } catch (error) {
+        console.error("Failed to reject:", error);
+    }
+}
+
 const profilePicture = computed(() => props.profilePicture ?? DefaultPic);
 
 const onlineIndicatorColor = computed(() => {
@@ -23,7 +51,7 @@ const onlineIndicatorColor = computed(() => {
 
 function redirectToUserProfilePage(): void {
     if (!props.nickName) return;
-    window.location.href = window.location.origin + "/users/" + props.userName;
+    window.location.href = window.location.origin + "/users/" + props.nickName;
 }
 </script>
 
@@ -50,21 +78,20 @@ function redirectToUserProfilePage(): void {
           <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor"/>
         </svg>
 
-        <div class="flex flex-col gap-[0.3rem]">
-          <p class="text-[1.25rem] font-medium text-nowrap">{{ nickName }}</p>
-          <p class="text-[0.9rem] opacity-70">{{ userName }}</p>
-        </div>
+     <div class="flex flex-col gap-[0.3rem]">
+          <p class="text-[2rem] font-bold text-nowrap leading-none lowercase">{{ nickName }}</p>
+          </div>
       </div>
 
       <div class="flex flex-row gap-[0.5rem] shrink-0">
         <ButtonComponent 
           label="reject" 
-          @click.stop="emit('reject', props.nickName)" 
+          @click.stop="handleReject" 
           class="reject-btn"
         />
         <ButtonComponent 
           label="accept" 
-          @click.stop="emit('accept', props.nickName)"
+          @click.stop="handleAccept"
         />
       </div>
 

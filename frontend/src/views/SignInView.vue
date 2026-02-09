@@ -21,19 +21,6 @@ const {
 
 const session = useSessionStore();
 
-// Inicializa desde localStorage
-//watchEffect(() => {
-//  const token = localStorage.getItem('token')
-//  const storedUsername = localStorage.getItem('username') || ''
-//  isAuthenticated.value = !!token
-//  username.value = storedUsername
-
-  //console.log('watchEffect token:', token)
-//  console.log('watchEffect storedUsername:', storedUsername)
-//  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
-//  console.log('watchEffect username:', username.value)
-//})
-
 const router = useRouter();
 // Función para iniciar sesión
 const handleSubmit = async () => {
@@ -64,41 +51,16 @@ const handleSubmit = async () => {
     console.error('Network error signing in:', error)
 	}
 }
-      
 
-// Función para cerrar sesión
-const signOut = async () => {
-	localStorage.removeItem('username')
-	isAuthenticated.values = false
-	username.value = ''
-	try{
-		const response = await fetch("https://" + window.location.host + "/api/auth/logout", {
-			method: 'POST',
-			credentials: 'include',
-		})
-		if (response.ok){
-			console.log("User logged out");
-		}
-	} catch (err){
-		console.error("Error logging out: ", err);
-	}
-	console.log('After logout - username.value:', username.value)
-	console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
-}
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-    <!-- DEBUG TEMPORAL -->
-    <pre>
-isAuthenticated: {{ isAuthenticated }}
-username: {{ username }}
-    </pre>
 
     <!-- USUARIO AUTENTICADO -->
-    <div v-if="isAuthenticated">
+    <div v-if="session.userName">
       <h2 class="text-2xl font-bold mb-6 text-center">
-        Hola, {{ username }}
+        Hola, {{ session.userName }}
       </h2>
 
       <PongButton
