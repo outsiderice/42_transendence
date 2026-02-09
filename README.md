@@ -9,9 +9,9 @@ With registration users are able to have a personalized display name and avatar,
 ## Instructions
 Prerequisites:
 - Docker installed in your PC
-- .env files where there are env.example files
+- correct env secrets to paste into .envs for things like OAuth.2.0 to work properly
 
-Clone the project then run `docker compose up` in the root of the repository. 
+Clone the project then run `make up` in the root of the repository. This will create the .envs needed which you can modify as needed.
 ## Team Information
 
 ## Project management
