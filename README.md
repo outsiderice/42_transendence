@@ -19,7 +19,7 @@ We organized ourselves through a Whatsapp group chat where we shared our advance
 
 At first we had a scheduled video call, specially because all team memebers had other responsabilities outside the project, but once the project was more advanced we slowed the meetings up for more specific coordination.
 
-In the docs folder we have some other documents that were useful in managing the project.
+In the docs folder we have some other documents that were useful in managing the project and keeping team objectives on track.
 
 ## Technical Stack
 **Frontend:** Vue with Tailwind CSS
@@ -30,6 +30,8 @@ In the docs folder we have some other documents that were useful in managing the
 ## Database Schema
 ![alt text](docs/db_schema.png)
 Our initial design of the database.
+
+As of our latest implementation we lack the achievements table where we fell short on time.
 ## Features List
 Mandatory requirements:
 - Frontend                  -   andmart2, kkoval, tatahere
@@ -59,21 +61,32 @@ Modules:
 | Standard user management and authentication                        | 2       |
 | Game statistics and match history                                  | 1       |
 | Implement remote authentication with OAuth 2.0.                    | 1       |
-| Implement a complete 2FA                                           | 1       |
 | Implement a web-based game where users can play against each other | 2       |
 | Remote players                                                     | 2       |
-| A gamification system                                              | 1       |
-| **TOTAL**                                                          | **17**  |
+| **TOTAL**                                                          | **15**  |
 
 This project began with the old requirements then we decided to adapt it to the new subject, which we thought would make for a more solid project. 
 
 Because this was a Pong project from the start with some features already decided before the new list of modules was available the biggest change was dropping the tournament system where we foresaw some issues which would be difficult to solve in our limited time frame to finish the project.
+### Use frameworks for both the backend and frontend
 
-### Web Game
+With the mandatory requirement of having a frontend and a backend it seemed logical to complete these modules by adding a framework to each one.
+
+In the backend we went with Fastify following the previous subject and in the frontend we decided on Vue because our team was unfamiliar with javascript and frontend development and Vue appeared friendlier to newbies.
+
+### Web Game, Websockets, and Remote players
 
 The Pong game implementation was mainly inspired and followed the logic of the original Pong 1971 game. We decided to use Authoritative server architecture. All calculations and general managment of movement of paddles, ball and score of the game resides on the backend container and frontend only renders the image using Canvas Api. This way we protect our game from possible cheating and secure the same rendering image for both players. The comunication happens via web sockets, where front end sends an message every time  player presses the keys to backend and backend does a calculation of movement and collisions and sends an updated game state of ball, paddles and scores to be rendered by frontend.
 
+### Public API
 
+### Custom design system with reusable components
+
+### Standard user management
+
+This module was another natural choice as basic user management was already required and adding the features needed simply filled out the feature. 
+
+Users can upload avatars which are saved in our server and the route to the image is saved in our database which the frontend uses to render it on the client.
 ## Individual Contributions
 
 ## Resources
