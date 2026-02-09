@@ -195,14 +195,12 @@ onMounted(fetchUserSettings)
     />
 
     <!-- INFO -->
-    <div class="mt-6 text-[var(--color_accent_2)]">
+    <div class="mt-6 text-[var(--color_accent_2)] text-center">
       <p><strong>Name:</strong> {{ name }}</p>
       <p><strong>Nickname:</strong> {{ nickname }}</p>
+      <p class="mb-6"><strong>Email:</strong> {{ email }}</p> <!-- <- margen extra -->
 
       <PongInput label="Change Nickname" v-model="nickname" />
-
-      <p><strong>Email:</strong> {{ email }}</p>
-
       <PongInput label="Old Password" type="password" v-model="oldpassword" />
       <PongInput label="New Password" type="password" v-model="password" />
     </div>
