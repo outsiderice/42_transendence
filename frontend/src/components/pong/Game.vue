@@ -139,8 +139,6 @@ onUnmounted(() => {
   <div class="game-wrapper"
     @touchstart="handleTouch($event, true)"
     @touchend="handleTouch($event, false)">
-  
-    <h2>Pong Online</h2>
     
     <h1 v-if="msgPong" class="winner-announcement status-msg">
       {{ msgPong }}
@@ -151,10 +149,6 @@ onUnmounted(() => {
       :leftName="leftPlayerName" 
       :rightName="rightPlayerName"
     />
-
-    <div v-if="!currentGameState" class="overlay status-msg">
-      Connecting to Game Server...
-    </div>
   </div>
 </template>
 
