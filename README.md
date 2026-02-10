@@ -105,6 +105,14 @@ Github OAuth 2.0 has been implemented, there's an option to instead of registeri
 
 ## Individual Contributions
 
+### josorteg
+
+Database design and creation.
+Full development of an independent database secured via API key access.
+Backend structure and configuration, including Swagger implementation for development and testing.
+Development of endpoints and business logic (in collaboration with Amagnell).
+Creation of services to support front-end integration.
+
 ### kkoval
 I had to revisit my geometry classes to calculate the angles for ball collisions (shoutout to Borja :D). While I was initially intimidated by WebSockets and transitioning from a local-only game to a remote multiplayer experience, the process turned out to be very logical and smooth. The biggest challenge was envisioning how my piece of work would fit into the team's workflow while balancing so many new frameworks and tools simultaneously.
 
