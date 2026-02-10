@@ -17,7 +17,7 @@ export class Ball {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
-		this.speed = 20;
+		this.speed = 40;
 		this.reset(); // reset the ball start side and y height
 		this.speedY = 7;//Math.random();
 		this.speedX = 4;
@@ -33,7 +33,7 @@ export class Ball {
 		this.speedX = 4 * directionX;
 		//randomize vertical angle range -3 to +3px
 		this.speedY = (Math.random() - 0.5) * 6;
-		this.speed = 20;
+		this.speed = 40;
 	}
 
 	setX(pos: number): void {
