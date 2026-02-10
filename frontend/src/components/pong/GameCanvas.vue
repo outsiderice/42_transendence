@@ -14,20 +14,37 @@ const containerRef = ref<HTMLDivElement | null>(null);
 let renderer: Renderer | null = null;
 
 const resizeCanvas = () => {
-  if (!canvasRef.value || !containerRef.value)
-    return;
+  if (!canvasRef.value || !containerRef.value) return;
+
   const container = containerRef.value;
   const canvas = canvasRef.value;
-  
-  // to mantain the ratio 4:3
-  const targetWidth = container.clientWidth;
+
+  // measuring header and message to extract their height
+  const header = document.querySelector('header') || document.querySelector('.header');
+  const statusMsg = document.querySelector('.status-msg');
+
+  const headerHeight = header?.offsetHeight || 0;
+  const msgHeight = statusMsg?.offsetHeight || 0;
+
+  const padding = 50; // to prevent game touching the message
+  const maxAvailableHeight = window.innerHeight - headerHeight - msgHeight - padding;
+  const maxAvailableWidth = container.clientWidth;
+
+  // ratio (4:3)
+  const widthByHeight = (maxAvailableHeight * 800) / 600;
+
+  // We pick the smallest width that fits both constraints (and stays under 1000px)
+  const targetWidth = Math.min(maxAvailableWidth, widthByHeight, 1000);
   const targetHeight = (targetWidth * 600) / 800;
 
+  // apply to DOM
   canvas.style.width = `${targetWidth}px`;
   canvas.style.height = `${targetHeight}px`;
+
+  // internal resolution stays fixed for renderer
   canvas.width = 800;
   canvas.height = 600;
-}
+};
 
 onMounted(() => {
   if (canvasRef.value) {
@@ -64,6 +81,9 @@ watch(() => props.gameState, (newState) => {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .pong-canvas {
   background: black;
