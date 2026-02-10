@@ -140,7 +140,7 @@ onUnmounted(() => {
     @touchstart="handleTouch($event, true)"
     @touchend="handleTouch($event, false)">
     
-    <h1 v-if="msgPong" class="winner-announcement status-msg">
+    <h1 v-if="msgPong" class="status-msg winner-announcement">
       {{ msgPong }}
     </h1>
 
@@ -156,9 +156,19 @@ onUnmounted(() => {
 /* PC VERSION */
 .game-wrapper {
   text-align: center;
-  color: white;
-  font-family: Arial, sans-serif;
+  color: var(--color_accent_1);
+  font-family: 'Oswald', sans-serif;
 }
+
+.winner-announcement {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--color_accent_1); 
+  text-shadow: 2px 2px 0px var(--color_background_1);
+  margin-bottom: 20px;
+}
+
 .overlay {
   margin-top: 20px;
   color: #888;
