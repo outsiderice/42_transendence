@@ -55,7 +55,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_1)] rounded-xl shadow-md">
+  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
 
     <!-- USUARIO AUTENTICADO -->
     <div v-if="session.userName">
