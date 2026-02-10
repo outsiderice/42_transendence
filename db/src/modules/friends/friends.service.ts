@@ -69,7 +69,7 @@ export class friendsService{
 		JOIN users u1 ON u1.id = r.user_1
 		JOIN users u2 ON u2.id = r.user_2
     	WHERE (r.user_1 = ? OR r.user_2 = ?)
-      		AND petition_status = 4
+      		AND petition_status <> user_1 
   	`);
     const rows = stmt.all(user_1, user_1) as Petitions[];
     return rows;
