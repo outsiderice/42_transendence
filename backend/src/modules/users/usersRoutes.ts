@@ -84,7 +84,8 @@ export const PetitionSchema = {
 	'user_1_nickname',
 	'user_2_id', 
 	'user_2_username',
-	'user_2_nickname'
+	'user_2_nickname',
+	'petition_status'
 	],
   properties: {
     id: { type: 'number' },
