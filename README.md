@@ -100,8 +100,13 @@ Github OAuth 2.0 has been implemented, there's an option to instead of registeri
 
 ## Individual Contributions
 
+### kkoval
+I had to revisit my geometry classes to calculate the angles for ball collisions (shoutout to Borja :D). While I was initially intimidated by WebSockets and transitioning from a local-only game to a remote multiplayer experience, the process turned out to be very logical and smooth. The biggest challenge was envisioning how my piece of work would fit into the team's workflow while balancing so many new frameworks and tools simultaneously.
+
 
 ## Resources
 
+
 ### AI usage
 
+AI was an excellent resource for generating examples for specific edge cases. It’s particularly effective for learning new concepts because it uses a more accessible vocabulary for beginners and can adapt its explanations based on your current knowledge level. Beyond the logic, it was also a massive time-saver for handling tedious tasks like formatting syntax and managing curly brackets. And emotional support for some.
