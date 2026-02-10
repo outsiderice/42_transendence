@@ -80,6 +80,11 @@ The Pong game implementation was mainly inspired and followed the logic of the o
 
 ### Public API
 
+We have prepared the database to allow external access to other applications via an API key.
+The idea is to be able to grant permissions to other services so they can consume our data, and to control what they can access and what they cannot.
+This will also allow us to access the database directly for maintenance, querying, or testing during development.
+Requests must go through the proxy, since the database is not public, but at the same time they must include the API key in order to access the database without going through the backend.
+
 ### Custom design system with reusable components
 
 ### Standard user management
@@ -99,6 +104,14 @@ The pong games played are stored in a database with score, winner, difference in
 Github OAuth 2.0 has been implemented, there's an option to instead of registering via email and password to sign up with Github. After you've signed up with it you can sign with it in the sign in page. It was implemented with @fastify/oauth2 plugin plus the @fastify/cookie plugin. To implement it, the users entity in the database had to be slightly modified, the password and email were made nullable and a githubid field was added. The logic of login and registration of github users and normal users is separated.
 
 ## Individual Contributions
+
+### josorteg
+
+Database design and creation.
+Full development of an independent database secured via API key access.
+Backend structure and configuration, including Swagger implementation for development and testing.
+Development of endpoints and business logic (in collaboration with Amagnell).
+Creation of services to support front-end integration.
 
 ### kkoval
 I had to revisit my geometry classes to calculate the angles for ball collisions (shoutout to Borja :D). While I was initially intimidated by WebSockets and transitioning from a local-only game to a remote multiplayer experience, the process turned out to be very logical and smooth. The biggest challenge was envisioning how my piece of work would fit into the team's workflow while balancing so many new frameworks and tools simultaneously.
