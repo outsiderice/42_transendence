@@ -75,6 +75,30 @@ export const UpdateUserSchema = {
   },
 };
 
+export const PetitionSchema = {
+  type: 'object',
+  required: [
+	'id', 
+	'user_1_id', 
+	'user_1_username',
+	'user_1_nickname',
+	'user_2_id', 
+	'user_2_username',
+	'user_2_nickname',
+	'petition_status'
+	],
+  properties: {
+    id: { type: 'number' },
+    user_1_id: { type: 'number' },
+	user_1_username: { type : 'string'},
+	user_1_nickname: { type : 'string'},
+    user_2_id: { type: 'number' },
+	user_2_username: { type : 'string'},
+	user_2_nickname: { type : 'string'},
+    status: { type: 'number' },
+  },
+};
+
 export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ ALL
@@ -112,7 +136,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
         id: { type: 'number' }
       }
     },
-    response: { 200: { type: 'array', items: UserSchema } },
+    response: { 200: { type: 'array', items: PetitionSchema } },
   } as any
 }, getUserPetitionsController);
 

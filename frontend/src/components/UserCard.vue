@@ -6,8 +6,8 @@ import UserAvatar from '@/components/UserAvatar.vue';
 //	prop handeling. 
 interface userCardInfo {
 	profilePicture?: string,
-	nickName: string,
-	userName: string,
+	nickName?: string,
+	userName?: string,
 	online: boolean,
 };
 
