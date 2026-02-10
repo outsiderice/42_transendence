@@ -252,7 +252,7 @@ function action()
         <div class="w-5 h-5 mb-1 bg-[var(--color_accent_3)] rounded-full flex items-center justify-center">
             <span class="text-[10px] text-[var(--color_background_3)]">★</span>
         </div>
-        <span class="text-[10px] font-bold uppercase">achievements</span>
+        <span class="text-[10px] font-bold uppercase">friends</span>
       </button>
 
       <button 
