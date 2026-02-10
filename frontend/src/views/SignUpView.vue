@@ -2,7 +2,7 @@
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
 import PongToggleButton from '../components/PongToggleButton.vue'
-
+import LinkComponent from '../components/LinkComponent.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import { useSessionStore } from '@/state/user_session.ts'
@@ -107,7 +107,7 @@ function sign_out()
     </div>
 
     <!-- USUARIO NO AUTENTICADO -->
-    <div v-else>
+    <div v-else >
       <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">
         Sign Up
       </h2>
@@ -150,7 +150,13 @@ function sign_out()
         :disabled="!name || !email || !password || !confirmPassword"
         @click="handleSubmit"
       />
-      
+     <div class="flex justify-center mt-6">
+  <LinkComponent
+    href="/sign_in"
+    label="sign in"
+    class=" text-[var(--color_accent_1)]"
+  />
+</div>
     </div>
   </div>
 </template>
