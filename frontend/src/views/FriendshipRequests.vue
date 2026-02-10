@@ -35,7 +35,6 @@ async function petitioner_info(id: number, petition: object)
 			online: false
 		};
 	} else {
-	}
 		petitioner = {
 			id: petition.user_1,
 			name: petition.user_1_username,
@@ -43,8 +42,9 @@ async function petitioner_info(id: number, petition: object)
 			profilePic: petition.user_1_avatar || undefined,
 			online: false
 		};
+	}
 	if (onlineUsers.getUsersIds.indexOf(petitioner.id) !== -1) {
-		user.online = true;
+		petitioner.online = true;
 	}
 	return (petitioner);
 }
@@ -60,28 +60,26 @@ fetch ("https://" + window.location.host + "/api/usersPetitions/" + session.getU
 	}
 	const result =  await response.json();
 	let i = 0;
-	while (i < length)
+	while (i < result.length)
 	{
 		let result_element = result[i];
 		let petitioner = petitioner_info(session.getUserid, result_element);
-		petitioners.push(petitioner.id);
+		petitioners.push(petitioner);
 		i++; 
 	}
 });
 
 watch(onlineUsers.usersIds, () => {
 	let i = 0;
-	while (i < users.length)
+	while (i < petitioners.length)
 	{
-		if (onlineUsers.getUsersIds.indexOf(Number (users[i].id)) != -1) {
-			users[i].online = true;
+		if (onlineUsers.getUsersIds.indexOf(Number (petitioners[i].id)) != -1) {
+			petitioners[i].online = true;
 		} else {
-			users[i].online = false;
+			petitioners[i].online = false;
 		}
 		i++;
 	}
-	console.log("users");
-	console.log(users);
 })
 
 </script>
