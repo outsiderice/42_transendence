@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { friendsService, Friends } from './friends.service';
+import { friendsService, Friends, Petitions } from './friends.service';
 
 export const friendsRoutes = async (app: FastifyInstance) => {
   // CREATE Friend Petition
