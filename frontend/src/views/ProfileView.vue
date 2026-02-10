@@ -74,16 +74,6 @@ const achievements = Array.from({ length: 20 }, (_, i) => ({
         </div>
       </div>
     </div>
-
-    <section class="w-full mt-6 flex flex-col items-center gap-10">
-      <PongButton label="return" class="w-48 !rounded-xl" />
-
-      <div class="flex gap-8 text-[#4A90E2] text-xs">
-        <a href="#" class="hover:underline">Terms of service</a>
-        <a href="#" class="hover:underline">Privacy policy</a>
-      </div>
-    </section>
-
   </div>
 </template>
 
