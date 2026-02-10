@@ -43,7 +43,7 @@ export const getPetitionFriendsController = async (
         error: 'Usuario no encontrado',
       });
     }
-    const friends = await DBClient.getAllFriends(user_1);
+    const friends = await DBClient.getAllPetitions(user_1);
 
     const filteredFriends: Friends[] = friends.filter(
      (friend: Friends) => friend.petition_status === user_1
@@ -95,6 +95,28 @@ export const createFriendPetitionController = async (
         )   {
                 return reply.status(409).send({
                 error: 'La relación de amistad ya existe',
+                });
+            };
+            console.log("la relacion es",relation);
+    }}
+
+    const petitionsUser2 = await DBClient.getAllPetitions(user_2);
+    const petitionsUser1 = await DBClient.getAllPetitions(user_1);
+
+    const existingPetition = [
+      ...petitionsUser2,
+      ...petitionsUser1
+    ];
+    
+    if (existingPetition.length > 0 ) 
+        {
+        for (const relation of existingPetition) {
+        if (
+            (relation.user_1 === normalizedUser1 && relation.user_2 === normalizedUser2) ||
+            (relation.user_1 === normalizedUser2 && relation.user_2 === normalizedUser1)
+        )   {
+                return reply.status(409).send({
+                error: 'La relación peticion de amistad ya existe',
                 });
             };
             console.log("la relacion es",relation);

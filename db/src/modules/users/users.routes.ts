@@ -50,12 +50,12 @@ export default async (app: FastifyInstance) => {
         email,
         password,
         nickname,
-        avatar : "avatar.jpg",
+        avatar ,
       });
 
       return reply.status(201).send(newUser);
     } catch (error) {
-      console.log(error);
+      
       return reply.status(500).send({
         error: 'Error al crear usuario mamon',
         details: error instanceof Error ? error.message : String(error),
