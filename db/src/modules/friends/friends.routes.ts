@@ -47,6 +47,27 @@ export const friendsRoutes = async (app: FastifyInstance) => {
       }
     });
 
+    app.get<{ Querystring: { user_1: number } }>('/friendsPetitions', {
+      schema: { 
+        tags: ['Friends'],
+        querystring: {
+          type: 'object',
+          required: ['user_1'],
+            properties: {
+                user_1: { type: 'number' },
+            },
+        },
+      } as any,
+    }, async (request: FastifyRequest<{ Querystring: { user_1: number } }>, reply: FastifyReply) => {
+      try {
+        const { user_1 } = request.query;
+        const friends = await friendsService.getAllFriendsPetitions(user_1);
+        reply.status(200).send(friends);
+      } catch (error) {
+        reply.status(400).send({ error: (error as Error).message });
+      }
+    });
+
     // READ ALL Petitions by user_1 id
     app.get<{ Querystring: { user_1: number } }>('/petitions', {
       schema: { 
@@ -63,7 +84,6 @@ export const friendsRoutes = async (app: FastifyInstance) => {
       try {
         const { user_1 } = request.query;
         const friends = await friendsService.getAllPetitions(user_1);
-        console.log("friends:",friends)
         reply.status(200).send(friends);
       } catch (error) {
         reply.status(400).send({ error: (error as Error).message });
