@@ -178,5 +178,39 @@ export const createFriendPetitionController = async (
   }
 };
 
+export const getAllFriendsNicController = async (
+  request: FastifyRequest<{ Querystring: { user1_id: number } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { user1_id } = request.query;
 
+    const relations = await DBClient.getAllFriendsPetitions(user1_id);
 
+    const result = await Promise.all(
+      relations.map(async (relation: Friends) => {
+        const [user1, user2] = await Promise.all([
+          DBClient.getUserById(relation.user_1),
+          DBClient.getUserById(relation.user_2),
+        ]);
+
+        return {
+          id: relation.id,
+          user1_id: relation.user_1,
+          user1_name : user1?.username,
+          user1_nickname: user1?.nickname,
+          user2_id: relation.user_2,
+          user2_name : user2?.username,
+          user2_nickname: user2?.nickname,
+        };
+      })
+    );
+
+    reply.status(200).send(result);
+  } catch (error) {
+    console.error('Error in getAllFriendsNickController:', error);
+    reply.status(500).send({
+      error: 'Error al obtener amigos',
+    });
+  }
+};
