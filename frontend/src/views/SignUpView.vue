@@ -15,11 +15,6 @@ const session = useSessionStore()
 const router = useRouter()
 
 // -------------------------
-// Toggles
-// -------------------------
-const { newsletter } = useToggles()
-
-// -------------------------
 // Formulario
 // -------------------------
 const {
@@ -66,7 +61,7 @@ const handleSubmit = async () => {
       console.log('Sign up successful ✅', data)
 
       // Inicializar sesión igual que en Sign In
-      session.setSession(data.user.id, data.user.username)
+      session.setSession(data.safeUser.id, data.safeUser.username)
 
       // Redirección
       router.push({ name: 'home' })
