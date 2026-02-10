@@ -13,7 +13,7 @@ interface userCardInfo {
 
 const props = defineProps<userCardInfo>();
 
-console.log(props.online);
+//console.log(props.online);
 
 const profilePicture = computed(() => {
 	return props.profilePicture === undefined ? defaultProfilePicture : props.profilePicture;
