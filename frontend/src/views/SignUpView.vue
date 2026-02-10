@@ -150,13 +150,13 @@ function sign_out()
         :disabled="!name || !email || !password || !confirmPassword"
         @click="handleSubmit"
       />
-     <div class="flex justify-center mt-6">
-  <LinkComponent
-    href="/sign_in"
-    label="sign in"
-    class=" text-[var(--color_accent_1)]"
-  />
-</div>
+      <div class="flex justify-center mt-6">
+        <LinkComponent
+        href="/sign_in"
+        label="sign in"
+        class=" text-[var(--color_accent_1)]"
+        />
+      </div>
     </div>
   </div>
 </template>
