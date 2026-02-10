@@ -52,6 +52,12 @@ const handleSubmit = async () => {
 	}
 }
 
+function sign_out()
+{
+	session.$reset();
+	router.push({name: 'signin'});
+}
+
 </script>
 
 <template>
@@ -66,7 +72,7 @@ const handleSubmit = async () => {
       <PongButton
         label="Log out"
         :fullWidth="true"
-        @click="signOut"
+        @click="sign_out()"
       />
     </div>
 
