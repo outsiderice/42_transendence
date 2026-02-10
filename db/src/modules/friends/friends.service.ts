@@ -26,9 +26,25 @@ export class friendsService{
     }
 
    static getAllFriends(user_1: number): Friends[] {
-    const stmt = db.prepare('SELECT * FROM relationship WHERE user_1 = ? OR user_2 = ?');
+    const stmt = db.prepare(`
+    	SELECT *
+    	FROM relationship
+    	WHERE (user_1 = ? OR user_2 = ?)
+      	AND petition_status = 0
+  	`);
     const rows = stmt.all(user_1, user_1) as Friends[];
-    return Array.isArray(rows) ? rows : [];
+    return rows;
+  }
+
+   static getAllPetitions(user_1: number): Friends[] {
+    const stmt = db.prepare(`
+    	SELECT *
+    	FROM relationship
+    	WHERE (user_1 = ? OR user_2 = ?)
+      	AND petition_status = 4
+  	`);
+    const rows = stmt.all(user_1, user_1) as Friends[];
+    return rows;
   }
 
   static AcceptFriendPetition(id: number): void {

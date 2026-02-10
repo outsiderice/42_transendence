@@ -8,6 +8,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  oldpassword?: string;
   nickname?: string;
   avatar?: string;
   created_at?: string;
@@ -142,6 +143,23 @@ export class DBClient {
       
       const data = await res.json();
       console.log('Data received from /friends:', data);
+      
+      if (Array.isArray(data)) {
+        return data as Friends[];
+      }
+
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  static async getAllPetitions(user_1: number): Promise<Friends[]> {
+    try {
+      const res = await dbFetch(`/api/petitions?user_1=${user_1}`);
+      
+      const data = await res.json();
+      console.log('Data received from /petitions:', data);
       
       if (Array.isArray(data)) {
         return data as Friends[];
