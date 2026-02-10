@@ -173,18 +173,22 @@ async function remove_friend()
 		"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
 		{ method: 'GET' }
 	);
-	const result1 = await response2.json();
-	console.log(result2);
+	const result1 = await response1.json();
+	console.log(result1);
+	console.log(user.id);
+	console.log(session.getUserId);
 	let	friendShipId;
 	while (result1.length != 0)
 	{
 		const item = result1.pop();
-		if ((item.user_1 == session.getUserId && item.user_2 == user.id) && 
+		console.log(item);
+		if ((item.user_1 == session.getUserId && item.user_2 == user.id) || 
 			(item.user_2 == session.getUserId && item.user_1 == user.id))
 		{
 			friendShipId = item.id;
 		}
 	}
+	console.log(friendShipId);
 	//	send the fetch for deleting this friendship.
 	fetch(
 		"https://" + window.location.host + "/api/friends?id=" + friendShipId, 
