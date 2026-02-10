@@ -10,6 +10,8 @@ const session = useSessionStore();
 const route = useRoute();
 const router = useRouter();
 
+const currentTab = ref<'achievements' | 'history'>('achievements');
+
 const load_status = ref<'loanding' | 'loaded' | 'fail'>('loanding');
 
 const user = reactive<
@@ -240,6 +242,48 @@ function action()
 	<div v-else >
 		<p> unable to load user.</p>
 	</div>
+
+    <div class="w-full bg-[#F3E8FF] rounded-lg flex p-1">
+      <button 
+        @click="currentTab = 'achievements'"
+        :class="['flex-1 flex flex-col items-center py-2 transition rounded-md', 
+                 currentTab === 'achievements' ? 'bg-[#DCD0FF] shadow-sm' : 'opacity-60']"
+      >
+        <div class="w-5 h-5 mb-1 bg-gray-500 rounded-full flex items-center justify-center">
+            <span class="text-[10px] text-white">★</span>
+        </div>
+        <span class="text-[10px] font-bold uppercase">achivments</span>
+      </button>
+
+      <button 
+        @click="currentTab = 'history'"
+        :class="['flex-1 flex flex-col items-center py-2 transition rounded-md', 
+                 currentTab === 'history' ? 'bg-[#DCD0FF] shadow-sm' : 'opacity-60']"
+      >
+        <div class="w-5 h-5 mb-1 border-2 border-gray-500 rounded-full flex items-center justify-center">
+            <span class="text-[10px] text-gray-500">🕒</span>
+        </div>
+        <span class="text-[10px] font-bold uppercase">game history</span>
+      </button>
+    </div>
+
+    <div v-if="currentTab === 'achievements'" class="w-full flex flex-col items-center">
+      <p class="italic text-sm mb-6">Your achievements: {{ unlockedCount }} / {{ totalCount }}</p>
+      
+      <div class="grid grid-cols-5 gap-4 md:gap-6">
+        <div v-for="star in achievements" :key="star.id" class="w-8 h-8 md:w-10 md:h-10">
+          <div 
+            :class="['w-full h-full rounded-full border-2 flex items-center justify-center text-lg', 
+                     star.unlocked ? 'border-gray-500 bg-white text-gray-700' : 'border-gray-200 text-gray-200']"
+          >
+            ★
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
 </section>
 
 </template>
