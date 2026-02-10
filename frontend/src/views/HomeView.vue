@@ -60,7 +60,7 @@ function sign_out()
 		class="my-[4rem]"
 	/>
 	<ButtonComponent label="play" @click="$router.push({name: 'game'})"/>
-	<ButtonComponent label="profile" @click="$router.push({name: 'profile'})"/>
+	<ButtonComponent label="profile" @click="$router.push({path: '/users/' + userName})"/>
 	<ButtonComponent label="users" @click="$router.push({name: 'users'})"/>
 	<ButtonComponent label="friendship requests" @click="$router.push({name: 'friendship_requests'})"/>
 	<ButtonComponent label="leaderboards" @click="$router.push({name: 'leaderboards'})"/>
