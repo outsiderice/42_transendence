@@ -5,7 +5,8 @@ import {
     createFriendPetitionController,
     getPetitionFriendsController,
     acceptFriendPetitionController,
-    deleteFriendPetitionController
+    deleteFriendPetitionController,
+    getAllFriendsNicController
 } from './friendsController';
 
 export const FriendSchema = {
@@ -44,6 +45,24 @@ export const friendsRoutes = async (app: FastifyInstance) => {
             },
         } as any,
     }, getPetitionFriendsController);
+
+    app.get<{ Querystring: { user1_id: number } }>(
+      '/friendsNick',
+      {
+        schema: {
+          tags: ['Friends'],
+          querystring: {
+            type: 'object',
+            required: ['user1_id'],
+            properties: {
+              user1_id: { type: 'number' },
+            },
+          },
+        } as any,
+      },
+      getAllFriendsNicController
+    );
+    
 
 
    app.post<{ Body: Friends }>(
