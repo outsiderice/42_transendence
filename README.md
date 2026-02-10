@@ -80,6 +80,11 @@ The Pong game implementation was mainly inspired and followed the logic of the o
 
 ### Public API
 
+We have prepared the database to allow external access to other applications via an API key.
+The idea is to be able to grant permissions to other services so they can consume our data, and to control what they can access and what they cannot.
+This will also allow us to access the database directly for maintenance, querying, or testing during development.
+Requests must go through the proxy, since the database is not public, but at the same time they must include the API key in order to access the database without going through the backend.
+
 ### Custom design system with reusable components
 
 ### Standard user management
