@@ -97,7 +97,7 @@ export const createFriendPetitionController = async (
                 error: 'La relación de amistad ya existe',
                 });
             };
-            console.log("la relacion es",relation);
+            console.log("la relacion es mecachis",relation);
     }}
 
     const petitionsUser2 = await DBClient.getAllPetitions(user_2);
@@ -119,7 +119,7 @@ export const createFriendPetitionController = async (
                 error: 'La relación peticion de amistad ya existe',
                 });
             };
-            console.log("la relacion es",relation);
+            console.log("la relacion es mecachis",relation);
     }}
     
     const newRelation = await DBClient.createFriendPetition({
