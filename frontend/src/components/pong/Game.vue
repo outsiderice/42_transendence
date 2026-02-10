@@ -5,28 +5,25 @@ import type { GameState } from './GameState';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+let   socket: WebSocket | null = null;
 const currentGameState = ref<GameState | null>(null);
 const msgPong = ref<string | null>(null);
 const leftPlayerName = ref<string>("Loading...");
 const rightPlayerName = ref<string>("Loading...");
 const mySide = ref<string | null>(null);
-let   socket: WebSocket | null = null;
+
 //timer variables
 const gameEnded = ref(false);
-let   postWinTimer = null;
+let postWinTimer: ReturnType<typeof setTimeout> | null = null;
 
 // timer for redirection to main after endGame is reached
 const startPostGameRoutine = () => {
-  // clear time just in case
-  if (postWinTimer) clearInterval(postWinTimer);
-
-  console.log("Win signal received. Starting 15s interval..."); // delete later
-  
-  postWinTimer = setInterval(() => {
-    console.log("15 seconds passed: Refreshing leaderboard or rewards..."); // delete later
-    router.push({name: 'home'}); //redirection to home
-    
-  }, 15000);
+  if (postWinTimer)
+    return;
+  //console.log("Win signal received. Starting 5s interval...");
+  postWinTimer = setTimeout(() => {
+    router.push({name: 'home'});
+  }, 5000);
 };
 
 // Send input to backend
@@ -82,8 +79,7 @@ const handleTouch = (e: TouchEvent, pressed: boolean) => {
 };
 
 onMounted(() => {
-  // Connect to the Fastify backend WebSocket route
-
+// Connect to the Fastify backend WebSocket route
 socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 
   socket.onmessage = (event) => {
@@ -100,6 +96,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
       }
       else if (data.type === "DISCONNECTED") {
         msgPong.value = `${data.username} has left the game. What a coward!`;
+        startPostGameRoutine();
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
@@ -111,7 +108,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
         mySide.value = data.side;
       }
     } catch (err) {
-      console.error("Error parsing WebSocket message:", err);
+      //console.error("Error parsing WebSocket message:", err); // should be logger in future
     }
   };
 
@@ -123,11 +120,18 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 });
 
 onUnmounted(() => {
-  if (socket) socket.close();
+  if (socket) {
+    socket.onmessage = null;
+    socket.close();
+    socket = null;
+  } 
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
-  //clear timer
-  clearInterval(postWinTimer);
+  //clear timeout
+  if (postWinTimer) {
+    clearTimeout(postWinTimer);
+    postWinTimer = null;
+  }
 });
 </script>
 
@@ -135,10 +139,8 @@ onUnmounted(() => {
   <div class="game-wrapper"
     @touchstart="handleTouch($event, true)"
     @touchend="handleTouch($event, false)">
-  
-    <h2>Pong Online</h2>
     
-    <h1 v-if="msgPong" class="winner-announcement status-msg">
+    <h1 v-if="msgPong" class="status-msg winner-announcement">
       {{ msgPong }}
     </h1>
 
@@ -147,26 +149,32 @@ onUnmounted(() => {
       :leftName="leftPlayerName" 
       :rightName="rightPlayerName"
     />
-
-    <div v-if="!currentGameState" class="overlay status-msg">
-      Connecting to Game Server...
-    </div>
   </div>
 </template>
 
 <style scoped>
-/* PC VERSION - REMAINING UNTOUCHED */
+/* PC VERSION */
 .game-wrapper {
   text-align: center;
-  color: white;
-  font-family: Arial, sans-serif;
+  color: var(--color_accent_1);
+  font-family: 'Oswald', sans-serif;
 }
+
+.winner-announcement {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--color_accent_1); 
+  text-shadow: 2px 2px 0px var(--color_background_1);
+  margin-bottom: 20px;
+}
+
 .overlay {
   margin-top: 20px;
   color: #888;
 }
 
-/* MOBILE VERSION - TARGETED IMPROVEMENTS */
+/* MOBILE VERSION */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-wrapper {
     position: fixed;
@@ -182,7 +190,6 @@ onUnmounted(() => {
     z-index: 9999;
   }
 
-  /* Your successful generous sizing */
   .game-wrapper > div:not(.status-msg) {
     transform: rotate(90deg);
     width: 100svh; 
@@ -203,7 +210,7 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
     border: 1px solid white;
-    margin: 0; /* Reset margins that push layout */
+    margin: 0;
     pointer-events: none;
   }
 

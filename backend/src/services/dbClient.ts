@@ -8,6 +8,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  oldpassword?: string;
   nickname?: string;
   avatar?: string;
   created_at?: string;
@@ -19,6 +20,19 @@ export default interface Friends {
   user_1: number;
   user_2: number;
   petition_status: number;
+}
+
+export interface Petitions {
+    id?: number;
+    user_1: number;
+    user_1_username: string;
+    user_1_nickname: string;
+    user_1_avatar: string;
+    user_2: number;
+    user_2_username: string;
+    user_2_nickname: string;
+    user_2_avatar: string;
+    petition_status: number;
 }
 //Interfaces end here
 
@@ -145,6 +159,40 @@ export class DBClient {
       
       if (Array.isArray(data)) {
         return data as Friends[];
+      }
+
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  static async getAllFriendsPetitions(user_1: number): Promise<Friends[]> {
+    try {
+      const res = await dbFetch(`/api/friendsPetitions?user_1=${user_1}`);
+      
+      const data = await res.json();
+      console.log('Data received from /friendsPetitions:', data);
+      
+      if (Array.isArray(data)) {
+        return data as Friends[];
+      }
+
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  static async getAllPetitions(user_1: number): Promise<Petitions[]> {
+    try {
+      const res = await dbFetch(`/api/petitions?user_1=${user_1}`);
+      
+      const data = await res.json();
+      console.log('Data received from /petitions:', data);
+      
+      if (Array.isArray(data)) {
+        return data as Petitions[];
       }
 
       return [];

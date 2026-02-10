@@ -43,7 +43,7 @@ export const getPetitionFriendsController = async (
         error: 'Usuario no encontrado',
       });
     }
-    const friends = await DBClient.getAllFriends(user_1);
+    const friends = await DBClient.getAllFriendsPetitions(user_1);
 
     const filteredFriends: Friends[] = friends.filter(
      (friend: Friends) => friend.petition_status === user_1
@@ -65,6 +65,7 @@ export const createFriendPetitionController = async (
 ) => {
   try {
     let { user_1, user_2, petition_status } = request.body;
+    petition_status = user_2;
 
     if (user_1 === user_2) {
       return reply.status(400).send({
@@ -96,7 +97,29 @@ export const createFriendPetitionController = async (
                 error: 'La relación de amistad ya existe',
                 });
             };
-            console.log("la relacion es",relation);
+            console.log("la relacion es mecachis",relation);
+    }}
+
+    const petitionsUser2 = await DBClient.getAllFriendsPetitions(user_2);
+    const petitionsUser1 = await DBClient.getAllFriendsPetitions(user_1);
+
+    const existingPetition = [
+      ...petitionsUser2,
+      ...petitionsUser1
+    ];
+    
+    if (existingPetition.length > 0 ) 
+        {
+        for (const relation of existingPetition) {
+        if (
+            (relation.user_1 === normalizedUser1 && relation.user_2 === normalizedUser2) ||
+            (relation.user_1 === normalizedUser2 && relation.user_2 === normalizedUser1)
+        )   {
+                return reply.status(409).send({
+                error: 'La relación peticion de amistad ya existe',
+                });
+            };
+            console.log("la relacion es mecachis",relation);
     }}
     
     const newRelation = await DBClient.createFriendPetition({
@@ -123,7 +146,7 @@ export const createFriendPetitionController = async (
     try {
       const { id } = request.query; 
       await DBClient.acceptFriendPetition(id);
-      return reply.status(200).send({ message: 'Solicitud de amistad aceptada' });
+      return reply.status(200).send({ message: 'Done' });
     } catch (error) {
       console.error('Error accepting friend petition:', error);
       return reply.status(500).send({

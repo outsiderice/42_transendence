@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import UserCard from "@/components/UserCard.vue";
+import LeaderboardCard from "@/components/LeaderboardCard.vue";
+import UserAvatar from "@/components/UserAvatar.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 import DonutChart from "@/components/DonutChart.vue";
 import GameStatisticsCard from "@/components/GameStatisticsCard.vue";
@@ -55,6 +57,24 @@ import LinkComponent from "@/components/LinkComponent.vue";
 
 	<ButtonComponent @click="$router.push({name: 'home'})" label="click me!"/>
 	<LinkComponent href="/test" label="click this link!" />
+	<UserAvatar :online="false"/>
+	<UserAvatar 
+		profilePicture="https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png"
+		:online="false"
+	/>
+	<UserAvatar 
+		profilePicture="https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png"
+		:online="true"
+	/>
+	<UserAvatar 
+		profilePicture="https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png"
+		:online="false"
+	/>
+	<UserAvatar 
+		profilePicture="https://cdn.intra.42.fr/users/3652d353f132f5475c6b099ea0bdf1f2/tatahere.png"
+		:online="false"
+	/>
+	<LeaderboardCard :ranking="1" :online="true" nickName='pedro' :points="1.2"/>
 	<div />
 </section>
 </template>

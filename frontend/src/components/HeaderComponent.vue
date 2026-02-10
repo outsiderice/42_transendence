@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 function redirect_to_home_page() {
-	console.log('it is doing the function.');
 	router.push({name: 'home'});
 }
 

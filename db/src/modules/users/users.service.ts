@@ -24,7 +24,7 @@ export class UsersService {
       user.email,
       user.password,
       user.nickname || null,
-      user.avatar || null
+      null
     );
 
     return {
