@@ -165,7 +165,23 @@ load_user_info().then(() => {
 function send_friend_request()
 {
 	console.log('sending a friend request.');
-	
+	fetch(
+		"https://" + window.location.host + "/api/friends", 
+		{
+			method: 'POST',
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				"user_1": session.getUserId,
+				"user_2": user.id,
+				"petition_status": 3,
+			}),
+		}
+	).then(() => {
+		window.location.reload();
+	});
+
 	return ;
 }
 
@@ -174,9 +190,9 @@ async function remove_friend()
 	console.log('removing a friend.');
 	// get all the friendships for finding the friendship id.
 	const response1 = await fetch(
-			"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
-			{ method: 'GET' }
-			);
+		"https://" + window.location.host + "/api/friends?user_1" + user.id, 
+		{ method: 'GET' }
+	);
 	const result1 = await response1.json();
 	console.log(result1);
 	console.log(user.id);
@@ -203,10 +219,6 @@ async function remove_friend()
 
 function action()
 {
-	console.log('AAAAAAAAAAAAAAAAAAA');
-	console.log(load_status.value);
-	console.log(user_kind.value);
-	console.log(load_status.value == 'loanding' || user_kind.value == 'requested_friend');
 	if (load_status.value === 'loanding')
 	{
 		console.log("esperate a que carge la pagina.");
