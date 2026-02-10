@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import PongButton from '../components/PongButton.vue';
 import UserCard from '@/components/UserCard.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
+import DisabledButtonComponent from '@/components/DisabledButtonComponent.vue'
 import { useSessionStore } from '@/state/user_session.ts'
 
 const session = useSessionStore();
@@ -164,6 +165,7 @@ load_user_info().then(() => {
 function send_friend_request()
 {
 	console.log('sending a friend request.');
+	
 	return ;
 }
 
@@ -201,6 +203,10 @@ async function remove_friend()
 
 function action()
 {
+	console.log('AAAAAAAAAAAAAAAAAAA');
+	console.log(load_status.value);
+	console.log(user_kind.value);
+	console.log(load_status.value == 'loanding' || user_kind.value == 'requested_friend');
 	if (load_status.value === 'loanding')
 	{
 		console.log("esperate a que carge la pagina.");
@@ -236,7 +242,15 @@ function action()
 			:online="user.online" 
 			:profilePicture="user.profilePic" 
 		/>
-		<ButtonComponent :label="buttonLabel" @click="action()"/>
+		<DisabledButtonComponent 
+			v-if="load_status == 'loanding' || user_kind == 'requested_friend'" 
+			:label="buttonLabel" 
+		/>
+		<ButtonComponent 
+			v-else
+			:label="buttonLabel" 
+			@click="action()" 
+		/>
 	</div>
 
 	<div v-else>
