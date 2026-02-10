@@ -281,11 +281,7 @@ function action()
         </div>
       </div>
     </div>
-
-
-
-</section>
-
+  </div>
 </template>
 
 <style scoped>
