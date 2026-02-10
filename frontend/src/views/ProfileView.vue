@@ -17,44 +17,48 @@ const achievements = Array.from({ length: 20 }, (_, i) => ({
 <template>
   <div class="flex flex-col items-center w-full max-w-[450px] mx-auto px-4 py-8 gap-6 font-['Oswald']">
     
-    <section class="w-full flex items-center gap-6 p-4 border border-black rounded-xl md:border-none md:p-0">
-      <div class="w-24 h-24 md:w-28 md:h-28 bg-[#E5D9F2] rounded-full flex items-center justify-center overflow-hidden shrink-0">
-        <svg class="w-16 h-16 text-[#7B61FF]" viewBox="0 0 24 24" fill="currentColor">
+    <section class="w-full flex items-center gap-6 p-4 border border-[var(--color_accent_3)] rounded-xl md:border-none md:p-0">
+      <div class="w-24 h-24 md:w-28 md:h-28 bg-[var(--color_background_3)] rounded-full flex items-center justify-center overflow-hidden shrink-0">
+        <svg class="w-16 h-16 text-[var(--color_accent_2)]" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
       </div>
 
       <div class="flex flex-col text-sm md:text-base">
-        <p class="italic text-gray-700">user name: <span class="block not-italic font-bold text-black break-all">XXXXXXXXXX</span></p>
-        <p class="italic text-gray-700 mt-2">nick name: <span class="block not-italic font-bold text-black break-all">XXXXXXXXXX</span></p>
+        <p class="italic text-[var(--color_accent_3)]">user name: 
+          <span class="block not-italic font-bold text-[var(--color_accent_1)] break-all">XXXXXXXXXX</span>
+        </p>
+        <p class="italic text-[var(--color_accent_3)] mt-2">nick name: 
+          <span class="block not-italic font-bold text-[var(--color_accent_1)] break-all">XXXXXXXXXX</span>
+        </p>
       </div>
     </section>
 
     <PongButton 
       label="unfriend" 
       :fullWidth="true"
-      class="!bg-black !text-white !rounded-lg h-10 flex items-center justify-center uppercase tracking-widest" 
+      class="!bg-[var(--color_accent_1)] !text-[var(--color_background_3)] !rounded-lg h-10 flex items-center justify-center uppercase tracking-widest" 
     />
 
-    <div class="w-full bg-[#F3E8FF] rounded-lg flex p-1">
+    <div class="w-full bg-[var(--color_background_2)] rounded-lg flex p-1">
       <button 
         @click="currentTab = 'achievements'"
         :class="['flex-1 flex flex-col items-center py-2 transition rounded-md', 
-                 currentTab === 'achievements' ? 'bg-[#DCD0FF] shadow-sm' : 'opacity-60']"
+                 currentTab === 'achievements' ? 'bg-[var(--color_background_3)] shadow-sm' : 'opacity-60']"
       >
-        <div class="w-5 h-5 mb-1 bg-gray-500 rounded-full flex items-center justify-center">
-            <span class="text-[10px] text-white">★</span>
+        <div class="w-5 h-5 mb-1 bg-[var(--color_accent_3)] rounded-full flex items-center justify-center">
+            <span class="text-[10px] text-[var(--color_background_3)]">★</span>
         </div>
-        <span class="text-[10px] font-bold uppercase">achivments</span>
+        <span class="text-[10px] font-bold uppercase">achievements</span>
       </button>
 
       <button 
         @click="currentTab = 'history'"
         :class="['flex-1 flex flex-col items-center py-2 transition rounded-md', 
-                 currentTab === 'history' ? 'bg-[#DCD0FF] shadow-sm' : 'opacity-60']"
+                 currentTab === 'history' ? 'bg-[var(--color_background_3)] shadow-sm' : 'opacity-60']"
       >
-        <div class="w-5 h-5 mb-1 border-2 border-gray-500 rounded-full flex items-center justify-center">
-            <span class="text-[10px] text-gray-500">🕒</span>
+        <div class="w-5 h-5 mb-1 border-2 border-[var(--color_accent_3)] rounded-full flex items-center justify-center">
+            <span class="text-[10px] text-[var(--color_accent_3)]">🕒</span>
         </div>
         <span class="text-[10px] font-bold uppercase">game history</span>
       </button>
@@ -67,7 +71,8 @@ const achievements = Array.from({ length: 20 }, (_, i) => ({
         <div v-for="star in achievements" :key="star.id" class="w-8 h-8 md:w-10 md:h-10">
           <div 
             :class="['w-full h-full rounded-full border-2 flex items-center justify-center text-lg', 
-                     star.unlocked ? 'border-gray-500 bg-white text-gray-700' : 'border-gray-200 text-gray-200']"
+                     star.unlocked ? 'border-[var(--color_accent_3)] bg-[var(--color_background_3)] text-[var(--color_accent_2)]' 
+                                   : 'border-[var(--color_background_2)] text-[var(--color_background_2)]']"
           >
             ★
           </div>
@@ -76,6 +81,7 @@ const achievements = Array.from({ length: 20 }, (_, i) => ({
     </div>
   </div>
 </template>
+
 
 <style scoped>
 :deep(.pong-button) {
