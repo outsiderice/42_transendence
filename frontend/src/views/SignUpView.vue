@@ -77,30 +77,32 @@ const handleSubmit = async () => {
 // -------------------------
 // Logout
 // -------------------------
-const signOut = () => {
-  session.logout()
+function sign_out()
+{
+	session.$reset();
+	router.push({name: 'signin'});
 }
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
 
-    <!-- DEBUG TEMPORAL 
+    <!-- DEBUG TEMPORAL -->
     <pre class="mb-4 text-xs">
 isAuthenticated: {{ session.isAuthenticated }}
-username: {{ session.username }}
-    </pre>-->
+username: {{ session.userName }}
+    </pre>
 
-    <!-- USUARIO AUTENTICADO -->
-    <div v-if="session.isAuthenticated">
+    <!-- USUARIO AUTENTICADO 
+    <div  v-if="session.userName">
       <h2 class="text-2xl font-bold mb-6 text-center">
-        Hola, {{ session.username }}
-      </h2>
+        Hola, {{ session.userName }}
+      </h2>-->
 
       <PongButton
         label="Log out"
         :fullWidth="true"
-        @click="signOut"
+        @click="sign_out()"
       />
     </div>
 
