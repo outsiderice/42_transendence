@@ -11,7 +11,7 @@ const router = useRouter();
 
 const onlineUsers = useOnlineUsersStore();
 
-const users = reactive
+const petitioners = reactive
 <
 	{
 		id: number,
@@ -22,26 +22,40 @@ const users = reactive
 	}[]
 > ([]);
 
-async function user_info(user: object)
+async function petitioner_info(id: number, petition: object)
 {
-	if (user.avatar === '') {
-		user.profilePic = undefined;
-	}
-	if (onlineUsers.getUsersIds.indexOf(result.id) !== -1) {
-		user.online = true;
+	let petitioner;
+	if (id === petition.user_1){
+		//petitioner is user_2
+		petitioner = {
+			id: petition.user_2,
+			name: petition.user_2_username,
+			nick: petition.user_2_nickname,
+			profilePic: petition.user_2_avatar || undefined,
+			online: false
+		};
 	} else {
-		user.online = false;
 	}
-	return (user);
+		petitioner = {
+			id: petition.user_1,
+			name: petition.user_1_username,
+			nick: petition.user_1_nickname,
+			profilePic: petition.user_1_avatar || undefined,
+			online: false
+		};
+	if (onlineUsers.getUsersIds.indexOf(petitioner.id) !== -1) {
+		user.online = true;
+	}
+	return (petitioner);
 }
 
-fetch ("https://" + window.location.host + "/api/usersPetitions", {
+fetch ("https://" + window.location.host + "/api/usersPetitions/" + session.getUserId, {
 	method: 'GET',
 	}).then(async (response) => {
 	if (!response.ok)
 	{
 		session.$reset();
-		router.push({name: 'home'});
+		router.push({name: 'signin'});
 		return ;
 	}
 	const result =  await response.json();
@@ -49,8 +63,8 @@ fetch ("https://" + window.location.host + "/api/usersPetitions", {
 	while (i < length)
 	{
 		let result_element = result[i];
-		let user = user_info(result_element);
-		users.push(user);
+		let petitioner = petitioner_info(session.getUserid, result_element);
+		petitioners.push(petitioner.id);
 		i++; 
 	}
 });
@@ -75,12 +89,11 @@ watch(onlineUsers.usersIds, () => {
 <template>
 <section class="max-w-[40rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
 	<p>friendship requests.</p>
-	<UserRequestCard v-for='user in users'
-		:relationshipId="user.rank"
-		:profilePicture="user.profilePic" 
-		:online="user.online" 
-		:nickName="user.nick" 
-		:points="user.points" 
+	<UserRequestCard v-for='petitioner in petitioners'
+		:relationshipId="petitioner.id"
+		:profilePicture="petitioner.profilePic" 
+		:online="petitioner.online" 
+		:nickName="petitioner.nick" 
 		class=""
 	/>
 </section>
