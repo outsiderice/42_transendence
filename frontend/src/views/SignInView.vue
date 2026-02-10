@@ -7,6 +7,7 @@ import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import { useSessionStore } from '@/state/user_session.ts'
 import { useRouter } from 'vue-router';
+import LinkComponent from '../components/LinkComponent.vue'
 
 const { newsletter } = useToggles()
 
@@ -102,6 +103,13 @@ function sign_out()
         :disabled="!name || !password"
         @click="handleSubmit"
       />
+      <div class="flex justify-center mt-6">
+        <LinkComponent
+          href="/sign_up"
+          label="sign up"
+          class="text-(--color_accent_1)"
+        />
+      </div>
     </div>
   </div>
 </template>
