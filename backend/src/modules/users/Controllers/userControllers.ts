@@ -195,7 +195,7 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
-      avatar : "avatar.jpg",
+      avatar,
       ...(nickname && { nickname }),
      
     });

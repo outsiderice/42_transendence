@@ -24,7 +24,7 @@ export class UsersService {
       user.email,
       user.password,
       user.nickname || null,
-      "avatar.jpg"
+      null
     );
 
     return {
