@@ -111,7 +111,7 @@ username: {{ session.username }}
 
     <!-- USUARIO NO AUTENTICADO -->
     <div v-else>
-      <h2 class="text-3xl font-bold mb-8 text-center">
+      <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">
         Sign Up
       </h2>
 

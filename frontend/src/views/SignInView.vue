@@ -72,7 +72,7 @@ const handleSubmit = async () => {
 
     <!-- USUARIO NO AUTENTICADO -->
     <div v-else>
-      <h2 class="text-3xl font-bold mb-8 text-center">Sign In</h2>
+      <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">Sign In</h2>
 
       <PongInput
         label="Name"
