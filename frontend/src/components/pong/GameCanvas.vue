@@ -46,25 +46,35 @@ const resizeCanvas = () => {
   canvas.height = 600;
 };
 
+let animationFrame: number;
+const renderLoop = () => {
+  if (props.gameState && renderer) {
+    renderer.draw(props.gameState, props.leftName, props.rightName);
+  }
+  animationFrame = requestAnimationFrame(renderLoop);
+};
+
 onMounted(() => {
   if (canvasRef.value) {
     renderer = new Renderer(canvasRef.value);
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+    renderLoop(); //starts the loop
   }
 });
 
 onUnmounted(() => {
+  cancelAnimationFrame(animationFrame);
   window.removeEventListener('resize', resizeCanvas);
 });
 
-// Every time the parent (Game.vue) gets a new state from the server, 
-// this watcher triggers the draw function.
-watch(() => props.gameState, (newState) => {
+// Every time the parent gets a new state from the server, this watcher triggers the draw function. Works but not the best for mobile
+
+/*watch(() => props.gameState, (newState) => {
   if (newState && renderer) {
     renderer.draw(newState, props.leftName, props.rightName);
   }
-});
+}); */
 </script>
 
 <template>
