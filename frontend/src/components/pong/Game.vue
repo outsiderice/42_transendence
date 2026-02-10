@@ -71,11 +71,26 @@ const handleTouch = (e: TouchEvent, pressed: boolean) => {
   const middle = rect.width / 2;
 
   if (mySide.value === "LEFT") {
-    // If touch is on the left side of the physical phone (Visual T
+    // If touch is on the left side of the physical phone
     sendInput(touchX > middle ? "w" : "s", true);
   } else {
     sendInput(touchX > middle ? "ArrowUp" : "ArrowDown", true);
   }
+};
+
+const handleOffline = () => {
+  msgPong.value = "Connection lost. You are offline.";
+  if (socket) {
+    socket.close();
+  }
+  //startPostGameRoutine();
+};
+
+const handleOnline = () => {
+  msgPong.value = "You are online again! Returning to menu..."
+  setTimeout(() => {
+    router.push({ name: 'home' });
+  }, 2000);
 };
 
 onMounted(() => {
@@ -114,19 +129,22 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
-  // check this for status offline
-  //window.addEventListener('online', () => console.log('Became online'));
-  //window.addEventListener('offline', () => console.log('Became offline'));
+  window.addEventListener('offline', handleOffline);
+  window.addEventListener('online', handleOnline);
 });
 
 onUnmounted(() => {
+  window.removeEventListener('offline', handleOffline);
+  window.addEventListener('online', handleOnline);
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+
   if (socket) {
     socket.onmessage = null;
     socket.close();
     socket = null;
-  } 
-  window.removeEventListener("keydown", handleKeyDown);
-  window.removeEventListener("keyup", handleKeyUp);
+  }
+
   //clear timeout
   if (postWinTimer) {
     clearTimeout(postWinTimer);

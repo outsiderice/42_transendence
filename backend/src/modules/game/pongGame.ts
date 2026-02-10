@@ -71,10 +71,7 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
       p.webSocket.close();
     }
   });
-  //player1.webSocket.send(finalMsg);
-  //player2.webSocket.send(finalMsg);
-  //player1.webSocket.close();
-  //player2.webSocket.close();
+
 }
 
 
@@ -99,11 +96,11 @@ export function close_game(player: Player, gameInterval: NodeJS.Timeout, game: P
     if (!game.endGame()){
       console.log(`Player ${player.userName} disconnected. Game stopped.`);
       const msg = JSON.stringify({ type: "DISCONNECTED", username: player.userName});
-      if (game.player1.webSocket.readyState === 1) {
-        game.player1.webSocket.send(msg);
-      }
-      if (game.player2.webSocket.readyState === 1) {
-        game.player2.webSocket.send(msg);
+      const opponent = (player === game.player1) ? game.player2 : game.player1;
+
+      if (opponent.webSocket.readyState === 1) {
+        opponent.webSocket.send(msg);
+        setTimeout(() => opponent.webSocket.close(), 1000);
       }
     }
   });
@@ -161,7 +158,6 @@ export async function pongGame(
             type: "ERROR", 
             message: "You are already in the matchmaking queue!" 
         }));
-        //close the socket maybe redirect to main page?
         socket.close();
         return;
       }

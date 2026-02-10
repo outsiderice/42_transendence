@@ -17,9 +17,13 @@ const onlineUsers = useOnlineUsersStore();
 </script>
 
 <template>
-	<HeaderComponent />
-	<RouterView />
-	<FooterComponent v-if="!route.meta?.hideFooter"/>
+	<div class="flex flex-col min-h-screen">
+		<HeaderComponent />
+		<main class="flex-grow">
+			<RouterView />
+		</main>
+		<FooterComponent v-if="!route.meta?.hideFooter"/>
+	</div>
 </template>
 
 <style scoped>
