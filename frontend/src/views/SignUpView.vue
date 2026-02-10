@@ -89,15 +89,15 @@ function sign_out()
 
     <!-- DEBUG TEMPORAL -->
     <pre class="mb-4 text-xs">
-isAuthenticated: {{ session.isAuthenticated }}
-username: {{ session.userName }}
+      isAuthenticated: {{ session.isAuthenticated }}
+      username: {{ session.userName }}
     </pre>
 
-    <!-- USUARIO AUTENTICADO 
+    <!-- USUARIO AUTENTICADO -->
     <div  v-if="session.userName">
       <h2 class="text-2xl font-bold mb-6 text-center">
         Hola, {{ session.userName }}
-      </h2>-->
+      </h2>
 
       <PongButton
         label="Log out"
@@ -150,7 +150,7 @@ username: {{ session.userName }}
         :disabled="!name || !email || !password || !confirmPassword"
         @click="handleSubmit"
       />
-
+      
     </div>
   </div>
 </template>
