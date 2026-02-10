@@ -60,21 +60,9 @@ export const getUserPetitionsController = async (
 ) => {
   const userId = request.params.id;
 
-  const relations = await DBClient.getAllPetitions (userId);
+  const petitions = await DBClient.getAllPetitions (userId);
 
-  const friendIds = [
-    ...new Set(
-      relations.map(r =>
-        r.user_1 === userId ? r.user_2 : r.user_1
-      )
-    )
-  ];
-
-  const users = (await Promise.all(
-    friendIds.map(id => DBClient.getUserById(id))
-  )).filter(Boolean);
-
-  return users;
+  return petitions;
 };
 
 /**

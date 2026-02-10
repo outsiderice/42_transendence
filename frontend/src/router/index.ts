@@ -81,6 +81,11 @@ const router = createRouter({
       component: () => import('../components/pong/Game.vue'),
       meta: { hideFooter: true }
     },
+    {
+      path: '/friendship_requests',
+      name: 'friendship_requests',
+      component: () => import('../views/FriendshipRequests.vue'),
+    },
   ],
 })
 
