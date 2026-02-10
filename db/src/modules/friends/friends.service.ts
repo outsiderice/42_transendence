@@ -33,6 +33,7 @@ export class friendsService{
       	AND petition_status = 0
   	`);
     const rows = stmt.all(user_1, user_1) as Friends[];
+    
     return rows;
   }
 
@@ -41,9 +42,9 @@ export class friendsService{
     	SELECT *
     	FROM relationship
     	WHERE (user_1 = ? OR user_2 = ?)
-      	AND petition_status = 4
+      	AND petition_status = ?
   	`);
-    const rows = stmt.all(user_1, user_1) as Friends[];
+    const rows = stmt.all(user_1, user_1,user_1) as Friends[];
     return rows;
   }
 
