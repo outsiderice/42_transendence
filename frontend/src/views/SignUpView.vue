@@ -90,11 +90,11 @@ const signOut = () => {
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
 
-    <!-- DEBUG TEMPORAL -->
+    <!-- DEBUG TEMPORAL 
     <pre class="mb-4 text-xs">
 isAuthenticated: {{ session.isAuthenticated }}
 username: {{ session.username }}
-    </pre>
+    </pre>-->
 
     <!-- USUARIO AUTENTICADO -->
     <div v-if="session.isAuthenticated">
@@ -154,12 +154,6 @@ username: {{ session.username }}
         @click="handleSubmit"
       />
 
-      <div class="mt-4">
-        <PongToggleButton
-          v-model="newsletter"
-          label="Suscribirme al newsletter"
-        />
-      </div>
     </div>
   </div>
 </template>

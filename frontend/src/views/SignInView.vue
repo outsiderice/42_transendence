@@ -96,10 +96,6 @@ const handleSubmit = async () => {
         :disabled="!name || !password"
         @click="handleSubmit"
       />
-
-      <div class="mt-4">
-        <PongToggleButton v-model="newsletter" label="Suscribirme al newsletter" />
-      </div>
     </div>
   </div>
 </template>
