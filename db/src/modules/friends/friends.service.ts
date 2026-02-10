@@ -51,6 +51,20 @@ export class friendsService{
     return rows;
   }
 
+  static getAllFriendsPetitions(user_1: number): Friends[] {
+    const stmt = db.prepare(`
+    	SELECT *
+    	FROM relationship
+    	WHERE (user_1 = ? OR user_2 = ?) and petition_status =?;
+      	
+  	`);
+    const rows = stmt.all(user_1, user_1,user_1) as Friends[];
+    
+    return rows;
+  }
+
+
+
    static getAllPetitions(user_1: number): Friends[] {
     const stmt = db.prepare(`
     	SELECT

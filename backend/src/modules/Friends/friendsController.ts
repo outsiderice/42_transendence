@@ -43,7 +43,7 @@ export const getPetitionFriendsController = async (
         error: 'Usuario no encontrado',
       });
     }
-    const friends = await DBClient.getAllPetitions(user_1);
+    const friends = await DBClient.getAllFriendsPetitions(user_1);
 
     const filteredFriends: Friends[] = friends.filter(
      (friend: Friends) => friend.petition_status === user_1
@@ -100,8 +100,8 @@ export const createFriendPetitionController = async (
             console.log("la relacion es mecachis",relation);
     }}
 
-    const petitionsUser2 = await DBClient.getAllPetitions(user_2);
-    const petitionsUser1 = await DBClient.getAllPetitions(user_1);
+    const petitionsUser2 = await DBClient.getAllFriendsPetitions(user_2);
+    const petitionsUser1 = await DBClient.getAllFriendsPetitions(user_1);
 
     const existingPetition = [
       ...petitionsUser2,
@@ -146,7 +146,7 @@ export const createFriendPetitionController = async (
     try {
       const { id } = request.query; 
       await DBClient.acceptFriendPetition(id);
-      return reply.status(200).send({ message: 'Solicitud de amistad aceptada' });
+      return reply.status(200).send({ message: 'Done' });
     } catch (error) {
       console.error('Error accepting friend petition:', error);
       return reply.status(500).send({
