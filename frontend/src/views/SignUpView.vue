@@ -87,11 +87,11 @@ function sign_out()
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
 
-    <!-- DEBUG TEMPORAL -->
+    <!-- DEBUG TEMPORAL 
     <pre class="mb-4 text-xs">
       isAuthenticated: {{ session.isAuthenticated }}
       username: {{ session.userName }}
-    </pre>
+    </pre>-->
 
     <!-- USUARIO AUTENTICADO -->
     <div  v-if="session.userName">
