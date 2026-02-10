@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
 import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
 import { useRouter } from 'vue-router';
 import { useSessionStore } from '@/state/user_session.ts'
-
+import UserAvatar from '@/components/UserAvatar.vue';
 const session = useSessionStore();
 const router = useRouter();
 
@@ -143,13 +143,19 @@ const handleSubmit = async () => {
   }
 };
 
+const myprofilevalue = computed (()=> profilePicture.value ? profilePicture.value : undefined) 
+
 onMounted(fetchUserSettings)
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
-
-    <!-- AVATAR -->
+    <UserAvatar class= "mx-auto w-[8rem] h-[8rem]"
+    @click="triggerFilePicker" 
+		:profilePicture="myprofilevalue"
+		:online="online"
+	  />
+    <!-- AVATAR 
     <div class="flex justify-center mb-6 cursor-pointer" @click="triggerFilePicker">
       <svg
         viewBox="0 0 60 60"
@@ -184,7 +190,7 @@ onMounted(fetchUserSettings)
 
         <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor" />
       </svg>
-    </div>
+    </div>-->
 
     <input
       ref="fileInputRef"
