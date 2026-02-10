@@ -54,6 +54,28 @@ export const getUserFriendsController = async (
   return users;
 };
 
+export const getUserPetitionsController = async (
+  request: FastifyRequest<{ Params: { id: number } }>,
+  reply: FastifyReply
+) => {
+  const userId = request.params.id;
+
+  const relations = await DBClient.getAllPetitions (userId);
+
+  const friendIds = [
+    ...new Set(
+      relations.map(r =>
+        r.user_1 === userId ? r.user_2 : r.user_1
+      )
+    )
+  ];
+
+  const users = (await Promise.all(
+    friendIds.map(id => DBClient.getUserById(id))
+  )).filter(Boolean);
+
+  return users;
+};
 
 /**
  * GET /users/:id - Obtener usuario por ID
