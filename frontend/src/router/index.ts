@@ -41,15 +41,14 @@ const router = createRouter({
       component: () => import('../views/UserListing.vue'),
     },
     {
-      path: '/user/:id',
-      name: 'user',
-      component: () => import('../views/404.vue'),
+      path: '/users/:id',
+	  component: () => import('../views/ProfileView.vue'),
     },
-    {
-      path: '/my_profile_design', // change the name and add id !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      name: 'my-profile-design',
-      component: () => import('../views/ProfileView.vue'),
-    },
+   // {
+   //   path: '/my_profile_design', // change the name and add id !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   //   name: 'my-profile-design',
+   //   component: () => import('../views/ProfileView.vue'),
+   // },
     {
       path: '/test_card',
       name: 'test-card',
