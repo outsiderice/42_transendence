@@ -47,6 +47,7 @@ export class friendsService{
       	AND petition_status = 0
   	`);
     const rows = stmt.all(user_1, user_1) as Friends[];
+    
     return rows;
   }
 

@@ -63,6 +63,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
       try {
         const { user_1 } = request.query;
         const friends = await friendsService.getAllPetitions(user_1);
+        console.log("friends:",friends)
         reply.status(200).send(friends);
       } catch (error) {
         reply.status(400).send({ error: (error as Error).message });
