@@ -52,10 +52,16 @@ const handleSubmit = async () => {
 	}
 }
 
+function sign_out()
+{
+	session.$reset();
+	router.push({name: 'signin'});
+}
+
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
+  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
 
     <!-- USUARIO AUTENTICADO -->
     <div v-if="session.userName">
@@ -66,13 +72,13 @@ const handleSubmit = async () => {
       <PongButton
         label="Log out"
         :fullWidth="true"
-        @click="signOut"
+        @click="sign_out()"
       />
     </div>
 
     <!-- USUARIO NO AUTENTICADO -->
     <div v-else>
-      <h2 class="text-3xl font-bold mb-8 text-center">Sign In</h2>
+      <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">Sign In</h2>
 
       <PongInput
         label="Name"
@@ -96,10 +102,6 @@ const handleSubmit = async () => {
         :disabled="!name || !password"
         @click="handleSubmit"
       />
-
-      <div class="mt-4">
-        <PongToggleButton v-model="newsletter" label="Suscribirme al newsletter" />
-      </div>
     </div>
   </div>
 </template>
