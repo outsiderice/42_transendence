@@ -208,7 +208,7 @@ export const getAllFriendsNicController = async (
 
     reply.status(200).send(result);
   } catch (error) {
-    console.error('Error in getAllFriendsNickController:', error);
+    console.error('Error in NickFriend:', error);
     reply.status(500).send({
       error: 'Error al obtener amigos',
     });
