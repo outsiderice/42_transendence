@@ -39,7 +39,13 @@ const friends = reactive<
 
 //const games = reactive<>();
 
-const user_kind = ref<'oneself' | 'friend' | 'requested_friend' | 'stranger'>('stranger');
+const user_kind = ref<
+	'oneself' | 
+	'friend' | 
+	'requested_friend' | 
+	'requesting_friendship' | 
+	'stranger'
+>('stranger');
 
 const buttonLabel = ref<string>('something');
 
@@ -47,76 +53,96 @@ async function load_user_info()
 {
 	//	get basic info on the user.
 	const response1 = await fetch(
-			"https://" + window.location.host + "/api/users/by-username/" + route.params.id, {
-method:'GET',
-});
-if (!response1.ok)
-{
-	load_status.value = 'fail';
-	return ;
-}
-const result1 = await response1.json();
-user.name = result1.username;
-user.nick = result1.nickname;
-user.nick = result1.username;
-if (result1.avatar === '') {
-	user.profilePic = undefined;
-} else {
-	user.profilePic = result1.avatar;
-}
-user.id = result1.id;
-console.log("user.");
-console.log(user.id);
-console.log(session.getUserId);
-
-//	know if the user is oneself.
-if (user.id == session.getUserId)
-{
-	console.log("this is oneself");
-	user_kind.value = 'oneself';
-	user.online = true;
-	load_status.value = 'loaded';
-	return ;
-}
-
-//	know if the user is a friend.
-const response2 = await fetch(
+		"https://" + window.location.host + "/api/users/by-username/" + route.params.id, {
+		method:'GET',
+	});
+	if (!response1.ok)
+	{
+		load_status.value = 'fail';
+		return ;
+	}
+	const result1 = await response1.json();
+	user.name = result1.username;
+	user.nick = result1.nickname;
+	user.nick = result1.username;
+	if (result1.avatar === '') {
+		user.profilePic = undefined;
+	} else {
+		user.profilePic = result1.avatar;
+	}
+	user.id = result1.id;
+	console.log("user.");
+	console.log(user.id);
+	console.log(session.getUserId);
+	
+	//	know if the user is oneself.
+	if (user.id == session.getUserId)
+	{
+		console.log("this is oneself");
+		user_kind.value = 'oneself';
+		user.online = true;
+		load_status.value = 'loaded';
+		return ;
+	}
+	
+	//	know if the user is a friend.
+	const response2 = await fetch(
 		"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
 		{ method: 'GET' }
-		);
-const result2 = await response2.json();
-console.log(result2);
-while (result2.length != 0)
-{
-	const friendship = result2.pop();
-	if (friendship.user_1 === session.getUserId || friendship.user_2 === session.getUserId)
+	);
+	const result2 = await response2.json();
+	console.log(result2);
+	while (result2.length != 0)
 	{
-		console.log("this is a friend");
-		user_kind.value = 'friend';
-		load_status.value = 'loaded';
-		return ;
+		const friendship = result2.pop();
+		if (friendship.user_1 === session.getUserId || friendship.user_2 === session.getUserId)
+		{
+			console.log("this is a friend");
+			user_kind.value = 'friend';
+			load_status.value = 'loaded';
+			return ;
+		}
 	}
-}
-//	know if the user is pending as a friend.
-const response3 = await fetch(
+	//	know if the user is pending as a friend.
+	const response3 = await fetch(
 		"https://" + window.location.host + "/api/friendsPetitions?user_1=" + user.id, 
 		{ method: 'GET' }
-		);
-const result3 = await response3.json();
-while (result3.length != 0)
-{
-	if (result3.pop().user_1 === session.getUserId)
+	);
+	const result3 = await response3.json();
+	console.log("result3");
+	console.log(result3);
+	while (result3.length != 0)
 	{
-		console.log("will be a friend in the way.");
-		user_kind.value = 'requested_friend';
-		load_status.value = 'loaded';
-		return ;
+		const item = result3.pop();
+		if (item.user_1 === session.getUserId)
+		{
+			console.log("will be a friend in the way.");
+			user_kind.value = 'requested_friend';
+			load_status.value = 'loaded';
+			return ;
+		}
 	}
-}
-console.log("will be a stranger.");
-user_kind.value = 'stranger';
-load_status.value = 'loaded';
-return ;
+	//	know if the user has requested a friendship.
+	const response4 = await fetch(
+		"https://" + window.location.host + "/api/friendsPetitions?user_1=" + session.getUserId, 
+		{ method: 'GET' }
+	);
+	const result4 = await response4.json();
+	while (result4.length != 0)
+	{
+		const item = result4.pop();
+		if (item.user_2 === session.getUserId)
+		{
+			console.log("is asquing to be a firend.");
+			user_kind.value = 'requesting_friendship';
+			load_status.value = 'loaded';
+			return;
+		}
+	}
+	console.log("will be a stranger.");
+	user_kind.value = 'stranger';
+	load_status.value = 'loaded';
+	return ;
 }
 
 function set_button_label()
@@ -139,6 +165,11 @@ function set_button_label()
 	if (user_kind.value === 'requested_friend')
 	{
 		buttonLabel.value = 'friend request ongoing.';
+		return ;
+	}
+	if (user_kind.value === 'requesting_friendship')
+	{
+		buttonLabel.value = 'user has requested your friendship.';
 		return ;
 	}
 	if (user_kind.value === 'stranger')
@@ -289,7 +320,11 @@ function action()
 			:profilePicture="user.profilePic" 
 		/>
 		<DisabledButtonComponent 
-			v-if="load_status == 'loanding' || user_kind == 'requested_friend'" 
+			v-if="
+				load_status == 'loanding' || 
+				user_kind == 'requested_friend' || 
+				user_kind == 'requesting_friendship'
+			" 
 			:label="buttonLabel" 
 		/>
 		<ButtonComponent 
