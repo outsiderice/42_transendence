@@ -6,6 +6,8 @@ import UserCard from '@/components/UserCard.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 import DisabledButtonComponent from '@/components/DisabledButtonComponent.vue'
 import { useSessionStore } from '@/state/user_session.ts'
+import bookIcon from '@/assets/book_icon.svg';
+import userIcon from '@/assets/user_icon.svg';
 
 const session = useSessionStore();
 const route = useRoute();
@@ -302,64 +304,89 @@ function action()
 	</div>
 
 	<!-- Tabs -->
-	<div class="w-full bg-[var(--color_background_2)] rounded-lg flex p-1">
+	<div class="w-full flex flex-row">
 		<button 
 			@click="currentTab = 'friends'"
-			:class="
-				[
-					'flex-1 flex flex-col items-center py-2 transition rounded-md', 
-					currentTab === 'friends' ? 
-						'bg-[var(--color_background_3)] shadow-sm' 
-					: 
-						'opacity-60'
-				]
-			"
+			class="basis-64"
 		>
-			<div 
-				class="
-					w-5 
-					h-5 
-					mb-1 
-					bg-[var(--color_accent_3)] 
-					rounded-full 
-					flex 
-					items-center 
-					justify-center
-				"
+		<div class='m-auto inline-block' >
+			<div class='inline-block px-[0.5rem]' >
+			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.4rem] mx-auto">
+				<defs>
+					<mask id="userIconMask">
+						<rect width="19" height="19" fill="black" />
+						<image width="19" height="19" :href="userIcon"/>
+					</mask>
+				</defs>
+				<rect 
+					width='19' 
+					height='19' 
+					:fill="
+						currentTab === 'friends' ? 
+							'var(--color_accent_1)' 
+						: 
+							'var(--color_accent_3)'
+					"
+					mask="url(#userIconMask)"
+				/>
+			</svg>
+			<span :class="'text-[10px] font-bold uppercase text-' + (
+					currentTab === 'friends' ? 
+						'(--color_accent_1)'
+					:
+						'(--color_accent_3)'
+				)"
 			>
-				<span class="text-[10px] text-[var(--color_background_3)]">★</span>
+				friends
+			</span>
 			</div>
-			<span class="text-[10px] font-bold uppercase">friends</span>
+			<div 
+				v-if="currentTab === 'friends'" 
+				class="h-[0.2rem] rounded-t-[200rem] w-full bg-(--color_accent_1)"
+			/>
+		</div>
 		</button>
 
 		<button 
 			@click="currentTab = 'game_history'"
-			:class="
-				[
-					'flex-1 flex flex-col items-center py-2 transition rounded-md', 
-					currentTab === 'game_history' ? 
-						'bg-[var(--color_background_3)] shadow-sm' 
-					: 
-						'opacity-60'
-				]
-			"
+			class="basis-64"
 		>
-			<div 
-				class="
-					w-5 
-					h-5 
-					mb-1 
-					border-2 
-					border-[var(--color_accent_3)] 
-					rounded-full 
-					flex 
-					items-center 
-					justify-center
-				"
+		<div class='m-auto inline-block' >
+			<div class='inline-block px-[0.5rem]' >
+			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.4rem] mx-auto">
+				<defs>
+					<mask id="bookIconMask">
+						<rect width="19" height="19" fill="black" />
+						<image width="19" height="19" :href="bookIcon"/>
+					</mask>
+				</defs>
+				<rect 
+					width='19' 
+					height='19' 
+					:fill="
+						currentTab === 'game_history' ? 
+							'var(--color_accent_1)' 
+						: 
+							'var(--color_accent_3)'
+					"
+					mask="url(#bookIconMask)"
+				/>
+			</svg>
+			<span :class="'text-[10px] font-bold uppercase text-' + (
+					currentTab === 'game_history' ? 
+						'(--color_accent_1)'
+					:
+						'(--color_accent_3)'
+				)"
 			>
-				<span class="text-[10px] text-[var(--color_accent_3)]">🕒</span>
+				game history
+			</span>
 			</div>
-			<span class="text-[10px] font-bold uppercase">game history</span>
+			<div 
+				v-if="currentTab === 'game_history'" 
+				class="h-[0.2rem] rounded-t-[200rem] w-full bg-(--color_accent_1)"
+			/>
+		</div>
 		</button>
 	</div>
 
