@@ -4,6 +4,7 @@ import { GameSchema } from './gamedata.schema';
 
 export const gamesDataRoutes = async (app: FastifyInstance) => {
   app.post('/games', {
+    preHandler: app.authenticateApi,
     schema: {
       tags : ['game_data'],
       body: GameSchema,
@@ -28,6 +29,7 @@ export const gamesDataRoutes = async (app: FastifyInstance) => {
  
   app.get('/games',
     {
+    preHandler: app.authenticateApi,
       schema: {
         querystring: {
           type: 'object',

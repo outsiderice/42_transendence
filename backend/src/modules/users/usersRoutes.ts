@@ -103,6 +103,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ ALL
   app.get('/users', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       response: { 200: { type: 'array', items: UserSchema } },
@@ -111,6 +112,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   //user friends
   app.get<{ Params: { id: number } }>('/usersFriends/:id', {
+    preHandler: app.authenticateApi,
   schema: {
     tags: ['Users'],
     params: {
@@ -127,6 +129,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   //user pending petitions
   app.get<{ Params: { id: number } }>('/usersPetitions/:id', {
+    preHandler: app.authenticateApi,
   schema: {
     tags: ['Users'],
     params: {
@@ -171,6 +174,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // UPDATE
   app.put<{ Params: { id: string }; Body: Partial<User> }>('/users/:id', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
@@ -185,6 +189,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // DELETE
   app.delete<{ Params: { id: string } }>('/users/:id', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
