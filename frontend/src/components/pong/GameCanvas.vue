@@ -26,7 +26,7 @@ const resizeCanvas = () => {
   const headerHeight = header?.offsetHeight || 0;
   const msgHeight = statusMsg?.offsetHeight || 0;
 
-  const padding = 50; // to prevent game touching the message
+  const padding = 70; // to prevent game touching the message
   const maxAvailableHeight = window.innerHeight - headerHeight - msgHeight - padding;
   const maxAvailableWidth = container.clientWidth;
 
