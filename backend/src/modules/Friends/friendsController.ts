@@ -199,9 +199,11 @@ export const getAllFriendsNicController = async (
           user1_id: relation.user_1,
           user1_name : user1?.username,
           user1_nickname: user1?.nickname,
+          user1_avatar: user1?.avatar,
           user2_id: relation.user_2,
           user2_name : user2?.username,
           user2_nickname: user2?.nickname,
+          user2_avatar: user2?.avatar,
         };
       })
     );
