@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
+import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
 import { useRouter } from 'vue-router';
 import { useSessionStore } from '@/state/user_session.ts'
 import UserAvatar from '@/components/UserAvatar.vue';
@@ -10,8 +11,7 @@ const session = useSessionStore();
 const router = useRouter();
 
 const profilePicture = ref<string | undefined>(undefined)
-const avatarFile = ref<File | null>(null)
-
+const onlineIndicatorColor = "var(--color_accent_success)"
 const oldpassword = ref<string | undefined>(undefined)
 const password = ref<string | undefined>(undefined)
 const name = ref<string | undefined>(undefined)
@@ -25,71 +25,77 @@ const myprofilevalue = computed(() =>
   profilePicture.value ? profilePicture.value : undefined
 )
 
-// -------------------- AVATAR RESET 🔥 --------------------
-const resetAvatarState = () => {
-  if (profilePicture.value?.startsWith('blob:')) {
-    URL.revokeObjectURL(profilePicture.value)
-  }
-
-  profilePicture.value = undefined
-  avatarFile.value = null
-
-  if (fileInputRef.value) {
-    fileInputRef.value.value = ''
-  }
-}
-
-// -------------------- FILE PICKER --------------------
+// -------------------- AVATAR --------------------
 const triggerFilePicker = () => {
   fileInputRef.value?.click()
 }
 
-const onAvatarSelected = (e: Event) => {
+const onAvatarSelected = async (e: Event) => {
   const target = e.target as HTMLInputElement
-  if (!target.files || !target.files.length) return
+  if (!target.files?.length) return
 
-  avatarFile.value = target.files[0]
+  const file = target.files[0]
 
-  // Preview inmediato (blob)
-  profilePicture.value = URL.createObjectURL(avatarFile.value)
-}
+  // Guardamos avatar anterior por si hay error
+  const previousAvatar = profilePicture.value
 
-// -------------------- UPLOAD AVATAR --------------------
-const uploadAvatar = async () => {
-  if (!avatarFile.value) return
+  // Preview inmediato con blob
+  profilePicture.value = URL.createObjectURL(file)
 
+  // Subida al backend
   const formData = new FormData()
-  formData.append("avatar", avatarFile.value)
+  formData.append("avatar", file)
 
-  const url = `https://${window.location.host}/api/avatar/${session.getUserId}`
+  try {
+    const res = await fetch(`https://${window.location.host}/api/avatar/${session.getUserId}`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    })
 
-  const res = await fetch(url, {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  })
+    if (!res.ok) {
+      alert("Error subiendo avatar ❌")
+      // 🔹 Restaurar avatar anterior inmediatamente
+      profilePicture.value = previousAvatar
+      return
+    }
 
-  if (!res.ok) {
-    alert("Error subiendo avatar ❌")
-    return
+    await res.json() // data del upload no necesaria
+
+    // 🔹 Refrescar avatar desde backend para evitar imagen rota
+    const refreshRes = await fetch(`https://${window.location.host}/api/users/${session.getUserId}`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+
+    if (!refreshRes.ok) {
+      alert("Error refrescando avatar ❌")
+      profilePicture.value = previousAvatar
+      return
+    }
+
+    const userData = await refreshRes.json()
+    profilePicture.value = userData.avatar + `?t=${Date.now()}`
+
+  } catch (error) {
+    alert("Error de red al subir avatar ❌")
+    profilePicture.value = previousAvatar
   }
-
-  const data = await res.json()
-  profilePicture.value = data.avatar
 }
 
-// -------------------- FETCH USER (también para DISCARD) --------------------
+
+
+
+// -------------------- FETCH USER --------------------
 const fetchUserSettings = async () => {
   try {
-    resetAvatarState() // 🔥 la clave del discard
-
-    const url = `https://${window.location.host}/api/users/${session.getUserId}`
+    const url = `https://${window.location.host}/api/users/${session.getUserId}`;
 
     const res = await fetch(url, {
       method: 'GET',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-    })
+    });
 
     if (!res.ok) {
       session.$reset();
@@ -105,10 +111,9 @@ const fetchUserSettings = async () => {
     profilePicture.value = result.avatar;
     online.value = true;
 
-    // 🔥 limpiar passwords visualmente también
+    // limpiar passwords
     password.value = ''
     oldpassword.value = ''
-
   } catch (error) {
     session.$reset();
     router.push({ name: 'signin' });
@@ -118,13 +123,7 @@ const fetchUserSettings = async () => {
 // -------------------- SAVE --------------------
 const handleSubmit = async () => {
   try {
-    // 1️⃣ subir avatar si cambió
-    if (avatarFile.value) {
-      await uploadAvatar()
-    }
-
-    // 2️⃣ actualizar datos
-    const url = `https://${window.location.host}/api/users/${session.getUserId}`
+    const url = `https://${window.location.host}/api/users/${session.getUserId}`;
 
     const payload = {
       username: name.value,
@@ -143,12 +142,9 @@ const handleSubmit = async () => {
 
     if (res.ok) {
       alert('Cambios guardados ✅');
-
-      resetAvatarState() // 🔥 importantísimo después de guardar
-
-      // refrescar datos reales del backend
-      await fetchUserSettings()
-
+      password.value = ''
+      oldpassword.value = ''
+      await fetchUserSettings() // refrescar datos
     } else {
       alert('Error al guardar los cambios ❌');
     }
@@ -157,6 +153,11 @@ const handleSubmit = async () => {
     alert('Error de red ❌');
   }
 };
+
+// -------------------- CANCEL --------------------
+const handleCancel = () => {
+  router.back() // vuelve a la página anterior
+}
 
 onMounted(fetchUserSettings)
 </script>
@@ -178,6 +179,7 @@ onMounted(fetchUserSettings)
       @change="onAvatarSelected"
     />
 
+    <!-- INFO -->
     <div class="mt-6 text-[var(--color_accent_2)] text-center">
       <p><strong>Name:</strong> {{ name }}</p>
       <p><strong>Nickname:</strong> {{ nickname }}</p>
@@ -188,9 +190,10 @@ onMounted(fetchUserSettings)
       <PongInput label="New Password" type="password" v-model="password" />
     </div>
 
+    <!-- BOTONES -->
     <div class="flex flex-col gap-4 mt-4">
       <PongButton label="Save Changes" :fullWidth="true" @click="handleSubmit" />
-      <PongButton label="Discard Changes" :fullWidth="true" @click="fetchUserSettings" />
+      <PongButton label="Cancel" :fullWidth="true" @click="handleCancel" />
     </div>
   </div>
 </template>
