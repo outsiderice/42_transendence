@@ -43,7 +43,7 @@ export const getPetitionFriendsController = async (
         error: 'Usuario no encontrado',
       });
     }
-    const friends = await DBClient.getAllPetitions(user_1);
+    const friends = await DBClient.getAllFriendsPetitions(user_1);
 
     const filteredFriends: Friends[] = friends.filter(
      (friend: Friends) => friend.petition_status === user_1
@@ -100,8 +100,8 @@ export const createFriendPetitionController = async (
             console.log("la relacion es mecachis",relation);
     }}
 
-    const petitionsUser2 = await DBClient.getAllPetitions(user_2);
-    const petitionsUser1 = await DBClient.getAllPetitions(user_1);
+    const petitionsUser2 = await DBClient.getAllFriendsPetitions(user_2);
+    const petitionsUser1 = await DBClient.getAllFriendsPetitions(user_1);
 
     const existingPetition = [
       ...petitionsUser2,
@@ -146,7 +146,7 @@ export const createFriendPetitionController = async (
     try {
       const { id } = request.query; 
       await DBClient.acceptFriendPetition(id);
-      return reply.status(200).send({ message: 'Solicitud de amistad aceptada' });
+      return reply.status(200).send({ message: 'Done' });
     } catch (error) {
       console.error('Error accepting friend petition:', error);
       return reply.status(500).send({
@@ -178,5 +178,41 @@ export const createFriendPetitionController = async (
   }
 };
 
+export const getAllFriendsNicController = async (
+  request: FastifyRequest<{ Querystring: { user1_id: number } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { user1_id } = request.query;
 
+    const relations = await DBClient.getAllFriendsPetitions(user1_id);
 
+    const result = await Promise.all(
+      relations.map(async (relation: Friends) => {
+        const [user1, user2] = await Promise.all([
+          DBClient.getUserById(relation.user_1),
+          DBClient.getUserById(relation.user_2),
+        ]);
+
+        return {
+          id: relation.id,
+          user1_id: relation.user_1,
+          user1_name : user1?.username,
+          user1_nickname: user1?.nickname,
+          user1_avatar: user1?.avatar,
+          user2_id: relation.user_2,
+          user2_name : user2?.username,
+          user2_nickname: user2?.nickname,
+          user2_avatar: user2?.avatar,
+        };
+      })
+    );
+
+    reply.status(200).send(result);
+  } catch (error) {
+    console.error('Error in getAllFriendsNickController:', error);
+    reply.status(500).send({
+      error: 'Error al obtener amigos',
+    });
+  }
+};
