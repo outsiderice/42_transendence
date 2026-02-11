@@ -175,7 +175,8 @@ onUnmounted(() => {
       <h1 class="winner-announcement">{{ msgPong }}</h1>
       <ButtonComponent 
         v-if="isMatchmaking" 
-        label="Cancel" 
+        label="Cancel"
+        :is-danger="true"
         @click="handleCancel"
       />
     </div>
