@@ -18,16 +18,24 @@ const load_status = ref<'loanding' | 'loaded' | 'fail'>('loanding');
 const user = reactive<
 {
 	id?: number,
-		nick?: string,
-		name?: string,
-		online: boolean,
-		profilePic?: string,
+	nick?: string,
+	name?: string,
+	online: boolean,
+	profilePic?: string,
 }
->(
-		{
-online: false,
-}
-);
+>( { online: false } );
+
+const friends = reactive<
+{
+	id: number,
+	name: string, 
+	nick: string, 
+	online: boolean, 
+	profilePic?: string
+}[]
+>([]);
+
+//const games = reactive<>();
 
 const user_kind = ref<'oneself' | 'friend' | 'requested_friend' | 'stranger'>('stranger');
 
@@ -151,6 +159,30 @@ function set_game_history()
 
 function set_friends()
 {
+	console.log('loanding friends.');
+	fetch(
+		"https://" + window.location.host + "/api/usersFriends/" + user.id, 
+		{ method: 'GET' }
+	).then((response) => {
+		return response.json();
+	}).then((result) => {
+		while (result.length != 0)
+		{
+			const item = result.pop();
+			let	user_item = {};
+			user_item.id = item.id;
+			user_item.nick = item.nickname;
+			user_item.name = item.username;
+			user_item.online = false;
+			if (item.avatar == '') {
+				user_item.profilePic = undefined;
+			} else {
+				user_item.profilePic = item.avatar;
+			}
+			friends.push(user_item);
+		}
+	});
+	
 	return ;
 }
 
@@ -245,7 +277,7 @@ function action()
 
 <template>
 
-<section class="max-w-[25rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
+<section class="max-w-[30rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
 	<!-- Contenido principal -->
 	<div v-if="load_status !== 'fail'" class="flex flex-col gap-[2rem]">
 		<UserCard
@@ -332,10 +364,19 @@ function action()
 	</div>
 
 	<!-- Achievements -->
-	<div v-if="currentTab === 'friends'" class="w-full flex flex-col items-center">
-		<p>this is the friends.</p>
-	</div>
-	
+	<section 
+		v-if="currentTab === 'friends'" 
+		class="max-w-[30rem] flex flex-col gap-[2rem]"
+	>
+		<p>all the friends of {{user.nick}}</p>
+		<UserCard v-for='friend in friends'
+			:nickName="friend.nick" 
+			:userName="friend.name" 
+			:online="friend.online" 
+			:profilePicture="friend.profilePic" 
+			class=""
+		/>
+	</section>
 	<div v-if="currentTab === 'game_history'" class="w-full flex flex-col items-center">
 		<p>this is the game history.</p>
 	</div>
