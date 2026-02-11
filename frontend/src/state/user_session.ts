@@ -8,13 +8,21 @@ export const useSessionStore = defineStore( 'session', () => {
 	}).then(async (response) => {
 		if (response.ok) {
 			const result = await response.json();
+			fetch('https://' + window.location.host + '/api/auth/refresh', {
+				method: 'POST',
+			});
+			fetch('https://' + window.location.host + '/api/presence/heartbeat/' + getUserId.value, {
+				method: 'POST',
+			});
 			setSession(result.safeUser.id, result.safeUser.username);
 		}
 	});
 
-	const isSignedIn = ref(false);
-	const userName = ref('');
-	const userId = ref(0);
+	const is_signed_in = localStorage.getItem('user_name') !== null ? true : false;
+
+	const isSignedIn = ref(is_signed_in);
+	const userName = ref(is_signed_in ? localStorage.getItem('user_name') : '');
+	const userId = ref(is_signed_in ? localStorage.getItem('user_id') : -1);
 	const refreshAccessTokenIntervalId = ref(0);
 	const updateOnlineIntervalId = ref(0);
 
@@ -23,18 +31,17 @@ export const useSessionStore = defineStore( 'session', () => {
 	const getUserId = computed(() => {return userId.value});
 
 	function setSession(user_id: number, user_name: string) {
-		console.log("refresh access token.");
+		localStorage.setItem('user_id', user_id);
+		localStorage.setItem('user_name', user_name);
 		isSignedIn.value = true
 		userId.value = user_id;
 		userName.value = user_name;
 		refreshAccessTokenIntervalId.value = setInterval(() => {
-			console.log("refreshing the access token.");
 			fetch('https://' + window.location.host + '/api/auth/refresh', {
 				method: 'POST',
 			});
 		}, 600000);
 		updateOnlineIntervalId.value = setInterval(() => {
-			console.log("updating the user online status.");
 			fetch('https://' + window.location.host + '/api/presence/heartbeat/' + getUserId.value, {
 				method: 'POST',
 			});
@@ -45,6 +52,7 @@ export const useSessionStore = defineStore( 'session', () => {
 		isSignedIn.value = false;
 		userName.value = "";
 		userId.value = 0;
+		localStorage.clear();
 
 		if (refreshAccessTokenIntervalId.value != 0) {
 			clearInterval(refreshAccessTokenIntervalId.value);
@@ -52,6 +60,15 @@ export const useSessionStore = defineStore( 'session', () => {
 		if (updateOnlineIntervalId.value != 0) {
 			clearInterval(updateOnlineIntervalId.value);
 		}
+		fetch("https://" + window.location.host + "/api/auth/logout", {
+			method: 'POST',
+			credentials: 'include',
+		}).then(response => {
+			if (!response.ok)
+			{
+			}
+		});
+
 		// future code cleaning any resourese that may be allocated.
 	}
 	return {

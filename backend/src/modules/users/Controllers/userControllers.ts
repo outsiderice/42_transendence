@@ -2,6 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { DBClient, User } from '../../../services/dbClient';
 import * as bcrypt from 'bcrypt';
 
+
+
+const AVATAR_PREFIX = 'api/public/avatars';
+
+function buildAvatarUrl(filename?: string): string {
+  if (!filename) { 
+    return ''; 
+  }
+  return `${AVATAR_PREFIX}/${filename}`;
+}
+
 /**
  * GET /users - Obtener todos los usuarios
  */
@@ -16,6 +27,42 @@ export const getAllUsersController = async (request: FastifyRequest, reply: Fast
       details: error instanceof Error ? error.message : String(error),
     });
   }
+};
+
+
+
+export const getUserFriendsController = async (
+  request: FastifyRequest<{ Params: { id: number } }>,
+  reply: FastifyReply
+) => {
+  const userId = request.params.id;
+
+  const relations = await DBClient.getAllFriends (userId);
+
+  const friendIds = [
+    ...new Set(
+      relations.map(r =>
+        r.user_1 === userId ? r.user_2 : r.user_1
+      )
+    )
+  ];
+
+  const users = (await Promise.all(
+    friendIds.map(id => DBClient.getUserById(id))
+  )).filter(Boolean);
+
+  return users;
+};
+
+export const getUserPetitionsController = async (
+  request: FastifyRequest<{ Params: { id: number } }>,
+  reply: FastifyReply
+) => {
+  const userId = request.params.id;
+
+  const petitions = await DBClient.getAllPetitions (userId);
+
+  return petitions;
 };
 
 /**
@@ -41,6 +88,7 @@ export const getUserByIdController = async (
         error: 'Usuario no encontrado',
       });
     }
+    user.avatar = buildAvatarUrl(user.avatar);
 
     reply.status(200).send(user);
   } catch (error) {
@@ -75,6 +123,7 @@ export const getUserByUsernameController = async (
         error: 'Usuario no encontrado',
       });
     }
+    user.avatar = buildAvatarUrl(user.avatar);
 
     reply.status(200).send(user);
   } catch (error) {
@@ -95,7 +144,7 @@ export const registerUserController = async (
 ) => {
   try {
     const { username, email, password,nickname, avatar} = request.body;
-
+    
     // Validaciones básicas
     if (!username || !email || !password) {
       return reply.status(400).send({
@@ -134,8 +183,9 @@ export const registerUserController = async (
       username,
       email,
       password: hash,
+      avatar,
       ...(nickname && { nickname }),
-      ...(avatar && { avatar }),
+     
     });
     //evita devolver el password en la respuesta
     const { password: _, ...safeUser } = newUser;

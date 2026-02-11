@@ -7,6 +7,9 @@ import oauthPlugin from "@fastify/oauth2";
 import Swagger from "@fastify/swagger";
 import SwaggerUI from "@fastify/swagger-ui";
 import websocket from "@fastify/websocket";
+import multipart, { fastifyMultipart } from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+import path from 'path';
 
 //our plugins
 import jwtplugin from './plugins/jwt.plugin';
@@ -19,6 +22,7 @@ import { gameRoutes } from "./modules/game/GameRoutes";
 import { gamesDataRoutes } from "./modules/gamedata/gamedata.routes.js";
 import { presenceRoutes } from "./modules/presence/presence.Routes.js";
 import { dashboardRoutes } from './modules/gamestats/gamestats.routes.js';
+import { avatarRoutes } from './modules/Avatar/avatar.routes';
 
 // 1. Setup the basic App
 const app = Fastify({ logger: true });
@@ -32,6 +36,16 @@ app.register(cors, {
 
 app.register(cookie);
 app.register(websocket);
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  }
+});
+
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '../public'),
+  prefix: '/public/',
+});
 
 app.register(oauthPlugin, {
   name: 'githubOAuth2',
@@ -90,6 +104,7 @@ const start = async () => {
   app.register(presenceRoutes);
   app.register(gamesDataRoutes);
   app.register(dashboardRoutes);
+  app.register(avatarRoutes);
 
   await app.listen({ port: PORT, ...(HOST ? { host: HOST } : {}) }).then(() => {
       console.log("Server is running on http://localhost:3000");

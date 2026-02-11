@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import {ref, computed} from 'vue';
-import defaultProfilePicture from "@/assets/defaultProfilePicture.svg";
+//import defaultProfilePicture from "@/assets/defaultProfilePicture.svg";
+import UserAvatar from '@/components/UserAvatar.vue';
 
 //	prop handeling. 
 interface userCardInfo {
 	profilePicture?: string,
 	nickName?: string,
 	userName?: string,
-	online?: boolean,
+	online: boolean,
 };
 
 const props = defineProps<userCardInfo>();
+
+//console.log(props.online);
 
 const profilePicture = computed(() => {
 	return props.profilePicture === undefined ? defaultProfilePicture : props.profilePicture;
@@ -30,8 +33,7 @@ const onlineStatus = computed(() => {
 });
 
 const onlineIndicatorColor = computed(() => {
-	return	props.userName === undefined ? "var(--color_accent_3)" :
-			props.online ? "var(--color_accent_success)" : "var(--color_accent_danger)";
+	return props.online ? "var(--color_accent_success)" : "var(--color_accent_danger)";
 });
 
 //	user actions.
@@ -58,51 +60,11 @@ function redirectToUserProfilePage(): void{
 		border-(--color_accent_3)
 ">
 <div class="flex flex-row gap-[1rem] items-center" v-on:click="redirectToUserProfilePage">
-	<svg viewBox="0 0 60 60" v-on:click="" class="
-			profilePictureContainer 
-			w-[3.75rem] 
-			h-[3.75rem] 
-			flex-none 
-			hover:scale-110 
-			transition
-			diration-200
-	">
-		<defs>
-			<mask id="statusIndicatorHole">
-				<rect width="60" height="60" fill="white"/>
-				<circle r="12" cx="50" cy="50" fill="black"/>
-			</mask>
-			<mask id="profileMask" >
-				<rect width="60" height="60" fill="black"/>
-				<circle r="30" cx="30" cy="30" fill="white" mask="url(#statusIndicatorHole)"/>
-			</mask>
-			<mask id="defaultProfileMask" >
-				<rect width="60" height="60" fill="black"/>
-				<image width="60" height="60" :href="defaultProfilePicture" />
-			</mask>
-		</defs>
-		<!-- sceletal rendering -->
-		<rect 
-			v-if="props.userName === undefined" 
-			width="60" 
-			height="60" 
-			fill="var(--color_loading_content)"
-			mask="url(#profileMask)"
-			class="animate-pulse"
-		/>
-		<!-- default profile picture for users without a profile picture -->
-		<g v-else-if="props.profilePicture === undefined" mask="url(#profileMask)" >
-			<rect 
-				width="60" 
-				height="60" 
-				fill="var(--color_accent_1)" 
-				mask="url(#defaultProfileMask)" 
-			/>
-		</g>
-		<!-- user profile picture -->
-		<image v-else width="60" height="60" :href="profilePicture" mask="url(#profileMask)" />
-		<circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor"/>
-	</svg>
+	
+	<UserAvatar 
+		:profilePicture="props.profilePicture"
+		:online="props.online"
+	/>
 	<div class="panelUserCardText flex flex-col gap-[0.3rem] w-full">
 		<p 
 			v-if="props.userName !== undefined" 

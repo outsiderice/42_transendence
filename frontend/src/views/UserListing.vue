@@ -1,27 +1,34 @@
 <script setup lang="ts">
 import UserCard from "@/components/UserCard.vue";
 import { useSessionStore } from '@/state/user_session.ts'
-import { ref } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const session = useSessionStore();
 const router = useRouter();
 
+import { useOnlineUsersStore } from '@/state/online_users.ts'
+
+const onlineUsers = useOnlineUsersStore();
+
 //	 the information of the currently loged in user.
-const nickName = ref<string | undefined >(undefined);
-const userName = ref<string | undefined >(undefined);
-const online = ref<boolean | undefined >(undefined);
-const profilePicture = ref<string | undefined>(undefined);
 
-console.log("DEBUG:");
-console.log(session);
-console.log(session.getUserId);
+const users = reactive
+<
+	{
+		id: number,
+		name: string, 
+		nick: string, 
+		online: boolean, 
+		profilePic?: string
+	}[]
+> ([]);
 
-fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
+
+fetch("https://" + window.location.host + "/api/users" , {
 	method: 'GET',
 	headers: {
-//		'If-None-Match': ""
 	},
 }).then(async (response) => {
 	if (!response.ok)
@@ -31,37 +38,56 @@ fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
 		return ;
 	}
 	const result = await response.json();
-	if (result.nickname !== "") {
-		nickName.value = result.nickname;
+	let		result_elem : any;
+	while (result.length != 0)
+	{
+		let		user : any = {};
+		result_elem = result.pop();
+		user.id = result_elem.id;
+		user.name = result_elem.username;
+		if (result_elem.nickname !== "") {
+			user.nick = result_elem.nickname;
+		} else {
+			user.nick = "unamed";
+		}
+		if (result_elem.avatar !== '') {
+			user.profilePic = result_elem.avatar;
+		} else {
+			user.profilePic = undefined;
+		}
+		if (onlineUsers.getUsersIds.indexOf(result_elem.id) !== -1) {
+			user.online = true;
+		} else {
+			user.online = false;
+		}
+		users.push(user);
 	}
-	userName.value = result.username;
-	if (result.avatar !== '') {
-		profilePicture.value = result.avatar;
-	}
-	online.value = true;
 });
 
-function sign_out()
-{
-	session.$reset();
-	router.push({name: 'signin'});
-	console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!");
-}
+watch(onlineUsers.usersIds, () => {
+	let i = 0;
+	while (i < users.length)
+	{
+		if (onlineUsers.getUsersIds.indexOf(users[i].id.toString()) != -1) {
+			users[i].online = true;
+		} else {
+			users[i].online = false;
+		}
+		i++;
+	}
+})
 
 </script>
 
 <template>
 <section class="max-w-[25rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
-	<UserCard 
-		:nickName="nickName" 
-		:userName="userName" 
-		:online="online" 
-		:profilePicture="profilePicture" 
-		class="my-[4rem]"
+	<p>user listing.</p>
+	<UserCard v-for='user in users'
+		:nickName="user.nick" 
+		:userName="user.name" 
+		:online="user.online" 
+		:profilePicture="user.profilePic" 
+		class=""
 	/>
-	<ButtonComponent label="play" @click="$router.push({name: 'game'})"/>
-	<ButtonComponent label="profile" @click="$router.push({name: 'profile'})"/>
-	<ButtonComponent label="users" @click="$router.push({name: 'users'})"/>
-	<ButtonComponent label="sign out" @click="sign_out()"/>
 </section>
 </template>

@@ -1,113 +1,162 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import { useAuthForm } from '../composables/useAuthForm'
-import { useToggles } from '../composables/useToggles'
 import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
+import { useRouter } from 'vue-router';
+import { useSessionStore } from '@/state/user_session.ts'
+import UserAvatar from '@/components/UserAvatar.vue';
+const session = useSessionStore();
+const router = useRouter();
 
-// Toggle del newsletter
-const { newsletter } = useToggles()
-
-// Avatar y status
 const profilePicture = ref<string | undefined>(undefined)
+const avatarFile = ref<File | null>(null)
+
 const onlineIndicatorColor = "var(--color_accent_success)"
+const oldpassword = ref<string | undefined>(undefined)
+const password = ref<string | undefined>(undefined)
+const name = ref<string | undefined>(undefined)
+const email = ref<string | undefined>(undefined)
+const nickname = ref<string | undefined>(undefined)
+const online = ref<boolean | undefined >(undefined);
 
-// Token del usuario
-const token = localStorage.getItem('token')
-const userId = ref<number | null>(null)
+const fileInputRef = ref<HTMLInputElement | null>(null)
 
-// Campos del formulario
-const { 
-  name, 
-  email, 
-  password, 
-  confirmPassword,
-  nickname,
-  touched, 
-  nameError, 
-  emailError, 
-  passwordError,
-  nicknameError, 
-  confirmPasswordError,
-  validate 
-} = useAuthForm()
+// --- Abrir selector de archivos al clickear el avatar ---
+const triggerFilePicker = () => {
+  fileInputRef.value?.click()
+}
 
-// --- GET: traer datos del usuario usando token ---
+// --- Cuando el usuario selecciona una imagen ---
+const onAvatarSelected = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  if (!target.files || !target.files.length) return
+
+  avatarFile.value = target.files[0]
+
+  // Preview inmediato
+  profilePicture.value = URL.createObjectURL(avatarFile.value)
+}
+
+// --- POST avatar ---
+const uploadAvatar = async () => {
+  if (!avatarFile.value) return
+
+  const formData = new FormData()
+  formData.append("avatar", avatarFile.value)
+
+  const url = "https://" + window.location.host + "/api/avatar/" + session.getUserId
+
+  const res = await fetch(url, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  })
+
+  if (!res.ok) {
+    alert("Error subiendo avatar ❌")
+    return
+  }
+
+  const data = await res.json()
+
+  // 🔹 Usamos la URL que nos devuelve el backend
+  profilePicture.value = data.avatar
+}
+
+// --- GET usuario ---
 const fetchUserSettings = async () => {
-  if (!token) return
-
   try {
-    const res = await fetch('http://' + window.location.host + '/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
 
-    if (res.ok) {
-      const data = await res.json()
-      userId.value = data.id
-      name.value = data.username
-      email.value = data.email
-      nickname.value = data.nickname
-      profilePicture.value = data.avatar || undefined
-      console.log('User settings loaded:', data)
-    } else {
-      console.error('Error fetching user settings:', await res.text())
+    const res = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!res.ok) {
+      session.$reset();
+      router.push({ name: 'signin' });
+      return;
     }
-  } catch (error) {
-    console.error('Network error fetching settings:', error)
-  }
-}
 
-// --- PUT: actualizar usuario ---
+    const result = await res.json();
+
+    nickname.value = result.nickname;
+    name.value = result.username;
+    email.value = result.email;
+    profilePicture.value = result.avatar;
+    online.value = true;
+
+  } catch (error) {
+    session.$reset();
+    router.push({ name: 'signin' });
+  }
+};
+
+// --- PUT usuario + refrescar avatar ---
 const handleSubmit = async () => {
-  if (!validate()) return
-  if (!token || !userId.value) return alert('No estás autenticado')
-
   try {
-    const res = await fetch(`https://` + window.location.host + `/users/${userId.value}`, {
+    // 1️⃣ Subir avatar si cambió
+    if (avatarFile.value) {
+      await uploadAvatar()
+    }
+
+    // 2️⃣ Actualizar datos
+    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+
+    const payload = {
+      username: name.value,
+      email: email.value,
+      password: password.value || undefined,
+      oldpassword: oldpassword.value,
+      nickname: nickname.value,
+    };
+
+    const res = await fetch(url, {
       method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: name.value,
-        email: email.value,
-        password: password.value || undefined,
-        nickname: nickname.value,
-        avatar: profilePicture.value
-      })
-    })
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
     if (res.ok) {
-      const data = await res.json()
-      console.log('User settings updated:', data)
-      alert('Cambios guardados ✅')
-      // Limpiar passwords
-      password.value = ''
-      confirmPassword.value = ''
-    } else {
-      const errorText = await res.text()
-      console.error('Error updating settings:', errorText)
-      alert('Error al guardar los cambios ❌')
-    }
-  } catch (error) {
-    console.error('Network error updating settings:', error)
-    alert('Error de red al guardar cambios ❌')
-  }
-}
+      alert('Cambios guardados ✅');
+      password.value = '';
+      oldpassword.value = '';
+      avatarFile.value = null
 
-// Cargar datos al montar
+      // 🔹 Refrescar avatar desde backend para evitar imagen rota
+      const refreshRes = await fetch(`https://${window.location.host}/api/users/${session.getUserId}`, { credentials: 'include' })
+      if (refreshRes.ok) {
+        const data = await refreshRes.json()
+        profilePicture.value = data.avatar
+      }
+
+    } else {
+      alert('Error al guardar los cambios ❌');
+    }
+
+  } catch (error) {
+    alert('Error de red ❌');
+  }
+};
+
+const myprofilevalue = computed (()=> profilePicture.value ? profilePicture.value : undefined) 
+
 onMounted(fetchUserSettings)
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-    <!-- Avatar y status -->
-    <div class="flex justify-center mb-6">
+  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
+    <UserAvatar class= "mx-auto w-[8rem] h-[8rem]"
+    @click="triggerFilePicker" 
+		:profilePicture="myprofilevalue"
+		:online="online"
+	  />
+    <!-- AVATAR 
+    <div class="flex justify-center mb-6 cursor-pointer" @click="triggerFilePicker">
       <svg
         viewBox="0 0 60 60"
         class="profilePictureContainer w-[7rem] h-[7rem] flex-none hover:scale-110 transition duration-200"
@@ -127,67 +176,45 @@ onMounted(fetchUserSettings)
           </mask>
         </defs>
 
-        <!-- default avatar -->
         <g v-if="profilePicture === undefined" mask="url(#profileMask)">
           <rect width="60" height="60" fill="var(--color_accent_1)" mask="url(#defaultProfileMask)" />
         </g>
 
-        <!-- user avatar -->
-        <image v-else width="60" height="60" :href="profilePicture" mask="url(#profileMask)" />
+        <image
+          v-else
+          width="60"
+          height="60"
+          :href="profilePicture"
+          mask="url(#profileMask)"
+        />
 
-        <!-- status -->
         <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor" />
       </svg>
+    </div>-->
+
+    <input
+      ref="fileInputRef"
+      type="file"
+      accept="image/*"
+      class="hidden"
+      @change="onAvatarSelected"
+    />
+
+    <!-- INFO -->
+    <div class="mt-6 text-[var(--color_accent_2)] text-center">
+      <p><strong>Name:</strong> {{ name }}</p>
+      <p><strong>Nickname:</strong> {{ nickname }}</p>
+      <p class="mb-6"><strong>Email:</strong> {{ email }}</p> <!-- <- margen extra -->
+
+      <PongInput label="Change Nickname" v-model="nickname" />
+      <PongInput label="Old Password" type="password" v-model="oldpassword" />
+      <PongInput label="New Password" type="password" v-model="password" />
     </div>
 
-    <!-- Info actual -->
-    <div class="mt-6 text-[var(--color_accent_2)]">
-      <p><strong class="text-[var(--color_accent_1)]">Name:</strong> {{ name }}</p>
-      <p><strong class="text-[var(--color_accent_1)]">Nickname:</strong> {{ nickname }}</p>
-      <PongInput
-      label="Change Nickname"
-      v-model="nickname"
-      :error="nicknameError"
-      @blur="touched.nickname = true"
-      />
-      <p><strong class="text-[var(--color_accent_1)]">Email:</strong> {{ email }}</p>
-      <p><strong class="text-[var(--color_accent_1)]">Change Password:</strong> {{ email }}</p>
-      <PongInput
-        label="Type Old Password"
-        type="password"
-        v-model="password"
-        :error="passwordError"
-        @blur="touched.password = true"
-      />
-
-      <PongInput
-        label="Type New Password"
-        type="password"
-        v-model="confirmPassword"
-        :error="confirmPasswordError"
-        @blur="touched.confirmPassword = true"
-      />
-
-    </div>
-
-    <!-- Formulario -->
-    
-
-    
-
+    <!-- BOTONES -->
     <div class="flex flex-col gap-4 mt-4">
-      <PongButton
-        label="Save Changes"
-        :fullWidth="true"
-        :disabled="!name || !email"
-        @click="handleSubmit"
-      />
-
-      <PongButton
-        label="Discard Changes"
-        :fullWidth="true"
-        @click="fetchUserSettings"
-      />
+      <PongButton label="Save Changes" :fullWidth="true" @click="handleSubmit" />
+      <PongButton label="Discard Changes" :fullWidth="true" @click="fetchUserSettings" />
     </div>
   </div>
 </template>

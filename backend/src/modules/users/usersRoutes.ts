@@ -6,7 +6,9 @@ import {
   getUserByIdController,
   getUserByUsernameController,
   updateUserController,
-  deleteUserController
+  deleteUserController,
+  getUserFriendsController,
+  getUserPetitionsController
 } from './Controllers/userControllers';
 
 // Schemas para Fastify + Swagger
@@ -38,6 +40,30 @@ export const UpdateUserSchema = {
   },
 };
 
+export const PetitionSchema = {
+  type: 'object',
+  required: [
+	'id', 
+	'user_1_id', 
+	'user_1_username',
+	'user_1_nickname',
+	'user_2_id', 
+	'user_2_username',
+	'user_2_nickname',
+	'petition_status'
+	],
+  properties: {
+    id: { type: 'number' },
+    user_1_id: { type: 'number' },
+	user_1_username: { type : 'string'},
+	user_1_nickname: { type : 'string'},
+    user_2_id: { type: 'number' },
+	user_2_username: { type : 'string'},
+	user_2_nickname: { type : 'string'},
+    status: { type: 'number' },
+  },
+};
+
 export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ ALL
@@ -47,6 +73,37 @@ export const usersRoutes = async (app: FastifyInstance) => {
       response: { 200: { type: 'array', items: UserSchema } },
     },
   }, getAllUsersController);
+
+  //user friends
+  app.get<{ Params: { id: number } }>('/usersFriends/:id', {
+  schema: {
+    tags: ['Users'],
+    params: {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: { type: 'number' }
+      }
+    },
+    response: { 200: { type: 'array', items: UserSchema } },
+  } as any
+}, getUserFriendsController);
+
+
+  //user pending petitions
+  app.get<{ Params: { id: number } }>('/usersPetitions/:id', {
+  schema: {
+    tags: ['Users'],
+    params: {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: { type: 'number' }
+      }
+    },
+    response: { 200: { type: 'array', items: PetitionSchema } },
+  } as any
+}, getUserPetitionsController);
 
   // READ BY ID
   app.get<{ Params: { id: string } }>('/users/:id', {

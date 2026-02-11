@@ -21,19 +21,6 @@ const {
 
 const session = useSessionStore();
 
-// Inicializa desde localStorage
-//watchEffect(() => {
-//  const token = localStorage.getItem('token')
-//  const storedUsername = localStorage.getItem('username') || ''
-//  isAuthenticated.value = !!token
-//  username.value = storedUsername
-
-  //console.log('watchEffect token:', token)
-//  console.log('watchEffect storedUsername:', storedUsername)
-//  console.log('watchEffect isAuthenticated:', isAuthenticated.value)
-//  console.log('watchEffect username:', username.value)
-//})
-
 const router = useRouter();
 // Función para iniciar sesión
 const handleSubmit = async () => {
@@ -76,51 +63,33 @@ const handleGithubOauth = async () => {
 	}
 }
 
-// Función para cerrar sesión
-const signOut = async () => {
-	localStorage.removeItem('username')
-	isAuthenticated.values = false
-	username.value = ''
-	try{
-		const response = await fetch("https://" + window.location.host + "/api/auth/logout", {
-			method: 'POST',
-			credentials: 'include',
-		})
-		if (response.ok){
-			console.log("User logged out");
-		}
-	} catch (err){
-		console.error("Error logging out: ", err);
-	}
-	console.log('After logout - username.value:', username.value)
-	console.log('After logout - isAuthenticated.value:', isAuthenticated.value)
+function sign_out()
+{
+	session.$reset();
+	router.push({name: 'signin'});
 }
+
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-    <!-- DEBUG TEMPORAL -->
-    <pre>
-isAuthenticated: {{ isAuthenticated }}
-username: {{ username }}
-    </pre>
+  <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
 
     <!-- USUARIO AUTENTICADO -->
-    <div v-if="isAuthenticated">
+    <div v-if="session.userName">
       <h2 class="text-2xl font-bold mb-6 text-center">
-        Hola, {{ username }}
+        Hola, {{ session.userName }}
       </h2>
 
       <PongButton
         label="Log out"
         :fullWidth="true"
-        @click="signOut"
+        @click="sign_out()"
       />
     </div>
 
     <!-- USUARIO NO AUTENTICADO -->
     <div v-else>
-      <h2 class="text-3xl font-bold mb-8 text-center">Sign In</h2>
+      <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">Sign In</h2>
 
       <PongInput
         label="Name"

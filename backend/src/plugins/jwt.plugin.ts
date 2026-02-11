@@ -65,7 +65,7 @@ export default fp(async function (fastify: FastifyInstance) {
     this.setCookie('accessToken', accessToken, {
       httpOnly: true,
       path: '/',
-      maxAge: 60 * 15, // 15 minutes
+      maxAge: 60 * 60 * 5, // 5 hours
       sameSite: 'none',
       secure: true,
     });

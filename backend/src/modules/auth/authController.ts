@@ -166,7 +166,7 @@ export const refreshTokenController = async (
     reply.setCookie('accessToken', newToken, {
       httpOnly: true,
       path: '/',
-      maxAge: 60 * 15,
+      maxAge: 60 * 60 * 5,
       sameSite: 'none',
       secure: true,
     });
