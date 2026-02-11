@@ -147,6 +147,9 @@ const handleSubmit = async () => {
       await fetchUserSettings() // refrescar datos
     } else {
       alert('Error al guardar los cambios ❌');
+      password.value = ''
+      oldpassword.value = ''
+      await fetchUserSettings()
     }
 
   } catch (error) {
