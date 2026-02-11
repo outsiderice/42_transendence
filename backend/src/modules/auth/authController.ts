@@ -49,8 +49,7 @@ export const registerUserController = async (
     // generar contraseña hasheada 
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
-    console.log('Hashed password:', hash);
-    console.log('Original password:', password);
+    
         
     // Crear el usuario con la contraseña hasheada
     const newUser = await DBClient.createUser({
@@ -149,8 +148,12 @@ export const refreshTokenController = async (
 		return reply.code(401).send({error: "No refresh token"});
 	}
 
-    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
-
+    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET as string);
+//type check because typescript is stupid
+	if (typeof payload === "string") {
+  		return reply.status(401).send({ message: "Invalid token payload" });
+	}
+//the actual check we wanted to do
     if (payload.type !== 'refresh') {
       return reply.code(401).send({ error: 'Invalid refresh token' });
     }
@@ -173,7 +176,7 @@ export const refreshTokenController = async (
       secure: true,
     });
 
-	const safeUser: UserRefreshResponse = {
+	const safeUser = {
 		id:	payload.id,
 		username: payload.username,
 	};

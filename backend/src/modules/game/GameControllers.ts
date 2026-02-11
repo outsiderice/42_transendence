@@ -1,9 +1,8 @@
 import { FastifyRequest } from 'fastify';
-import { SocketStream } from '@fastify/websocket';
 import { pongGame } from "./pongGame.ts";
 
 export const gameController = async (
-	connection: SocketStream,
+	connection: WebsocketHandler,
 	request: FastifyRequest,
 ) => {
 	const socket = (connection as any).socket ?? connection;

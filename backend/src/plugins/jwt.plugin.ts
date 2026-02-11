@@ -49,7 +49,7 @@ export default fp(async function (fastify: FastifyInstance) {
   });
 
   // --- Generate both access and refresh tokens ---
-  fastify.decorateReply("generateTokens", async function(user: { id: string; username: string; nickname: string }) {
+  fastify.decorateReply("generateTokens", async function( user: { id: number; username: string; nickname: string; }) {
 
     const accessToken = await this.jwtSign(
       { id: user.id, username: user.username, nickname: user.nickname, type: 'access' },

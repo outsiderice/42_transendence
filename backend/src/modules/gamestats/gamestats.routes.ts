@@ -34,4 +34,45 @@ export async function dashboardRoutes(app: FastifyInstance) {
     }
   )
 
+  app.get(
+  '/ranking/users',
+  async (request, reply) => {
+    try {
+
+      const users = await DBClient.getAllUsers()
+      const validUsers = users.filter(
+        (user): user is typeof user & { id: number } => user.id !== undefined
+      )
+
+      const ranking = await Promise.all(
+        validUsers.map(async (user) => {
+
+          const games = await DBClient.getAllGames(user.id)
+
+          const stats = calculateGameStats(user.id, games)
+
+          return {
+            id: user.id,
+            nickname: user.nickname,
+            wins: stats.wins,
+            winRate: stats.winRate
+          }
+        })
+      )
+
+      const top10 = ranking
+        .sort((a, b) => b.wins - a.wins)
+        .slice(0, 10)
+
+      return reply.status(200).send(top10)
+
+    } catch (error) {
+      console.error('Ranking error:', error)
+      return reply.status(500).send({
+        error: 'Error al obtener ranking'
+      })
+    }
+  }
+)
+
 }

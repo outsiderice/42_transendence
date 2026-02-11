@@ -1,8 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import Friends from '../../services/dbClient';
+import Friends, { DBClient } from '../../services/dbClient';
 import {
     getAllFriendsController,
     createFriendPetitionController,
+    getPetitionFriendsController,
+    acceptFriendPetitionController,
+    deleteFriendPetitionController,
+    getAllFriendsNicController
 } from './friendsController';
 
 export const FriendSchema = {
@@ -29,6 +33,37 @@ export const friendsRoutes = async (app: FastifyInstance) => {
         } as any,
     }, getAllFriendsController);
 
+    app.get<{ Querystring: { user_1: number } }>('/friendsPetitions', {
+        schema: {
+            tags: ['Friends'],
+            querystring: {
+                type: 'object',
+                required: ['user_1'],
+                properties: {
+                    user_1: { type: 'number' },
+                },
+            },
+        } as any,
+    }, getPetitionFriendsController);
+
+    app.get<{ Querystring: { user1_id: number } }>(
+      '/friendsNick',
+      {
+        schema: {
+          tags: ['Friends'],
+          querystring: {
+            type: 'object',
+            required: ['user1_id'],
+            properties: {
+              user1_id: { type: 'number' },
+            },
+          },
+        } as any,
+      },
+      getAllFriendsNicController
+    );
+    
+
 
    app.post<{ Body: Friends }>(
   '/friends',
@@ -48,6 +83,42 @@ export const friendsRoutes = async (app: FastifyInstance) => {
   },
   createFriendPetitionController
 );
-}
 
+app.put<{ Querystring: { id: number } }>(
+  '/friends/accept',
+  {
+    schema: {
+      tags: ['Friends'],
+      querystring: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'number' },
+        },
+      },
+    },
+  },
+  acceptFriendPetitionController
+);
+
+
+app.delete<{ Querystring: { id: number } }>(
+  '/friends',
+  {
+    schema: {
+      tags: ['Friends'],
+      querystring: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'number' },
+        },
+      },
+    },
+  },
+  deleteFriendPetitionController
+);
+
+
+};
 

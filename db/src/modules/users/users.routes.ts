@@ -50,12 +50,12 @@ export default async (app: FastifyInstance) => {
         email,
         password,
         nickname,
-        avatar,
+        avatar ,
       });
 
       return reply.status(201).send(newUser);
     } catch (error) {
-      console.log(error);
+      
       return reply.status(500).send({
         error: 'Error al crear usuario mamon',
         details: error instanceof Error ? error.message : String(error),
@@ -230,7 +230,7 @@ export default async (app: FastifyInstance) => {
       }
       const changes = UsersService.deleteUser(id);
 
-      if (changes === 0) {
+      if (changes === false) {
         return reply.status(404).send({
           error: 'Usuario no encontrado',
         });

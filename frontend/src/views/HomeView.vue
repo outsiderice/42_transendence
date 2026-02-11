@@ -14,9 +14,8 @@ const userName = ref<string | undefined >(undefined);
 const online = ref<boolean | undefined >(undefined);
 const profilePicture = ref<string | undefined>(undefined);
 
-console.log("DEBUG:");
-console.log(session);
-console.log(session.getUserId);
+console.log(userName);
+console.log(nickName);
 
 fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
 	method: 'GET',
@@ -33,6 +32,8 @@ fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
 	const result = await response.json();
 	if (result.nickname !== "") {
 		nickName.value = result.nickname;
+	} else {
+		nickName.value = "no nickname";
 	}
 	userName.value = result.username;
 	if (result.avatar !== '') {
@@ -45,7 +46,6 @@ function sign_out()
 {
 	session.$reset();
 	router.push({name: 'signin'});
-	console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!");
 }
 
 </script>
@@ -53,15 +53,17 @@ function sign_out()
 <template>
 <section class="max-w-[25rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
 	<UserCard 
-		:nickName="nickName" 
-		:userName="userName" 
-		:online="online" 
+		:nickName="nickName === undefined ? 'undefined' : nickName" 
+		:userName="userName === undefined ? 'undefined' : userName" 
+		:online="true" 
 		:profilePicture="profilePicture" 
 		class="my-[4rem]"
 	/>
 	<ButtonComponent label="play" @click="$router.push({name: 'game'})"/>
-	<ButtonComponent label="profile" @click="$router.push({name: 'profile'})"/>
+	<ButtonComponent label="profile" @click="$router.push({path: '/users/' + userName})"/>
 	<ButtonComponent label="users" @click="$router.push({name: 'users'})"/>
+	<ButtonComponent label="friendship requests" @click="$router.push({name: 'friendship_requests'})"/>
+	<ButtonComponent label="leaderboards" @click="$router.push({name: 'leaderboards'})"/>
 	<ButtonComponent label="sign out" @click="sign_out()"/>
 </section>
 </template>
