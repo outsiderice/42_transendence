@@ -248,7 +248,7 @@ export const getCallbackController = async (
       email: email,
       avatar: githubUser.avatar,
     });
-	
+
 	const safeUser: SafeUserResponese = {
 		id:			user.id,
 		username:	user.username,
@@ -257,7 +257,16 @@ export const getCallbackController = async (
     //generar JWTs
 	await reply.generateTokens(user);
 
-    reply.status(200).send({ safeUser });
+    reply
+	
+	//deletes redirect cookie
+	.setCookie('oauth2-redirect-state', '', {
+		path: '/api/auth/github/callback',
+		httpOnly: true,
+		secure: true,
+		maxAge: 0,
+	})
+	.status(200).send({ safeUser });
   } catch (error) {
     console.error('Error in getCallbackController:', error);
     reply.status(500).send({
