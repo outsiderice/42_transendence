@@ -1,8 +1,9 @@
 
 
-.PHONY:	watch down clean up re
+.PHONY:	watch down clean up re fre 
 
 watch:
+	touch db/data/app.db
 	cp .env.example .env
 	cp frontend/.env.example frontend/.env
 	cp backend/.env.example backend/.env
@@ -23,5 +24,7 @@ down:
 clean:
 	rm db/data/app.db
 
-re: down clean watch
-	
+re: down watch
+
+fre: down clean watch
+
