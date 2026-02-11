@@ -14,7 +14,7 @@ const rightPlayerName = ref<string>("Loading...");
 const mySide = ref<string | null>(null);
 
 // to control cancel button
-const isMatchmaking = ref(true);
+let isMatchmaking = ref(true);
 
 //timer variables
 const gameEnded = ref(false);
@@ -124,10 +124,12 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
       }
       else if (data.type === "DISCONNECTED") {
         msgPong.value = `${data.username} has left the game. What a coward!`;
+        isMatchmaking = false;
         startPostGameRoutine();
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
+        isMatchmaking = false;
         startPostGameRoutine();
       }
       else if (data.type === "ASSIGN_SIDE") {
