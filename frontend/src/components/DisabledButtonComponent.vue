@@ -13,14 +13,12 @@ const props = defineProps<buttonComponentProps>();
 	<button 
 		type="button" 
 		class="
-			text-(--color_accent_1) 
+			text-(--color_accent_3) 
 			border 
-			border-(--color_accent_1) 
+			border-(--color_accent_3) 
 			px-[0.5rem]
 			py-[0.25rem]
 			rounded-[0.5rem] 
-			hover:bg-(--color_accent_1)
-			hover:text-(--color_background_3)
 			transition-all
 			delay-100
 		"
