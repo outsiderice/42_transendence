@@ -54,17 +54,6 @@ export const getUserFriendsController = async (
   return users;
 };
 
-export const getUserPetitionsController = async (
-  request: FastifyRequest<{ Params: { id: number } }>,
-  reply: FastifyReply
-) => {
-  const userId = request.params.id;
-
-  const petitions = await DBClient.getAllPetitions (userId);
-
-  return petitions;
-};
-
 /**
  * GET /users/:id - Obtener usuario por ID
  */
