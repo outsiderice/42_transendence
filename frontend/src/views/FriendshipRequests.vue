@@ -21,45 +21,24 @@ const petitioners = reactive
 	}[]
 > ([]);
 
-async function petitioner_info(id: number, petition: object)
-{
-	let petitioner;
-	if (id === petition.user_1){
-		//petitioner is user_2
-		petitioner = {
-			id: petition.user_2,
-			name: petition.user_2_username,
-			nick: petition.user_2_nickname,
-			profilePic: petition.user_2_avatar || undefined,
-			online: false
-		};
-	} else {
-		petitioner = {
-			id: petition.user_1,
-			name: petition.user_1_username,
-			nick: petition.user_1_nickname,
-			profilePic: petition.user_1_avatar || undefined,
-			online: false
-		};
-	}
-	if (onlineUsers.getUsersIds.indexOf(petitioner.id) !== -1) {
-		petitioner.online = true;
-	}
-	return (petitioner);
-}
-
-fetch ("https://" + window.location.host + "/api/usersPetitions/" + session.getUserId, {
+fetch ("https://" + window.location.host + "/api/friendsNick?user1_id=" + session.getUserId, {
 	method: 'GET',
 	}).then(async (response) => {
 	const result =  await response.json();
-	console.log(result);
-	let i = 0;
-	while (i < result.length)
+	while (result.length != 0)
 	{
-		let result_element = result[i];
-		let petitioner = petitioner_info(session.getUserid, result_element);
+		const item = result.pop();
+		let petitioner = {};
+		petitioner.id = item.id;
+		petitioner.name = item.user1_name;
+		petitioner.nick = item.user1_nickname;
+		petitioner.online = false;
+		if (item.user1_avatar == '') {
+			petitioner.profilePic = undefined;
+		} else {
+			petitioner.profilePic = item.user1_avatar;
+		}
 		petitioners.push(petitioner);
-		i++; 
 	}
 });
 
@@ -76,12 +55,19 @@ watch(onlineUsers.usersIds, () => {
 	}
 })
 
+function remove_petition(id: number)
+{
+	const index = petitioners.find((item) => item.id == id);
+	petitioners.splice(index, 1);
+}
+
 </script>
 
 <template>
 <section class="max-w-[40rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
 	<p>friendship requests.</p>
 	<UserRequestCard v-for='petitioner in petitioners'
+		@status-updated="(id) => {remove_petition(id)}"
 		:relationshipId="petitioner.id"
 		:profilePicture="petitioner.profilePic" 
 		:online="petitioner.online" 

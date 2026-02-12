@@ -18,7 +18,7 @@ const API_BASE = "https://" + window.location.host;
 
 async function handleAccept() {
     try {
-        const response = await fetch(`${API_BASE}/friends/accept?id=${props.relationshipId}`, {
+        const response = await fetch(`${API_BASE}/api/friends/accept?id=${props.relationshipId}`, {
             method: 'PUT'
         });
         if (response.ok) {
