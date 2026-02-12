@@ -37,7 +37,23 @@ const friends = reactive<
 }[]
 >([]);
 
-//const games = reactive<>();
+const total_games = reactive<
+{
+	wins: number,
+	loses: number,
+}
+>({wins: 0, loses: 0});
+
+const games = reactive<
+{
+	game_id: number,
+	name: string,
+	nick: string,
+	points_won: number,
+	points_lost: number,
+	date_of: string,
+}[]
+>([]);
 
 const user_kind = ref<
 	'oneself' | 
@@ -342,11 +358,11 @@ function action()
 	<div class="w-full flex flex-row">
 		<button 
 			@click="currentTab = 'friends'"
-			class="basis-64"
+			class="basis-64 rounded-md hover:bg-(--color_background_3) pt-[0.8rem] transition-all duration-200"
 		>
-		<div class='m-auto inline-block' >
+		<div class='mx-auto inline-block' >
 			<div class='inline-block px-[0.5rem]' >
-			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.4rem] mx-auto">
+			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.1rem] mx-auto">
 				<defs>
 					<mask id="userIconMask">
 						<rect width="19" height="19" fill="black" />
@@ -365,7 +381,7 @@ function action()
 					mask="url(#userIconMask)"
 				/>
 			</svg>
-			<span :class="'text-[10px] font-bold uppercase text-' + (
+			<span :class="'text-' + (
 					currentTab === 'friends' ? 
 						'(--color_accent_1)'
 					:
@@ -377,18 +393,22 @@ function action()
 			</div>
 			<div 
 				v-if="currentTab === 'friends'" 
-				class="h-[0.2rem] rounded-t-[200rem] w-full bg-(--color_accent_1)"
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full bg-(--color_accent_1)"
+			/>
+			<div 
+				v-if="currentTab !== 'friends'" 
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full "
 			/>
 		</div>
 		</button>
 
 		<button 
 			@click="currentTab = 'game_history'"
-			class="basis-64"
+			class="basis-64 rounded-md hover:bg-(--color_background_3) pt-[0.8rem] transition-all duration-200"
 		>
-		<div class='m-auto inline-block' >
+		<div class='mx-auto inline-block' >
 			<div class='inline-block px-[0.5rem]' >
-			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.4rem] mx-auto">
+			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.1rem] mx-auto">
 				<defs>
 					<mask id="bookIconMask">
 						<rect width="19" height="19" fill="black" />
@@ -407,7 +427,7 @@ function action()
 					mask="url(#bookIconMask)"
 				/>
 			</svg>
-			<span :class="'text-[10px] font-bold uppercase text-' + (
+			<span :class="'text-' + (
 					currentTab === 'game_history' ? 
 						'(--color_accent_1)'
 					:
@@ -419,7 +439,11 @@ function action()
 			</div>
 			<div 
 				v-if="currentTab === 'game_history'" 
-				class="h-[0.2rem] rounded-t-[200rem] w-full bg-(--color_accent_1)"
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full bg-(--color_accent_1)"
+			/>
+			<div 
+				v-if="currentTab !== 'game_history'" 
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full"
 			/>
 		</div>
 		</button>
