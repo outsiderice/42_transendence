@@ -8,7 +8,6 @@ import { useOnlineUsersStore } from '@/state/online_users.ts'
 const session = useSessionStore();
 const router = useRouter();
 
-
 const onlineUsers = useOnlineUsersStore();
 
 const petitioners = reactive
@@ -52,13 +51,8 @@ async function petitioner_info(id: number, petition: object)
 fetch ("https://" + window.location.host + "/api/usersPetitions/" + session.getUserId, {
 	method: 'GET',
 	}).then(async (response) => {
-	if (!response.ok)
-	{
-		session.$reset();
-		router.push({name: 'signin'});
-		return ;
-	}
 	const result =  await response.json();
+	console.log(result);
 	let i = 0;
 	while (i < result.length)
 	{
