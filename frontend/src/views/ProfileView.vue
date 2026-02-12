@@ -130,11 +130,15 @@ async function load_user_info()
 	);
 	const result3 = await response3.json();
 	console.log("result3");
-	console.log(result3);
+	console.log(result3.length);
+	console.log(result3[0]);
 	while (result3.length != 0)
 	{
 		const item = result3.pop();
-		if (item.user_1 === session.getUserId)
+		console.log('iteration');
+		console.log(item);
+		console.log(session.getUserId);
+		if (item.user_1 == session.getUserId)
 		{
 			console.log("will be a friend in the way.");
 			user_kind.value = 'requested_friend';
@@ -148,10 +152,16 @@ async function load_user_info()
 		{ method: 'GET' }
 	);
 	const result4 = await response4.json();
+	console.log("result4");
+	console.log(result4.length);
+	console.log(result4[0]);
 	while (result4.length != 0)
 	{
 		const item = result4.pop();
-		if (item.user_2 === session.getUserId)
+		console.log('iteration');
+		console.log(item);
+		console.log(session.getUserId);
+		if (item.user_2 == session.getUserId)
 		{
 			console.log("is asquing to be a firend.");
 			user_kind.value = 'requesting_friendship';
@@ -300,6 +310,10 @@ load_user_info().then(() => {
 function send_friend_request()
 {
 	console.log('sending a friend request.');
+	console.log('user_1');
+	console.log(session.getUserId);
+	console.log('user_2');
+	console.log(user.id);
 	fetch(
 		"https://" + window.location.host + "/api/friends", 
 		{
@@ -314,7 +328,7 @@ function send_friend_request()
 			}),
 		}
 	).then(() => {
-		window.location.reload();
+		load_user_info().then(() => {set_button_label()});
 	});
 
 	return ;
@@ -325,7 +339,7 @@ async function remove_friend()
 	console.log('removing a friend.');
 	// get all the friendships for finding the friendship id.
 	const response1 = await fetch(
-		"https://" + window.location.host + "/api/friends?user_1" + user.id, 
+		"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
 		{ method: 'GET' }
 	);
 	const result1 = await response1.json();

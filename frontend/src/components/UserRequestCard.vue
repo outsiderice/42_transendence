@@ -31,7 +31,7 @@ async function handleAccept() {
 
 async function handleReject() {
     try {
-        const response = await fetch(`${API_BASE}/friends?id=${props.relationshipId}`, {
+        const response = await fetch(`${API_BASE}/api/friends?id=${props.relationshipId}`, {
             method: 'DELETE'
         });
         if (response.ok) {
