@@ -8,6 +8,9 @@ import DisabledButtonComponent from '@/components/DisabledButtonComponent.vue'
 import { useSessionStore } from '@/state/user_session.ts'
 import bookIcon from '@/assets/book_icon.svg';
 import userIcon from '@/assets/user_icon.svg';
+import GameHistoricStatisticsCard from '@/components/GameHistoricStatisticsCard.vue';
+import GameStatisticsCard from '@/components/GameStatisticsCard.vue';
+
 
 const session = useSessionStore();
 const route = useRoute();
@@ -46,11 +49,12 @@ const total_games = reactive<
 
 const games = reactive<
 {
-	game_id: number,
+	id: number,
 	name: string,
 	nick: string,
 	points_won: number,
 	points_lost: number,
+	won: boolean,
 	date_of: string,
 }[]
 >([]);
@@ -201,8 +205,58 @@ function set_achievements()
 	return ;
 }
 
-function set_game_history()
+async function set_game_history()
 {
+	console.log("REALLY IMPORTANT TEST!!!");
+	console.log(user.id);
+	const response = await fetch(
+		"https://" + window.location.host + "/api/games?user_1=" + user.id,
+		{
+			method: 'GET',
+			headers: 
+			{
+				'accept': '*/*',
+			},
+		},
+	);
+	const result = await response.json();
+	while (result.length != 0)
+	{
+		const	item = result.pop();
+		let		game = {};
+		game.id = item.id;
+		if (item.player1_id == user.id)
+		{
+			game.name = item.player2_username;
+			game.nick = item.player2_nickname;
+			game.points_won = item.player1_score;
+			game.points_lost = item.player2_score;
+		}
+		else
+		{
+			game.name = item.player1_username;
+			game.nick = item.player1_nickname;
+			game.points_won = item.player2_score;
+			game.points_lost = item.player1_score;
+		}
+		if (item.winner_id == user.id) {
+			game.won = true;
+		} else {
+			game.won = false;
+		}
+		game.date_of = item.created_at;
+		games.push(game);
+	}
+	let i = 0;
+	while (games.length > i)
+	{
+		if (games[i].won) {
+			total_games.wins++;
+		} else {
+			total_games.loses++;
+		}
+		i++;
+	}
 	return ;
 }
 
@@ -449,12 +503,12 @@ function action()
 		</button>
 	</div>
 
-	<!-- Achievements -->
+	<!-- friends -->
 	<section 
 		v-if="currentTab === 'friends'" 
 		class="max-w-[30rem] flex flex-col gap-[2rem]"
 	>
-		<p>all the friends of {{user.nick}}</p>
+		<p v-if='friends.length == 0'>{{user.nick}} has no friends</p>
 		<UserCard v-for='friend in friends'
 			:nickName="friend.nick" 
 			:userName="friend.name" 
@@ -463,9 +517,23 @@ function action()
 			class=""
 		/>
 	</section>
-	<div v-if="currentTab === 'game_history'" class="w-full flex flex-col items-center">
-		<p>this is the game history.</p>
-	</div>
+	<!-- games -->
+	<section 
+		v-if="currentTab === 'game_history'" 
+		class="max-w-[30rem] flex flex-col gap-[2rem]"
+	>
+		<GameHistoricStatisticsCard 
+			class='mb-[2rem]'
+			:gamesWon='total_games.wins' 
+			:gamesLost='total_games.loses' 
+		/>
+		<GameStatisticsCard v-for='game in games'
+			:player2='game.name'
+			:dateStr='game.date_of'
+			:pointsPlayer1='game.points_won'
+			:pointsPlayer2='game.points_lost'
+		/>
+	</section>
 </section>
 </template>
 
