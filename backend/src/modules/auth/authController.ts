@@ -238,6 +238,8 @@ export const getCallbackController = async (
     const githubUser = await githubUserRes.json();
     const githubEmails = await githubEmailRes.json() as GithubEmail[];
 
+	console.log(githubUser);
+
     const email = githubEmails.find(
       (emailObj: any) => emailObj.primary
     )?.email ?? null;
@@ -246,7 +248,7 @@ export const getCallbackController = async (
       githubid: githubUser.id,
       username: githubUser.login,
       email: email,
-      avatar: githubUser.avatar,
+      avatar: githubUser.avatar_url,
     });
 
 	const safeUser: SafeUserResponese = {
