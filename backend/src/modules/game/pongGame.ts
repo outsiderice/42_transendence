@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { Pong } from "./Pong.js";
 import  { Player } from "./Player.js"
+import { DBClient } from '../../services/dbClient'
 
 export function player_controls(player: Player, game: Pong){
     player.webSocket.on("message", (message: string) => {
@@ -40,13 +41,8 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
   };
   
   try {
-    const response = await fetch("https://symmetrical-carnival-x79xwxwvxqv26v97-3000.app.github.dev/games", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(gameData),
-      signal: AbortSignal.timeout(5000) // 5 second timeout so game doesn't hang forever
-    });
-
+    const response = await DBClient.createGame(gameData);
+//RESPONSE IS MISCOFIGURED BUT WORKS OK
     if (response.ok) {
       const savedGame = await response.json();
       console.log(`🏆 DB Success: Game #${savedGame.id} saved.`);
@@ -55,7 +51,7 @@ export async function game_end(game: Pong, player1: Player, player2: Player) {
       const errorText = await response.text();
       console.error(`❌ DB Rejected (${response.status}):`, errorText);
     }
-  } catch (err: any) {
+  } catch (err) {
     if (err.name === 'TimeoutError') {
       console.error("❌ DB Error: The request timed out.");
     } else {
@@ -155,7 +151,7 @@ export async function pongGame(
       if (isAlreadyWaiting) {
         console.log(`⚠️ User ${user.username} tried to join twice.`);
         socket.send(JSON.stringify({ 
-            type: "ERROR", 
+            type: "ERROR_U_VS_U", 
             message: "You are already in the matchmaking queue!" 
         }));
         socket.close();

@@ -1,6 +1,36 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import Friends, { DBClient } from '../../services/dbClient';
 
+//parche para transformar las peticiones pendientes a un formato consistente, con el requester siempre en user_1 y el receiver en user_2
+const transformPendingPetitions = (relations: Friends[]): Friends[] => {
+  return relations.map((relation) => {
+    // Only transform pending petitions
+    if (relation.petition_status !== 0) {
+      let requester: number;
+      let receiver: number;
+
+      if (relation.petition_status === relation.user_1) {
+        // user_1 must accept → user_2 is requester
+        requester = relation.user_2;
+        receiver = relation.user_1;
+      } else {
+        // user_2 must accept → user_1 is requester
+        requester = relation.user_1;
+        receiver = relation.user_2;
+      }
+
+      return {
+        ...relation,
+        user_1: requester,
+        user_2: receiver,
+      };
+    }
+
+    // If accepted, return as-is
+    return relation;
+  });
+};
+
 export const getAllFriendsController = async (
   request: FastifyRequest<{ Querystring: { user_1: number } }>,
   reply: FastifyReply
@@ -48,8 +78,9 @@ export const getPetitionFriendsController = async (
     const filteredFriends: Friends[] = friends.filter(
      (friend: Friends) => friend.petition_status === user_1
     );
-    
-    reply.status(200).send(filteredFriends); 
+    const transformedFriends = transformPendingPetitions(filteredFriends);
+
+    reply.status(200).send(transformedFriends); 
   } catch (error) {
     console.error('Error in getPetitionFriendsController:', error);
     reply.status(500).send({
@@ -128,7 +159,9 @@ export const createFriendPetitionController = async (
       petition_status: Number(petition_status),
     });
 
-    return reply.status(201).send(newRelation);
+    const transformedRelation = transformPendingPetitions([newRelation])[0];
+
+    return reply.status(201).send(transformedRelation);
   } catch (error) {
     console.error('Error creating friend petition:', error);
 
@@ -189,19 +222,43 @@ export const getAllFriendsNicController = async (
 
     const result = await Promise.all(
       relations.map(async (relation: Friends) => {
-        const [user1, user2] = await Promise.all([
-          DBClient.getUserById(relation.user_1),
-          DBClient.getUserById(relation.user_2),
+        let requesterId: number;
+        let receiverId: number;
+
+        // Pending petition
+        if (relation.petition_status !== 0) {
+          if (relation.petition_status === relation.user_1) {
+            // user_1 must accept → user_2 requested
+            requesterId = relation.user_2;
+            receiverId = relation.user_1;
+          } else {
+            requesterId = relation.user_1;
+            receiverId = relation.user_2;
+          }
+        } else {
+          // Accepted friendship → keep normalized order
+          requesterId = relation.user_1;
+          receiverId = relation.user_2;
+        }
+
+        const [requester, receiver] = await Promise.all([
+          DBClient.getUserById(requesterId),
+          DBClient.getUserById(receiverId),
         ]);
 
         return {
           id: relation.id,
-          user1_id: relation.user_1,
-          user1_name : user1?.username,
-          user1_nickname: user1?.nickname,
-          user2_id: relation.user_2,
-          user2_name : user2?.username,
-          user2_nickname: user2?.nickname,
+          petition_status: relation.petition_status,
+
+          user1_id: requesterId,
+          user1_name: requester?.username,
+          user1_nickname: requester?.nickname,
+          user1_avatar: requester?.avatar,
+
+          user2_id: receiverId,
+          user2_name: receiver?.username,
+          user2_nickname: receiver?.nickname,
+          user2_avatar: receiver?.avatar,
         };
       })
     );
@@ -214,3 +271,4 @@ export const getAllFriendsNicController = async (
     });
   }
 };
+
