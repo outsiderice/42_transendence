@@ -7,9 +7,12 @@ import * as bcrypt from 'bcrypt';
 const AVATAR_PREFIX = 'api/public/avatars';
 
 function buildAvatarUrl(filename?: string): string {
-  if (!filename) { 
+	if (!filename) { 
     return ''; 
-  }
+	}
+	if (filename.startsWith('https://')){
+		return filename;
+	}
   return `${AVATAR_PREFIX}/${filename}`;
 }
 
