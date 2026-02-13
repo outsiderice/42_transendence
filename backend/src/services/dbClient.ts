@@ -220,23 +220,6 @@ static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<
     }
   }
 
-  static async getAllPetitions(user_1: number): Promise<Petitions[]> {
-    try {
-      const res = await dbFetch(`/api/petitions?user_1=${user_1}`);
-      
-      const data = await res.json();
-      console.log('Data received from /petitions:', data);
-      
-      if (Array.isArray(data)) {
-        return data as Petitions[];
-      }
-
-      return [];
-    } catch {
-      return [];
-    }
-  }
-
   static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<Friends> {
     const res = await dbFetch('/api/friends', {
       method: 'POST',

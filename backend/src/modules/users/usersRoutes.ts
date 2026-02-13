@@ -89,22 +89,6 @@ export const usersRoutes = async (app: FastifyInstance) => {
   } as any
 }, getUserFriendsController);
 
-
-  //user pending petitions
-  app.get<{ Params: { id: number } }>('/usersPetitions/:id', {
-  schema: {
-    tags: ['Users'],
-    params: {
-      type: 'object',
-      required: ['id'],
-      properties: {
-        id: { type: 'number' }
-      }
-    },
-    response: { 200: { type: 'array', items: PetitionSchema } },
-  } as any
-}, getUserPetitionsController);
-
   // READ BY ID
   app.get<{ Params: { id: string } }>('/users/:id', {
     preHandler: app.authenticateApi,

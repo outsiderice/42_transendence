@@ -16,7 +16,6 @@ export interface Petitions {
 export interface Friends {
     id?: number;
     user_1: number;
-	user_1
     user_2: number;
     petition_status: number;
 }
@@ -60,32 +59,6 @@ export class friendsService{
   	`);
     const rows = stmt.all(user_1, user_1,user_1) as Friends[];
     
-    return rows;
-  }
-
-
-
-   static getAllPetitions(user_1: number): Friends[] {
-    const stmt = db.prepare(`
-    	SELECT
-			r.id AS id,
-
-			r.user_1 AS user_1_id,
-			u1.username AS user_1_username,
-			u1.nickname AS user_1_nickname,
-
-			r.user_2 AS user_2_id,
-			u2.username AS user_2_username,
-			u2.nickname AS user_2_nickname,
-
-			r.petition_status AS status
-    	FROM relationship r
-		JOIN users u1 ON u1.id = r.user_1
-		JOIN users u2 ON u2.id = r.user_2
-    	WHERE (r.user_1 = ? OR r.user_2 = ?)
-      		AND petition_status <> user_1 
-  	`);
-    const rows = stmt.all(user_1, user_1) as Petitions[];
     return rows;
   }
 

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import PongToggleButton from '../components/PongToggleButton.vue'
-
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import { useSessionStore } from '@/state/user_session.ts'
 import { useRouter } from 'vue-router'
+import LinkComponent from '../components/LinkComponent.vue'
 
 // -------------------------
 // Store / Router
@@ -154,7 +153,7 @@ function sign_out()
         @blur="touched.confirmPassword = true"
       />
 
-      <PongButton
+      <PongButton class="mb-6"
         label="SEND"
         type="submit"
         :fullWidth="true"
@@ -176,6 +175,13 @@ function sign_out()
         />
       </div>
       
+      <div class="flex justify-center mb-6">
+          <LinkComponent
+            href="/sign_in"
+            label="sign in"
+            class="text-(--color_accent_1)"
+          />
+      </div>
     </div>
   </div>
 </template>
