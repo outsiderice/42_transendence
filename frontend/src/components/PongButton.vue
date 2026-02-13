@@ -12,7 +12,6 @@ const { label, type, disabled, fullWidth } = defineProps<Props>()
 const emit = defineEmits(['click'])
 
 const handleClick = (e: MouseEvent) => {
-  console.log('PongButton clicked')
   emit('click', e)
 }
 </script>
