@@ -8,6 +8,9 @@ import DisabledButtonComponent from '@/components/DisabledButtonComponent.vue'
 import { useSessionStore } from '@/state/user_session.ts'
 import bookIcon from '@/assets/book_icon.svg';
 import userIcon from '@/assets/user_icon.svg';
+import GameHistoricStatisticsCard from '@/components/GameHistoricStatisticsCard.vue';
+import GameStatisticsCard from '@/components/GameStatisticsCard.vue';
+
 
 const session = useSessionStore();
 const route = useRoute();
@@ -37,9 +40,32 @@ const friends = reactive<
 }[]
 >([]);
 
-//const games = reactive<>();
+const total_games = reactive<
+{
+	wins: number,
+	loses: number,
+}
+>({wins: 0, loses: 0});
 
-const user_kind = ref<'oneself' | 'friend' | 'requested_friend' | 'stranger'>('stranger');
+const games = reactive<
+{
+	id: number,
+	name: string,
+	nick: string,
+	points_won: number,
+	points_lost: number,
+	won: boolean,
+	date_of: string,
+}[]
+>([]);
+
+const user_kind = ref<
+	'oneself' | 
+	'friend' | 
+	'requested_friend' | 
+	'requesting_friendship' | 
+	'stranger'
+>('stranger');
 
 const buttonLabel = ref<string>('something');
 
@@ -47,76 +73,106 @@ async function load_user_info()
 {
 	//	get basic info on the user.
 	const response1 = await fetch(
-			"https://" + window.location.host + "/api/users/by-username/" + route.params.id, {
-method:'GET',
-});
-if (!response1.ok)
-{
-	load_status.value = 'fail';
-	return ;
-}
-const result1 = await response1.json();
-user.name = result1.username;
-user.nick = result1.nickname;
-user.nick = result1.username;
-if (result1.avatar === '') {
-	user.profilePic = undefined;
-} else {
-	user.profilePic = result1.avatar;
-}
-user.id = result1.id;
-console.log("user.");
-console.log(user.id);
-console.log(session.getUserId);
-
-//	know if the user is oneself.
-if (user.id == session.getUserId)
-{
-	console.log("this is oneself");
-	user_kind.value = 'oneself';
-	user.online = true;
-	load_status.value = 'loaded';
-	return ;
-}
-
-//	know if the user is a friend.
-const response2 = await fetch(
+		"https://" + window.location.host + "/api/users/by-username/" + route.params.id, {
+		method:'GET',
+	});
+	if (!response1.ok)
+	{
+		load_status.value = 'fail';
+		return ;
+	}
+	const result1 = await response1.json();
+	user.name = result1.username;
+	user.nick = result1.nickname;
+	user.nick = result1.username;
+	if (result1.avatar === '') {
+		user.profilePic = undefined;
+	} else {
+		user.profilePic = result1.avatar;
+	}
+	user.id = result1.id;
+	console.log("user.");
+	console.log(user.id);
+	console.log(session.getUserId);
+	
+	//	know if the user is oneself.
+	if (user.id == session.getUserId)
+	{
+		console.log("this is oneself");
+		user_kind.value = 'oneself';
+		user.online = true;
+		load_status.value = 'loaded';
+		return ;
+	}
+	
+	//	know if the user is a friend.
+	const response2 = await fetch(
 		"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
 		{ method: 'GET' }
-		);
-const result2 = await response2.json();
-console.log(result2);
-while (result2.length != 0)
-{
-	const friendship = result2.pop();
-	if (friendship.user_1 === session.getUserId || friendship.user_2 === session.getUserId)
+	);
+	const result2 = await response2.json();
+	console.log(result2);
+	while (result2.length != 0)
 	{
-		console.log("this is a friend");
-		user_kind.value = 'friend';
-		load_status.value = 'loaded';
-		return ;
+		const friendship = result2.pop();
+		if (friendship.user_1 === session.getUserId || friendship.user_2 === session.getUserId)
+		{
+			console.log("this is a friend");
+			user_kind.value = 'friend';
+			load_status.value = 'loaded';
+			return ;
+		}
 	}
-}
-//	know if the user is pending as a friend.
-const response3 = await fetch(
+	//	know if the user is pending as a friend.
+	const response3 = await fetch(
 		"https://" + window.location.host + "/api/friendsPetitions?user_1=" + user.id, 
 		{ method: 'GET' }
-		);
-const result3 = await response3.json();
-while (result3.length != 0)
-{
-	if (result3.pop().user_1 === session.getUserId)
+	);
+	const result3 = await response3.json();
+	console.log("result3");
+	console.log(result3.length);
+	console.log(result3[0]);
+	while (result3.length != 0)
 	{
-		console.log("will be a friend in the way.");
-		user_kind.value = 'requested_friend';
-		load_status.value = 'loaded';
-		return ;
+		const item = result3.pop();
+		console.log('iteration');
+		console.log(item);
+		console.log(session.getUserId);
+		if (item.user_1 == session.getUserId)
+		{
+			console.log("will be a friend in the way.");
+			user_kind.value = 'requested_friend';
+			load_status.value = 'loaded';
+			return ;
+		}
 	}
-}
-console.log("will be a stranger.");
-user_kind.value = 'stranger';
-load_status.value = 'loaded';
-return ;
+	//	know if the user has requested a friendship.
+	const response4 = await fetch(
+		"https://" + window.location.host + "/api/friendsPetitions?user_1=" + session.getUserId, 
+		{ method: 'GET' }
+	);
+	const result4 = await response4.json();
+	console.log("result4");
+	console.log(result4.length);
+	console.log(result4[0]);
+	while (result4.length != 0)
+	{
+		const item = result4.pop();
+		console.log('iteration');
+		console.log(item);
+		console.log(session.getUserId);
+		if (item.user_2 == session.getUserId)
+		{
+			console.log("is asquing to be a firend.");
+			user_kind.value = 'requesting_friendship';
+			load_status.value = 'loaded';
+			return;
+		}
+	}
+	console.log("will be a stranger.");
+	user_kind.value = 'stranger';
+	load_status.value = 'loaded';
+	return ;
 }
 
 function set_button_label()
@@ -141,6 +197,11 @@ function set_button_label()
 		buttonLabel.value = 'friend request ongoing.';
 		return ;
 	}
+	if (user_kind.value === 'requesting_friendship')
+	{
+		buttonLabel.value = 'user has requested your friendship.';
+		return ;
+	}
 	if (user_kind.value === 'stranger')
 	{
 		buttonLabel.value = 'send friend request.';
@@ -154,8 +215,58 @@ function set_achievements()
 	return ;
 }
 
-function set_game_history()
+async function set_game_history()
 {
+	console.log("REALLY IMPORTANT TEST!!!");
+	console.log(user.id);
+	const response = await fetch(
+		"https://" + window.location.host + "/api/games?user_1=" + user.id,
+		{
+			method: 'GET',
+			headers: 
+			{
+				'accept': '*/*',
+			},
+		},
+	);
+	const result = await response.json();
+	while (result.length != 0)
+	{
+		const	item = result.pop();
+		let		game = {};
+		game.id = item.id;
+		if (item.player1_id == user.id)
+		{
+			game.name = item.player2_username;
+			game.nick = item.player2_nickname;
+			game.points_won = item.player1_score;
+			game.points_lost = item.player2_score;
+		}
+		else
+		{
+			game.name = item.player1_username;
+			game.nick = item.player1_nickname;
+			game.points_won = item.player2_score;
+			game.points_lost = item.player1_score;
+		}
+		if (item.winner_id == user.id) {
+			game.won = true;
+		} else {
+			game.won = false;
+		}
+		game.date_of = item.created_at;
+		games.push(game);
+	}
+	let i = 0;
+	while (games.length > i)
+	{
+		if (games[i].won) {
+			total_games.wins++;
+		} else {
+			total_games.loses++;
+		}
+		i++;
+	}
 	return ;
 }
 
@@ -199,6 +310,10 @@ load_user_info().then(() => {
 function send_friend_request()
 {
 	console.log('sending a friend request.');
+	console.log('user_1');
+	console.log(session.getUserId);
+	console.log('user_2');
+	console.log(user.id);
 	fetch(
 		"https://" + window.location.host + "/api/friends", 
 		{
@@ -213,7 +328,7 @@ function send_friend_request()
 			}),
 		}
 	).then(() => {
-		window.location.reload();
+		load_user_info().then(() => {set_button_label()});
 	});
 
 	return ;
@@ -224,7 +339,7 @@ async function remove_friend()
 	console.log('removing a friend.');
 	// get all the friendships for finding the friendship id.
 	const response1 = await fetch(
-		"https://" + window.location.host + "/api/friends?user_1" + user.id, 
+		"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
 		{ method: 'GET' }
 	);
 	const result1 = await response1.json();
@@ -289,7 +404,11 @@ function action()
 			:profilePicture="user.profilePic" 
 		/>
 		<DisabledButtonComponent 
-			v-if="load_status == 'loanding' || user_kind == 'requested_friend'" 
+			v-if="
+				load_status == 'loanding' || 
+				user_kind == 'requested_friend' || 
+				user_kind == 'requesting_friendship'
+			" 
 			:label="buttonLabel" 
 		/>
 		<ButtonComponent 
@@ -307,11 +426,11 @@ function action()
 	<div class="w-full flex flex-row">
 		<button 
 			@click="currentTab = 'friends'"
-			class="basis-64"
+			class="basis-64 rounded-md hover:bg-(--color_background_3) pt-[0.8rem] transition-all duration-200"
 		>
-		<div class='m-auto inline-block' >
+		<div class='mx-auto inline-block' >
 			<div class='inline-block px-[0.5rem]' >
-			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.4rem] mx-auto">
+			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.1rem] mx-auto">
 				<defs>
 					<mask id="userIconMask">
 						<rect width="19" height="19" fill="black" />
@@ -330,7 +449,7 @@ function action()
 					mask="url(#userIconMask)"
 				/>
 			</svg>
-			<span :class="'text-[10px] font-bold uppercase text-' + (
+			<span :class="'text-' + (
 					currentTab === 'friends' ? 
 						'(--color_accent_1)'
 					:
@@ -342,18 +461,22 @@ function action()
 			</div>
 			<div 
 				v-if="currentTab === 'friends'" 
-				class="h-[0.2rem] rounded-t-[200rem] w-full bg-(--color_accent_1)"
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full bg-(--color_accent_1)"
+			/>
+			<div 
+				v-if="currentTab !== 'friends'" 
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full "
 			/>
 		</div>
 		</button>
 
 		<button 
 			@click="currentTab = 'game_history'"
-			class="basis-64"
+			class="basis-64 rounded-md hover:bg-(--color_background_3) pt-[0.8rem] transition-all duration-200"
 		>
-		<div class='m-auto inline-block' >
+		<div class='mx-auto inline-block' >
 			<div class='inline-block px-[0.5rem]' >
-			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.4rem] mx-auto">
+			<svg viewBox="0 0 19 19" class="w-[1.2rem] mb-[-0.1rem] mx-auto">
 				<defs>
 					<mask id="bookIconMask">
 						<rect width="19" height="19" fill="black" />
@@ -372,7 +495,7 @@ function action()
 					mask="url(#bookIconMask)"
 				/>
 			</svg>
-			<span :class="'text-[10px] font-bold uppercase text-' + (
+			<span :class="'text-' + (
 					currentTab === 'game_history' ? 
 						'(--color_accent_1)'
 					:
@@ -384,18 +507,22 @@ function action()
 			</div>
 			<div 
 				v-if="currentTab === 'game_history'" 
-				class="h-[0.2rem] rounded-t-[200rem] w-full bg-(--color_accent_1)"
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full bg-(--color_accent_1)"
+			/>
+			<div 
+				v-if="currentTab !== 'game_history'" 
+				class="h-[0.2rem] rounded-t-[200rem] mt-[0.3rem] w-full"
 			/>
 		</div>
 		</button>
 	</div>
 
-	<!-- Achievements -->
+	<!-- friends -->
 	<section 
 		v-if="currentTab === 'friends'" 
 		class="max-w-[30rem] flex flex-col gap-[2rem]"
 	>
-		<p>all the friends of {{user.nick}}</p>
+		<p v-if='friends.length == 0'>{{user.nick}} has no friends</p>
 		<UserCard v-for='friend in friends'
 			:nickName="friend.nick" 
 			:userName="friend.name" 
@@ -404,9 +531,23 @@ function action()
 			class=""
 		/>
 	</section>
-	<div v-if="currentTab === 'game_history'" class="w-full flex flex-col items-center">
-		<p>this is the game history.</p>
-	</div>
+	<!-- games -->
+	<section 
+		v-if="currentTab === 'game_history'" 
+		class="max-w-[30rem] flex flex-col gap-[2rem]"
+	>
+		<GameHistoricStatisticsCard 
+			class='mb-[2rem]'
+			:gamesWon='total_games.wins' 
+			:gamesLost='total_games.loses' 
+		/>
+		<GameStatisticsCard v-for='game in games'
+			:player2='game.name'
+			:dateStr='game.date_of'
+			:pointsPlayer1='game.points_won'
+			:pointsPlayer2='game.points_lost'
+		/>
+	</section>
 </section>
 </template>
 

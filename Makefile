@@ -1,8 +1,9 @@
 
 
-.PHONY:	watch down up re
+.PHONY:	watch down clean up re fre 
 
 watch:
+	touch db/data/app.db
 	cp .env.example .env
 	cp frontend/.env.example frontend/.env
 	cp backend/.env.example backend/.env
@@ -10,6 +11,7 @@ watch:
 	docker compose watch
 
 up:
+	touch db/data/app.db
 	cp .env.example .env
 	cp frontend/.env.example frontend/.env
 	cp backend/.env.example backend/.env
@@ -19,5 +21,10 @@ up:
 down:
 	docker compose down
 
+clean:
+	rm db/data/app.db
+
 re: down watch
-	
+
+fre: down clean watch
+
