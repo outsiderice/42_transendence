@@ -128,7 +128,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
         startPostGameRoutine();
       }
       else if (data.type === "ERROR_U_VS_U") {
-        msgPong.value = "You were assigned to play against youself";
+        msgPong.value = "Stop playing with yourself!";
         isMatchmaking = true;
         startPostGameRoutine();
       }

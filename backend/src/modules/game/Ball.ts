@@ -97,6 +97,7 @@ export class Ball {
 	// horizontal walls
 	bounceX(): void {
 		this.speedY *= -1;
+		this.speed += 5;
 	}
 
 	absoluteValue(num: number): number{
