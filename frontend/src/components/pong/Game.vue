@@ -127,6 +127,11 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
         isMatchmaking = false;
         startPostGameRoutine();
       }
+      else if (data.type === "ERROR_U_VS_U") {
+        msgPong.value = "You were assigned to play against youself";
+        isMatchmaking = true;
+        startPostGameRoutine();
+      }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
         isMatchmaking = false;
