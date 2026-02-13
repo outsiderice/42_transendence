@@ -133,11 +133,21 @@ export const authRoutes = async (app: FastifyInstance) => {
   */ 
    // GITHUB CALLBACK
    app.get('/auth/github/callback', {
-     schema: {
-       tags: ['Auth'],
-       response: { 
-         200: { UserSafeSchema: {type: 'object'}},           
-         },
-       },
-     },getCallbackController);
+  schema: {
+    tags: ['Auth'],
+    response: {
+      303: {
+        type: 'null',
+        description: 'Redirect to frontend after successful GitHub authentication'
+      },
+      500: {
+        type: 'object',
+        properties: {
+          error: { type: 'string' },
+          details: { type: 'string' }
+        }
+      }
+    }
+  }
+}, getCallbackController);
 }

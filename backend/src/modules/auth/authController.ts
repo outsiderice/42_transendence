@@ -266,7 +266,7 @@ export const getCallbackController = async (
 		secure: true,
 		maxAge: 0,
 	})
-	.status(200).send({ safeUser });
+	.redirect('https://localhost:8443/');
   } catch (error) {
     console.error('Error in getCallbackController:', error);
     reply.status(500).send({
