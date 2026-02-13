@@ -151,7 +151,7 @@ export async function pongGame(
       if (isAlreadyWaiting) {
         console.log(`⚠️ User ${user.username} tried to join twice.`);
         socket.send(JSON.stringify({ 
-            type: "ERROR", 
+            type: "ERROR_U_VS_U", 
             message: "You are already in the matchmaking queue!" 
         }));
         socket.close();
