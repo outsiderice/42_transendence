@@ -250,7 +250,7 @@ export default async (app: FastifyInstance) => {
   });
 
     // READ ONE BY EMAIL
-  app.get<{ Params: { email: string; }; }>('/users/by-emial/:email', {
+  app.get<{ Params: { email: string; }; }>('/users/by-email/:email', {
     schema: {
       tags: ['Users'],
       params: {
