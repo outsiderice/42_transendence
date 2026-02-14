@@ -17,8 +17,7 @@ const password = ref<string | undefined>(undefined)
 const name = ref<string | undefined>(undefined)
 const email = ref<string | undefined>(undefined)
 const nickname = ref<string | undefined>(undefined)
-const online = ref<boolean | undefined >(undefined);
-
+const online = ref<boolean | undefined>(false)
 const fileInputRef = ref<HTMLInputElement | null>(null)
 
 const myprofilevalue = computed(() =>

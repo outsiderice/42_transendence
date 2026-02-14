@@ -4,7 +4,7 @@ import defaultProfilePicture from "@/assets/defaultProfilePicture.svg";
 
 interface userAvatarInfo {
 	profilePicture?: string,
-	online: boolean,
+	online?: boolean,
 };
 
 const props = defineProps<userAvatarInfo>();
