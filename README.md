@@ -86,7 +86,8 @@ This will also allow us to access the database directly for maintenance, queryin
 Requests must go through the proxy, since the database is not public, but at the same time they must include the API key in order to access the database without going through the backend.
 
 ### Custom design system with reusable components
-
+![alt text](docs/components_design.png)
+[Project Figma](https://www.figma.com/design/pU9rJmGdOkIRibzAE4bCde/trancendence-project.?node-id=55-24&t=alP5ZIQxnzLlUfGN-1)
 ### Standard user management
 
 This module was another natural choice as basic user management was already required and adding the features needed simply filled out the feature. 
