@@ -4,7 +4,7 @@ import {
  	loginUserController,
  	refreshTokenController,
 	logoutUserController,
-//  getCallbackController
+	getCallbackController,
 } from './authController';
 
 
@@ -26,15 +26,6 @@ export const UserSafeSchema = {
     email: { type: 'string' },
   },
   required: ['id', 'username', 'email'],
-};
-
-export const UserRefreshSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'integer' },
-    username: { type: 'string' },
-  },
-  required: ['id', 'username'],
 };
 
 export const CreateUserSchema = {
@@ -60,9 +51,15 @@ export type LoginUserBody = {
 };
 
 export type SafeUserResponese = {
-  id:		number | undefined;
+  id:		number | undefined ;
   username: string;
-  email: 	string;
+};
+
+export type GithubEmail = {
+  email: string;
+  primary: boolean;
+  verified: boolean;
+  visibility?: string;
 };
 
 //routes
@@ -99,7 +96,7 @@ export const authRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ['Auth'],
       response: {
-              	201: { UserRefreshSchema: {type: 'object'}},
+              	201: { UserSafeSchema: {type: 'object'}},
         		401: { type: 'object', properties: { error: { type: 'string' } } },
 			},
 		},
@@ -120,14 +117,37 @@ export const authRoutes = async (app: FastifyInstance) => {
   	},
   	logoutUserController
 	);
-
-//   // GITHUB OAUTH CALLBACK
-//   app.get('/auth/github/callback', {
-//     schema: {
-//       tags: ['Auth'],
-//       response: { 
-//         200: UserSchema,           
-//         },
-//       },
-//     },getCallbackController);
+/*
+   // LOGIN WITH GITHUB
+   app.get('/auth/githublogin', {}, (req, reply) => {
+		app.githubOAuth2.generateAuthorizationUri(
+		req,
+		reply,
+		(err, authorizationEndpoint) => {
+			if (err) 
+				console.error(err)
+			reply.redirect(authorizationEndpoint)
+			}
+		);
+	});
+  */ 
+   // GITHUB CALLBACK
+   app.get('/auth/github/callback', {
+  schema: {
+    tags: ['Auth'],
+    response: {
+      303: {
+        type: 'null',
+        description: 'Redirect to frontend after successful GitHub authentication'
+      },
+      500: {
+        type: 'object',
+        properties: {
+          error: { type: 'string' },
+          details: { type: 'string' }
+        }
+      }
+    }
+  }
+}, getCallbackController);
 }

@@ -6,12 +6,11 @@ import defaultProfilePicture from "../assets/defaultProfilePicture.svg"
 import { useRouter } from 'vue-router';
 import { useSessionStore } from '@/state/user_session.ts'
 import UserAvatar from '@/components/UserAvatar.vue';
+
 const session = useSessionStore();
 const router = useRouter();
 
 const profilePicture = ref<string | undefined>(undefined)
-const avatarFile = ref<File | null>(null)
-
 const onlineIndicatorColor = "var(--color_accent_success)"
 const oldpassword = ref<string | undefined>(undefined)
 const password = ref<string | undefined>(undefined)
@@ -22,52 +21,75 @@ const online = ref<boolean | undefined >(undefined);
 
 const fileInputRef = ref<HTMLInputElement | null>(null)
 
-// --- Abrir selector de archivos al clickear el avatar ---
+const myprofilevalue = computed(() =>
+  profilePicture.value ? profilePicture.value : undefined
+)
+
+// -------------------- AVATAR --------------------
 const triggerFilePicker = () => {
   fileInputRef.value?.click()
 }
 
-// --- Cuando el usuario selecciona una imagen ---
-const onAvatarSelected = (e: Event) => {
+const onAvatarSelected = async (e: Event) => {
   const target = e.target as HTMLInputElement
-  if (!target.files || !target.files.length) return
+  if (!target.files?.length) return
 
-  avatarFile.value = target.files[0]
+  const file = target.files[0]
 
-  // Preview inmediato
-  profilePicture.value = URL.createObjectURL(avatarFile.value)
-}
+  // Guardamos avatar anterior por si hay error
+  const previousAvatar = profilePicture.value
 
-// --- POST avatar ---
-const uploadAvatar = async () => {
-  if (!avatarFile.value) return
+  // Preview inmediato con blob
+  profilePicture.value = URL.createObjectURL(file)
 
+  // Subida al backend
   const formData = new FormData()
-  formData.append("avatar", avatarFile.value)
+  formData.append("avatar", file)
 
-  const url = "https://" + window.location.host + "/api/avatar/" + session.getUserId
+  try {
+    const res = await fetch(`https://${window.location.host}/api/avatar/${session.getUserId}`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    })
 
-  const res = await fetch(url, {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  })
+    if (!res.ok) {
+      alert("Error subiendo avatar ❌")
+      // 🔹 Restaurar avatar anterior inmediatamente
+      profilePicture.value = previousAvatar
+      return
+    }
 
-  if (!res.ok) {
-    alert("Error subiendo avatar ❌")
-    return
+    await res.json() // data del upload no necesaria
+
+    // 🔹 Refrescar avatar desde backend para evitar imagen rota
+    const refreshRes = await fetch(`https://${window.location.host}/api/users/${session.getUserId}`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+
+    if (!refreshRes.ok) {
+      alert("Error refrescando avatar ❌")
+      profilePicture.value = previousAvatar
+      return
+    }
+
+    const userData = await refreshRes.json()
+    profilePicture.value = userData.avatar + `?t=${Date.now()}`
+
+  } catch (error) {
+    alert("Error de red al subir avatar ❌")
+    profilePicture.value = previousAvatar
   }
-
-  const data = await res.json()
-
-  // 🔹 Usamos la URL que nos devuelve el backend
-  profilePicture.value = data.avatar
 }
 
-// --- GET usuario ---
+
+
+
+// -------------------- FETCH USER --------------------
 const fetchUserSettings = async () => {
   try {
-    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+    const url = `https://${window.location.host}/api/users/${session.getUserId}`;
 
     const res = await fetch(url, {
       method: 'GET',
@@ -89,22 +111,19 @@ const fetchUserSettings = async () => {
     profilePicture.value = result.avatar;
     online.value = true;
 
+    // limpiar passwords
+    password.value = ''
+    oldpassword.value = ''
   } catch (error) {
     session.$reset();
     router.push({ name: 'signin' });
   }
 };
 
-// --- PUT usuario + refrescar avatar ---
+// -------------------- SAVE --------------------
 const handleSubmit = async () => {
   try {
-    // 1️⃣ Subir avatar si cambió
-    if (avatarFile.value) {
-      await uploadAvatar()
-    }
-
-    // 2️⃣ Actualizar datos
-    const url = "https://" + window.location.host + "/api/users/" + session.getUserId;
+    const url = `https://${window.location.host}/api/users/${session.getUserId}`;
 
     const payload = {
       username: name.value,
@@ -123,19 +142,14 @@ const handleSubmit = async () => {
 
     if (res.ok) {
       alert('Cambios guardados ✅');
-      password.value = '';
-      oldpassword.value = '';
-      avatarFile.value = null
-
-      // 🔹 Refrescar avatar desde backend para evitar imagen rota
-      const refreshRes = await fetch(`https://${window.location.host}/api/users/${session.getUserId}`, { credentials: 'include' })
-      if (refreshRes.ok) {
-        const data = await refreshRes.json()
-        profilePicture.value = data.avatar
-      }
-
+      password.value = ''
+      oldpassword.value = ''
+      await fetchUserSettings() // refrescar datos
     } else {
       alert('Error al guardar los cambios ❌');
+      password.value = ''
+      oldpassword.value = ''
+      await fetchUserSettings()
     }
 
   } catch (error) {
@@ -143,54 +157,22 @@ const handleSubmit = async () => {
   }
 };
 
-const myprofilevalue = computed (()=> profilePicture.value ? profilePicture.value : undefined) 
+// -------------------- CANCEL --------------------
+const handleCancel = () => {
+  router.back() // vuelve a la página anterior
+}
 
 onMounted(fetchUserSettings)
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-12 p-6 bg-[var(--color_background_3)] rounded-xl shadow-md">
-    <UserAvatar class= "mx-auto w-[8rem] h-[8rem]"
-    @click="triggerFilePicker" 
-		:profilePicture="myprofilevalue"
-		:online="online"
-	  />
-    <!-- AVATAR 
-    <div class="flex justify-center mb-6 cursor-pointer" @click="triggerFilePicker">
-      <svg
-        viewBox="0 0 60 60"
-        class="profilePictureContainer w-[7rem] h-[7rem] flex-none hover:scale-110 transition duration-200"
-      >
-        <defs>
-          <mask id="statusIndicatorHole">
-            <rect width="60" height="60" fill="white" />
-            <circle r="12" cx="50" cy="50" fill="black" />
-          </mask>
-          <mask id="profileMask">
-            <rect width="60" height="60" fill="black" />
-            <circle r="30" cx="30" cy="30" fill="white" mask="url(#statusIndicatorHole)" />
-          </mask>
-          <mask id="defaultProfileMask">
-            <rect width="60" height="60" fill="black" />
-            <image width="60" height="60" :href="defaultProfilePicture" />
-          </mask>
-        </defs>
-
-        <g v-if="profilePicture === undefined" mask="url(#profileMask)">
-          <rect width="60" height="60" fill="var(--color_accent_1)" mask="url(#defaultProfileMask)" />
-        </g>
-
-        <image
-          v-else
-          width="60"
-          height="60"
-          :href="profilePicture"
-          mask="url(#profileMask)"
-        />
-
-        <circle r="8" cx="50" cy="50" :fill="onlineIndicatorColor" />
-      </svg>
-    </div>-->
+    <UserAvatar
+      class="mx-auto w-[8rem] h-[8rem]"
+      @click="triggerFilePicker"
+      :profilePicture="myprofilevalue"
+      :online="online"
+    />
 
     <input
       ref="fileInputRef"
@@ -204,7 +186,7 @@ onMounted(fetchUserSettings)
     <div class="mt-6 text-[var(--color_accent_2)] text-center">
       <p><strong>Name:</strong> {{ name }}</p>
       <p><strong>Nickname:</strong> {{ nickname }}</p>
-      <p class="mb-6"><strong>Email:</strong> {{ email }}</p> <!-- <- margen extra -->
+      <p class="mb-6"><strong>Email:</strong> {{ email }}</p>
 
       <PongInput label="Change Nickname" v-model="nickname" />
       <PongInput label="Old Password" type="password" v-model="oldpassword" />
@@ -214,7 +196,7 @@ onMounted(fetchUserSettings)
     <!-- BOTONES -->
     <div class="flex flex-col gap-4 mt-4">
       <PongButton label="Save Changes" :fullWidth="true" @click="handleSubmit" />
-      <PongButton label="Discard Changes" :fullWidth="true" @click="fetchUserSettings" />
+      <PongButton label="Cancel" :fullWidth="true" @click="handleCancel" />
     </div>
   </div>
 </template>

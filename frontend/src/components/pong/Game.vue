@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import GameCanvas from './GameCanvas.vue';
+import      { ref, onMounted, onUnmounted } from 'vue';
+import      GameCanvas from './GameCanvas.vue';
 import type { GameState } from './GameState';
-import { useRouter } from 'vue-router';
+import      ButtonComponent from "@/components/ButtonComponent.vue";
+import      { useRouter } from 'vue-router';
 
 const router = useRouter();
 let   socket: WebSocket | null = null;
@@ -12,9 +13,20 @@ const leftPlayerName = ref<string>("Loading...");
 const rightPlayerName = ref<string>("Loading...");
 const mySide = ref<string | null>(null);
 
+// to control cancel button
+let isMatchmaking = ref(true);
+
 //timer variables
 const gameEnded = ref(false);
 let postWinTimer: ReturnType<typeof setTimeout> | null = null;
+
+
+const handleCancel = () => {
+  if (socket) {
+    socket.close();
+  }
+  router.push({name: 'home'});
+};
 
 // timer for redirection to main after endGame is reached
 const startPostGameRoutine = () => {
@@ -105,16 +117,24 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
       }
       else if (data.type === "PLAY") {
         msgPong.value = "";
+        isMatchmaking = false; // bye bye Cancel button
       }
       else if (data.type === "INFO") {
         msgPong.value = data.msg;
       }
       else if (data.type === "DISCONNECTED") {
         msgPong.value = `${data.username} has left the game. What a coward!`;
+        isMatchmaking = false;
+        startPostGameRoutine();
+      }
+      else if (data.type === "ERROR_U_VS_U") {
+        msgPong.value = "Stop playing with yourself!";
+        isMatchmaking = true;
         startPostGameRoutine();
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
+        isMatchmaking = false;
         startPostGameRoutine();
       }
       else if (data.type === "ASSIGN_SIDE") {
@@ -135,7 +155,7 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
 
 onUnmounted(() => {
   window.removeEventListener('offline', handleOffline);
-  window.addEventListener('online', handleOnline);
+  window.removeEventListener('online', handleOnline);
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
 
@@ -158,9 +178,15 @@ onUnmounted(() => {
     @touchstart="handleTouch($event, true)"
     @touchend="handleTouch($event, false)">
     
-    <h1 v-if="msgPong" class="status-msg winner-announcement">
-      {{ msgPong }}
-    </h1>
+    <div v-if="msgPong" class="status-msg flex items-center justify-center gap-4">
+      <h1 class="winner-announcement">{{ msgPong }}</h1>
+      <ButtonComponent 
+        v-if="isMatchmaking" 
+        label="Cancel"
+        :is-danger="true"
+        @click="handleCancel"
+      />
+    </div>
 
     <GameCanvas 
       :gameState="currentGameState"
@@ -178,19 +204,25 @@ onUnmounted(() => {
   font-family: 'Oswald', sans-serif;
 }
 
+@media (min-width: 1024px) {
+  .status-msg {
+    margin-bottom: 2rem;
+  }
+}
+
 .winner-announcement {
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
   color: var(--color_accent_1); 
   text-shadow: 2px 2px 0px var(--color_background_1);
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
 }
 
-.overlay {
+/*.overlay {
   margin-top: 20px;
   color: #888;
-}
+}*/
 
 /* MOBILE VERSION */
 @media (pointer: coarse) and (orientation: portrait) {
@@ -226,10 +258,11 @@ onUnmounted(() => {
     z-index: 100;
     transform: rotate(90deg); /* Rotate text to match game */
     background: rgba(0, 0, 0, 0.7);
-    padding: 10px;
+    padding: 15px 25px;
     border: 1px solid white;
     margin: 0;
-    pointer-events: none;
+    pointer-events: auto; /*for cancel button to work but then block the screen */
+    border-radius: 8px; 
   }
 
   :deep(canvas) {

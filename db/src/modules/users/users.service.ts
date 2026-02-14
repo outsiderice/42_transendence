@@ -3,8 +3,9 @@ import { db } from '../../config/sqlite';
 export interface User {
   id?: number;
   username: string;
-  email: string;
-  password: string;
+  githubid?: string;
+  email?: string;
+  password?: string;
   nickname?: string;
   avatar?: string;
   created_at?: string;
@@ -15,16 +16,17 @@ export class UsersService {
   // CREATE
   static createUser(user: User): User {
     const stmt = db.prepare(`
-      INSERT INTO users (username, email, password, nickname, avatar)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO users (username, githubid, email, password, nickname, avatar)
+      VALUES (?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
       user.username,
-      user.email,
-      user.password,
+	  user.githubid || null,
+      user.email || null,
+      user.password || null,
       user.nickname || null,
-      null
+      user.avatar|| null
     );
 
     return {
@@ -43,6 +45,12 @@ export class UsersService {
   static getUserByUsername(username: string): User | undefined {
     const stmt = db.prepare('SELECT * FROM users WHERE username = ?');
     return stmt.get(username) as User | undefined;
+  }
+
+  // READ ONE BY GITHUBID
+    static getUserByGithubId(githubid: string): User | undefined {
+    const stmt = db.prepare('SELECT * FROM users WHERE githubid = ?');
+    return stmt.get(githubid) as User | undefined;
   }
 
   // READ ONE BY EMAIL
@@ -97,8 +105,14 @@ export class UsersService {
 
   // DELETE
   static deleteUser(id: number): boolean {
+	try{
     const stmt = db.prepare('DELETE FROM users WHERE id = ?');
     const result = stmt.run(id);
+	console.log('DB DELETE RESULT:', result); 
     return (result.changes as number) > 0;
+	} catch (err){
+	console.error('RAW DB ERROR in deleteUser:', err); // <-- log full DB error
+    throw err;
+	}
   }
 }

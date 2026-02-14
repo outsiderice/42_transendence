@@ -5,7 +5,6 @@ import {
   getAllUsersController,
   getUserByIdController,
   getUserByUsernameController,
-  createUserController,
   updateUserController,
   deleteUserController,
   getUserFriendsController,
@@ -15,51 +14,17 @@ import {
 // Schemas para Fastify + Swagger
 export const UserSchema = {
   type: 'object',
-  required: ['id', 'username', 'email', 'password'],
+  required: ['id', 'username'],
   properties: {
     id: { type: 'number' },
     username: { type: 'string' },
+    githubid: { type: 'string' },
     email: { type: 'string' },
     password: { type: 'string' },
     nickname: { type: 'string' },
     avatar: { type: 'string' },
     created_at: { type: 'string' },
     updated_at: { type: 'string' },
-  },
-};
-
-export const LoginUserSchema = {
-  type: 'object',
-  required: ['username', 'password'],
-  properties: {
-    username: { type: 'string' },
-    password: { type: 'string' },
-  },
-};
-
-export const UserSafeSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'integer' },
-    username: { type: 'string' },
-    email: { type: 'string' },
-    nickname: { type: 'string' },
-    avatar: { type: 'string' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' },
-  },
-  required: ['id', 'username', 'email', 'created_at', 'updated_at'],
-};
-
-export const CreateUserSchema = {
-  type: 'object',
-  required: ['username', 'email', 'password'],
-  properties: {
-    username: { type: 'string' },
-    email: { type: 'string' },
-    password: { type: 'string' },
-    nickname: { type: 'string' },
-    avatar: { type: 'string' },
   },
 };
 
@@ -103,6 +68,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // READ ALL
   app.get('/users', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       response: { 200: { type: 'array', items: UserSchema } },
@@ -111,6 +77,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   //user friends
   app.get<{ Params: { id: number } }>('/usersFriends/:id', {
+    preHandler: app.authenticateApi,
   schema: {
     tags: ['Users'],
     params: {
@@ -123,22 +90,6 @@ export const usersRoutes = async (app: FastifyInstance) => {
     response: { 200: { type: 'array', items: UserSchema } },
   } as any
 }, getUserFriendsController);
-
-
-  //user pending petitions
-  app.get<{ Params: { id: number } }>('/usersPetitions/:id', {
-  schema: {
-    tags: ['Users'],
-    params: {
-      type: 'object',
-      required: ['id'],
-      properties: {
-        id: { type: 'number' }
-      }
-    },
-    response: { 200: { type: 'array', items: PetitionSchema } },
-  } as any
-}, getUserPetitionsController);
 
   // READ BY ID
   app.get<{ Params: { id: string } }>('/users/:id', {
@@ -171,6 +122,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // UPDATE
   app.put<{ Params: { id: string }; Body: Partial<User> }>('/users/:id', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
@@ -185,6 +137,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
   // DELETE
   app.delete<{ Params: { id: string } }>('/users/:id', {
+    preHandler: app.authenticateApi,
     schema: {
       tags: ['Users'],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },

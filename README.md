@@ -105,6 +105,11 @@ Github OAuth 2.0 has been implemented, there's an option to instead of registeri
 
 ## Individual Contributions
 
+### amagnell
+I handled the initial network setup, user session logic in the backend implemented with JWT, the implementation of oauth2.0., and kept track of project goals. There were definitely growing pains from this being my, and other teammates', first web project.
+The biggest technical challenge for me was JWT implementation, mostly because I did not realize it's whole scope at first and I felt the pressure of user sessions being stable so everyone else could work and test smoothly. I'm glad to say if I had to do it again I would have a much clearer idea of what needs to get done first and kept things closer to production settings faster. 
+### andmart2
+
 ### josorteg
 
 Database design and creation.
@@ -116,6 +121,7 @@ Creation of services to support front-end integration.
 ### kkoval
 I had to revisit my geometry classes to calculate the angles for ball collisions (shoutout to Borja :D). While I was initially intimidated by WebSockets and transitioning from a local-only game to a remote multiplayer experience, the process turned out to be very logical and smooth. The biggest challenge was envisioning how my piece of work would fit into the team's workflow while balancing so many new frameworks and tools simultaneously.
 
+### tatahere
 
 ## Resources
 

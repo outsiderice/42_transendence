@@ -29,8 +29,8 @@ services:
     build: ./frontend
     container_name: frontend
     environment:
-      - PORT=${VITE_PORT}
-      - HOST=${VITE_HOST}
+      - PORT=${FRONTEND_PORT}
+      - HOST=${FRONTEND_HOST}
       - PROXY=${PROXY_URL}
     ports:
       - "8443:443"
