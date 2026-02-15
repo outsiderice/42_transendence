@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import Friends, { DBClient } from '../../services/dbClient';
+import {buildAvatarUrl} from '../users/Controllers/userControllers';
 
 //parche para transformar las peticiones pendientes a un formato consistente, con el requester siempre en user_1 y el receiver en user_2
 const transformPendingPetitions = (relations: Friends[]): Friends[] => {
@@ -253,12 +254,12 @@ export const getAllFriendsNicController = async (
           user1_id: requesterId,
           user1_name: requester?.username,
           user1_nickname: requester?.nickname,
-          user1_avatar: requester?.avatar,
+          user1_avatar: buildAvatarUrl(requester?.avatar),
 
           user2_id: receiverId,
           user2_name: receiver?.username,
           user2_nickname: receiver?.nickname,
-          user2_avatar: receiver?.avatar,
+          user2_avatar: buildAvatarUrl(receiver?.avatar),
         };
       })
     );
