@@ -73,6 +73,7 @@ function remove_petition(id: number)
 		:profilePicture="petitioner.profilePic" 
 		:online="petitioner.online" 
 		:nickName="petitioner.nick" 
+		:userName="petitioner.name" 
 		class=""
 	/>
 </section>

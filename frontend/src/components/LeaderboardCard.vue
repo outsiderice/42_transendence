@@ -4,12 +4,15 @@ import {ref, computed} from 'vue';
 import UserAvatar from '@/components/UserAvatar.vue';
 import { useRouter } from 'vue-router';
 
+const router = useRouter();
+
 //	prop handeling. 
 interface leaderboardCardInfo {
 	ranking: number,
 	profilePicture?: string,
 	online: boolean,
 	nickName: string,
+	userName: string,
 	points: number,
 };
 
@@ -24,9 +27,7 @@ const ranking_ordinal_num = computed(() => {
 //	user actions.
 
 function redirectToUserProfilePage(): void{
-	if (props.userName === undefined)
-		return;
-	router.push({'path': window.location.origin + "/users/" + userName._value});
+	router.push({path: "/users/" + props.userName});
 }
 
 </script>
@@ -43,7 +44,9 @@ function redirectToUserProfilePage(): void{
 		rounded-[1.25rem]
 		border
 		border-(--color_accent_3)
-">
+"
+	v-on:click="redirectToUserProfilePage"
+>
 <div class="flex flex-row gap-[1rem] items-center" v-on:click="redirectToUserProfilePage">
 	
 	<!-- the rank of the player -->
