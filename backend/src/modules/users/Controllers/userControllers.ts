@@ -29,7 +29,6 @@ export const getAllUsersController = async (request: FastifyRequest, reply: Fast
 			...user,
 			avatar: buildAvatarUrl(user.avatar),
 		}));
-	console.log(users);
     reply.status(200).send(usersWithAvatarUrl);
   } catch (error) {
     console.error('Error in getAllUsersController:', error);
@@ -61,8 +60,12 @@ export const getUserFriendsController = async (
   const users = (await Promise.all(
     friendIds.map(id => DBClient.getUserById(id))
   )).filter(Boolean);
-
-  return users;
+	const usersWithAvatarUrl = users.map( user => ({
+			...user,
+			avatar: buildAvatarUrl(user.avatar),
+		}));
+	
+  return usersWithAvatarUrl;
 };
 
 /**
