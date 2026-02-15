@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import PongInput from '../components/PongInput.vue'
 import PongButton from '../components/PongButton.vue'
-import PongToggleButton from '../components/PongToggleButton.vue'
-import LinkComponent from '../components/LinkComponent.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import { useSessionStore } from '@/state/user_session.ts'
 import { useRouter } from 'vue-router'
+import LinkComponent from '../components/LinkComponent.vue'
 
 // -------------------------
 // Store / Router
@@ -73,7 +72,18 @@ const handleSubmit = async () => {
     console.error('Network error signing up:', error)
   }
 }
-
+// -------------------------
+// Registro mediante Github
+// -------------------------
+const handleGithubOauth = async () => {
+	try {
+		window.location.href = 
+		`https://${window.location.host}/api/login/github`;
+    
+	} catch (error){
+		console.error('Error during Github OAuth:', error)
+	}
+}
 // -------------------------
 // Logout
 // -------------------------
@@ -143,19 +153,36 @@ function sign_out()
         @blur="touched.confirmPassword = true"
       />
 
-      <PongButton
+      <PongButton class="mb-6"
         label="SEND"
         type="submit"
         :fullWidth="true"
         :disabled="!name || !email || !password || !confirmPassword"
         @click="handleSubmit"
       />
+<<<<<<< HEAD
       <div class="flex justify-center mt-6">
         <LinkComponent
         href="/sign_in"
         label="sign in"
         class=" text-[var(--color_accent_1)]"
         />
+=======
+      <div class="mt-2">
+      <PongButton
+        label="Sign up with Github"
+        type="submit"
+        :fullWidth="true"
+        @click="handleGithubOauth"
+      />
+      </div>
+      <div class="flex justify-center mb-6">
+          <LinkComponent
+            href="/sign_in"
+            label="sign in"
+            class="text-(--color_accent_1)"
+          />
+>>>>>>> d234f22980c93f05e27f7eee44da3bc6f3219513
       </div>
     </div>
   </div>

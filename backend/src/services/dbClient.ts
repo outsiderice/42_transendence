@@ -6,8 +6,9 @@ const DB_API_KEY = process.env.DB_API_KEY || '';
 export interface User {
   id?: number;
   username: string;
-  email: string;
-  password: string;
+  githubid?: string;
+  email?: string;
+  password?: string;
   oldpassword?: string;
   nickname?: string;
   avatar?: string;
@@ -77,6 +78,12 @@ export class DBClient {
     return await res.json();
   }
 
+  static async getUserByGithubId(githubid: string): Promise<User | null> {
+    const res = await dbFetch(`/api/users/by-githubid/${githubid}`, { method: 'GET' });
+    if (res.status === 404) return null;
+    return await res.json();
+  }
+
   static async getUserByUsername(username: string): Promise<User | null> {
     const res = await dbFetch(`/api/users/by-username/${username}`, { method: 'GET' });
     if (res.status === 404) return null;
@@ -96,6 +103,35 @@ export class DBClient {
     });
     return await res.json();
   }
+
+  static async createGithubUser(user: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
+    const res = await dbFetch('/api/githubusers', {
+      method: 'POST',
+      body: JSON.stringify(user),
+    });
+    return await res.json();
+  }
+
+static async createFriendPetition(friendPetition: Omit<Friends, 'id'>): Promise<Friends> {
+  const res = await dbFetch('/api/friends', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', // 🔑 obligatorio
+    },
+    body: JSON.stringify({
+      user_1: Number(friendPetition.user_1),
+      user_2: Number(friendPetition.user_2),
+      petition_status: String(friendPetition.petition_status),
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`DB Service error: ${res.status} ${text}`);
+  }
+
+  return await res.json();
+}
 
   static async updateUser(id: number, updates: Partial<User>): Promise<User | null> {
     const res = await dbFetch(`/api/users/${id}`, {
@@ -176,23 +212,6 @@ export class DBClient {
       
       if (Array.isArray(data)) {
         return data as Friends[];
-      }
-
-      return [];
-    } catch {
-      return [];
-    }
-  }
-
-  static async getAllPetitions(user_1: number): Promise<Petitions[]> {
-    try {
-      const res = await dbFetch(`/api/petitions?user_1=${user_1}`);
-      
-      const data = await res.json();
-      console.log('Data received from /petitions:', data);
-      
-      if (Array.isArray(data)) {
-        return data as Petitions[];
       }
 
       return [];

@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { RegisterUserBody, LoginUserBody, SafeUserResponese } from './authRoutes';
+import { RegisterUserBody, LoginUserBody, SafeUserResponese, GithubEmail } from './authRoutes';
 import { DBClient } from '../../services/dbClient';
+import { findOrCreateGithubUser } from './githubOauth';
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -61,9 +62,8 @@ export const registerUserController = async (
   
     //evita devolver el password en la respuesta
     const safeUser: SafeUserResponese = {
-	  id:		newUser.id,
+	    id:		newUser.id,
       username: newUser.username,
-      email: newUser.email,
     };
 
 	await reply.generateTokens(newUser);
@@ -116,9 +116,8 @@ export const loginUserController = async (
     //evita devolver el password en la respuesta
 
     const safeUser: SafeUserResponese = {
-	  id: existingUsername.id,
+	    id: existingUsername.id,
       username: existingUsername.username,
-      email: existingUsername.email,
     };
 	await reply.generateTokens(existingUsername);
 
@@ -167,12 +166,12 @@ export const refreshTokenController = async (
     reply.setCookie('accessToken', newToken, {
       httpOnly: true,
       path: '/',
-      maxAge: 60 * 15,
+      maxAge: 60 * 60 * 5,
       sameSite: 'none',
       secure: true,
     });
 
-	const safeUser: UserRefreshResponse = {
+	const safeUser: SafeUserResponese = {
 		id:	payload.id,
 		username: payload.username,
 	};
@@ -212,37 +211,69 @@ export const logoutUserController = async (
 	.send(null)
 };
 
-// /**
-//  * GET /callback - OAuth callback
-//  */
-// export const getCallbackController = async (
-//   request: FastifyRequest,
-//   reply: FastifyReply
-// ) => {
-//   try {
-//     //get user info from github
-//     const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
-    
-//     const githubUserRes = await fetch('https://api.github.com/user', {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//         Accept: 'application/vnd.github+json',
-//       },
-//     });
+/**
+ * GET /callback - OAuth callback
+ */
+export const getCallbackController = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  try {
+    //get user info from github
+    const accessToken = await request.server.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+	const token = accessToken.token.access_token    
+    const githubUserRes = await fetch('https://api.github.com/user', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+		Accept: 'application/vnd.github+json',
+      },
+    });
+    const githubEmailRes = await fetch('https://api.github.com/user/emails', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+		Accept: 'application/vnd.github+json',
+      },
+    });
 
-//     const githubEmailRes = await fetch('https://api.github.com/user/emails', {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//         Accept: 'application/vnd.github+json',
-//       },
-//     });
+    const githubUser = await githubUserRes.json();
+    const githubEmails = await githubEmailRes.json() as GithubEmail[];
 
-//     const githubUser = await githubUserRes.json();
-//     const githubEmail = await githubEmailRes.json();
+	console.log(githubUser);
 
-//     //check if user exists in database
-//     const existingUser = await DBClient.getUserByUsername(githubUser.login);
-//     //then call login or register logic
-//   } catch (error) {
+    const email = githubEmails.find(
+      (emailObj: any) => emailObj.primary
+    )?.email ?? null;
 
-//   }
+    const user = await findOrCreateGithubUser({
+      githubid: githubUser.id,
+      username: githubUser.login,
+      email: email,
+      avatar: githubUser.avatar_url,
+    });
+
+	const safeUser: SafeUserResponese = {
+		id:			user.id,
+		username:	user.username,
+	}
+
+    //generar JWTs
+	await reply.generateTokens(user);
+
+    reply
+	
+	//deletes redirect cookie
+	.setCookie('oauth2-redirect-state', '', {
+		path: '/api/auth/github/callback',
+		httpOnly: true,
+		secure: true,
+		maxAge: 0,
+	})
+	.redirect('https://localhost:8443/');
+  } catch (error) {
+    console.error('Error in getCallbackController:', error);
+    reply.status(500).send({
+      error: 'Error en autenticación con GitHub',
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
+};

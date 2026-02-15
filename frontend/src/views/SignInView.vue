@@ -6,7 +6,7 @@ import PongToggleButton from '../components/PongToggleButton.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useToggles } from '../composables/useToggles'
 import { useSessionStore } from '@/state/user_session.ts'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 import LinkComponent from '../components/LinkComponent.vue'
 
 const { newsletter } = useToggles()
@@ -50,6 +50,16 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     console.error('Network error signing in:', error)
+	}
+}
+//github signin
+const handleGithubOauth = async () => {
+	try {
+		window.location.href = 
+		`https://${window.location.host}/api/login/github`;
+    
+	} catch (error){
+		console.error('Error during Github OAuth:', error)
 	}
 }
 
@@ -97,18 +107,40 @@ function sign_out()
       />
 
       <PongButton
+        class = "mb-6"
         label="SEND"
         type="submit"
         :fullWidth="true"
         :disabled="!name || !password"
         @click="handleSubmit"
       />
+<<<<<<< HEAD
       <div class="flex justify-center mt-6">
         <LinkComponent
           href="/sign_up"
           label="sign up"
           class="text-(--color_accent_1)"
         />
+=======
+      <div class="mt-2">
+      <PongButton
+        label="Sign in with Github"
+        type="submit"
+        :fullWidth="true"
+        @click="handleGithubOauth"
+      />
+      </div>
+
+      <div class="mt-4">
+        <PongToggleButton v-model="newsletter" label="Remember me" />
+      <div class="flex justify-center mb-6">
+          <LinkComponent
+            href="/sign_up"
+            label="sign up"
+            class="text-(--color_accent_1)"
+          />
+     	</div>
+>>>>>>> d234f22980c93f05e27f7eee44da3bc6f3219513
       </div>
     </div>
   </div>
