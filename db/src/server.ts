@@ -16,7 +16,7 @@ const HOST = process.env.DB_SERVICE_HOST || '0.0.0.0';
 const app = Fastify({ logger: true });
 
 app.register(fastifyRateLimit, {
-  max: 100, // max 100 requests
+  max: 100000, // max 100000 requests
   timeWindow: '1 minute', // per 1 minute
   keyGenerator: (request) => request.headers['x-api-key'] || '', // rate-limit per API key
 });
