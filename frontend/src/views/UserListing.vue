@@ -38,6 +38,8 @@ fetch("https://" + window.location.host + "/api/users" , {
 		return ;
 	}
 	const result = await response.json();
+	console.log('result');
+	console.log(result[2]);
 	let		result_elem : any;
 	while (result.length != 0)
 	{
@@ -51,7 +53,9 @@ fetch("https://" + window.location.host + "/api/users" , {
 			user.nick = "unamed";
 		}
 		if (result_elem.avatar !== '') {
-			user.profilePic = result_elem.avatar;
+			user.profilePic = 'https://' + window.location.host + "/" + result_elem.avatar;
+			console.log(user.profilePic);
+//			user.profilePic = result_elem.avatar;
 		} else {
 			user.profilePic = undefined;
 		}

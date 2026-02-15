@@ -13,6 +13,8 @@ interface userCardInfo {
 
 const props = defineProps<userCardInfo>();
 
+console.log(props.profilePicture);
+
 //console.log(props.online);
 
 const profilePicture = computed(() => {

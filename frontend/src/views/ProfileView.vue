@@ -84,16 +84,12 @@ async function load_user_info()
 	const result1 = await response1.json();
 	user.name = result1.username;
 	user.nick = result1.nickname;
-	user.nick = result1.username;
 	if (result1.avatar === '') {
 		user.profilePic = undefined;
 	} else {
-		user.profilePic = result1.avatar;
+		user.profilePic = 'https://' + window.location.host + "/" + result1.avatar;
 	}
 	user.id = result1.id;
-	console.log("user.");
-	console.log(user.id);
-	console.log(session.getUserId);
 	
 	//	know if the user is oneself.
 	if (user.id == session.getUserId)
@@ -153,6 +149,7 @@ async function load_user_info()
 	);
 	const result4 = await response4.json();
 	console.log("result4");
+	console.log(session.getUserId);
 	console.log(result4.length);
 	console.log(result4[0]);
 	while (result4.length != 0)
@@ -161,7 +158,7 @@ async function load_user_info()
 		console.log('iteration');
 		console.log(item);
 		console.log(session.getUserId);
-		if (item.user_2 == session.getUserId)
+		if (item.user_1 == user.id)
 		{
 			console.log("is asquing to be a firend.");
 			user_kind.value = 'requesting_friendship';
@@ -401,7 +398,7 @@ function action()
 			:nickName="user.nick" 
 			:userName="user.name" 
 			:online="user.online" 
-			:profilePicture="user.profilePic" 
+				:profilePicture="user.profilePic" 
 		/>
 		<DisabledButtonComponent 
 			v-if="

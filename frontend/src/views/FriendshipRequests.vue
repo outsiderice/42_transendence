@@ -36,7 +36,8 @@ fetch ("https://" + window.location.host + "/api/friendsNick?user1_id=" + sessio
 		if (item.user1_avatar == '') {
 			petitioner.profilePic = undefined;
 		} else {
-			petitioner.profilePic = item.user1_avatar;
+			petitioner.profilePic = 'https://' + window.location.host + "/" + item.user1_avatar;
+//			petitioner.profilePic = item.user1_avatar;
 		}
 		petitioners.push(petitioner);
 	}
