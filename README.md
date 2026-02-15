@@ -88,6 +88,7 @@ Requests must go through the proxy, since the database is not public, but at the
 ### Custom design system with reusable components
 ![alt text](docs/components_design.png)
 [Project Figma](https://www.figma.com/design/pU9rJmGdOkIRibzAE4bCde/trancendence-project.?node-id=55-24&t=alP5ZIQxnzLlUfGN-1)
+
 ### Standard user management
 
 This module was another natural choice as basic user management was already required and adding the features needed simply filled out the feature. 
@@ -124,6 +125,8 @@ Creation of services to support front-end integration.
 I had to revisit my geometry classes to calculate the angles for ball collisions (shoutout to Borja :D). While I was initially intimidated by WebSockets and transitioning from a local-only game to a remote multiplayer experience, the process turned out to be very logical and smooth. The biggest challenge was envisioning how my piece of work would fit into the team's workflow while balancing so many new frameworks and tools simultaneously.
 
 ### tatahere
+
+responsible for the web page design, balancing a movile first accecible interface with an apealling design. Giving it the identity and ensuring consistensy across the web app. 
 
 ## Resources
 
