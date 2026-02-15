@@ -72,14 +72,14 @@ const handleSubmit = async () => {
       errorData.message ||
       'Registration failed'
 
-    console.error('Register error ❌:', message)
+    //console.error('Register error ❌:', message)
 
     alert(`Register error ❌: ${message}`)
   }
 
 } catch (error) {
   const message = error?.message || 'Network error'
-  console.error('Network error signing up:', message)
+  //console.error('Network error signing up:', message)
   alert(`Network error signing up: ${message}`)
 }
 }
