@@ -18,7 +18,7 @@ const onlineUsers = useOnlineUsersStore();
 
 <template>
 	<div class="flex flex-col min-h-screen">
-		<HeaderComponent />
+		<HeaderComponent v-if="!route.meta?.hideHeader"/>
 		<main class="flex-grow">
 			<RouterView />
 		</main>
