@@ -32,7 +32,11 @@ fetch ("https://" + window.location.host + "/api/friendsNick?user1_id=" + sessio
 		petitioner.id = item.id;
 		petitioner.name = item.user1_name;
 		petitioner.nick = item.user1_nickname;
-		petitioner.online = false;
+		if (onlineUsers.getUsersIds.indexOf(item.id) !== -1) {
+			petitioner.online = true;
+		} else {
+			petitioner.online = false;
+		}
 		if (item.user1_avatar == '') {
 			petitioner.profilePic = undefined;
 		} else {
