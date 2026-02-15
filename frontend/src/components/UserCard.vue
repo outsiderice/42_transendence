@@ -2,6 +2,7 @@
 import {ref, computed} from 'vue';
 //import defaultProfilePicture from "@/assets/defaultProfilePicture.svg";
 import UserAvatar from '@/components/UserAvatar.vue';
+import { useRouter } from 'vue-router';
 
 //	prop handeling. 
 interface userCardInfo {
@@ -11,6 +12,7 @@ interface userCardInfo {
 	online: boolean,
 };
 
+const router = useRouter();
 const props = defineProps<userCardInfo>();
 
 console.log(props.profilePicture);
@@ -43,7 +45,7 @@ const onlineIndicatorColor = computed(() => {
 function redirectToUserProfilePage(): void{
 	if (props.userName === undefined)
 		return;
-	window.location.href = window.location.origin + "/users/" + userName._value;
+	router.push({path: '/users/' + userName._value});
 }
 
 </script>
