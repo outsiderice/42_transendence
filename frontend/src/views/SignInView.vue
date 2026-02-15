@@ -124,7 +124,7 @@ function sign_out()
       </div>
 
       <div class="mt-4">
-        <PongToggleButton v-model="newsletter" label="Suscribirme al newsletter" />
+        <PongToggleButton v-model="newsletter" label="Remember me" />
       <div class="flex justify-center mb-6">
           <LinkComponent
             href="/sign_up"

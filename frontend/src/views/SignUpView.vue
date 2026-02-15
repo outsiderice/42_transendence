@@ -168,13 +168,6 @@ function sign_out()
         @click="handleGithubOauth"
       />
       </div>
-      <div class="mt-4">
-        <PongToggleButton
-          v-model="newsletter"
-          label="Suscribirme al newsletter"
-        />
-      </div>
-      
       <div class="flex justify-center mb-6">
           <LinkComponent
             href="/sign_in"
