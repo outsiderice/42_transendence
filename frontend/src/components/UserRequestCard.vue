@@ -2,12 +2,16 @@
 import { computed } from 'vue';
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import  DefaultPic from "@/assets/defaultProfilePicture.svg"
+import { useRoute, useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // Re-using the Interface from UserCard
 interface UserRequestProps {
     relationshipId: number;
     profilePicture?: string;
     nickName: string;
+    userName: string;
     online: boolean;
 }
 
@@ -49,10 +53,11 @@ const onlineIndicatorColor = computed(() => {
            props.online ? "var(--color_accent_success)" : "var(--color_accent_danger)";
 });
 
-function redirectToUserProfilePage(): void {
-    if (!props.nickName) return;
-    window.location.href = window.location.origin + "/users/" + props.nickName;
+function redirectToUserProfilePage(): void
+{
+	router.push({path: '/users/' + props.userName});
 }
+
 </script>
 
 <template>
@@ -65,7 +70,9 @@ function redirectToUserProfilePage(): void {
       rounded-[1.25rem] 
       border border-(--color_accent_3)
       w-full
-  ">
+	"
+	v-on:click="redirectToUserProfilePage"
+	>
     <div class="flex flex-row items-center justify-between gap-[1rem]">
       
       <div class="flex flex-row gap-[1.5rem] items-center cursor-pointer min-w-0" @click="redirectToUserProfilePage">

@@ -33,10 +33,10 @@ const {
 // Registro (Sign Up)
 // -------------------------
 const handleSubmit = async () => {
-  console.log('Submitting signup:', {
-    username: name.value,
-    email: email.value
-  })
+    //console.log('Submitting signup:', {
+    //username: name.value,
+    //email: email.value
+  //})
 
   // if (!validate()) return
 
@@ -57,7 +57,7 @@ const handleSubmit = async () => {
     if (response.ok) {
       const data = await response.json()
 
-      console.log('Sign up successful ✅', data)
+      //console.log('Sign up successful ✅', data)
 
       // Inicializar sesión igual que en Sign In
       session.setSession(data.safeUser.id, data.safeUser.username)
@@ -65,13 +65,27 @@ const handleSubmit = async () => {
       // Redirección
       router.push({ name: 'home' })
     } else {
-      const errorText = await response.text()
-      console.error('Register error ❌', errorText)
-    }
-  } catch (error) {
-    console.error('Network error signing up:', error)
+    // 👇 Aquí está el cambio importante
+    const errorData = await response.json()
+    const message =
+      errorData.error ||
+      errorData.message ||
+      'Registration failed'
+
+    //console.error('Register error ❌:', message)
+
+    alert(`Register error ❌: ${message}`)
   }
+
+} catch (error) {
+  const message = error?.message || 'Network error'
+  //console.error('Network error signing up:', message)
+  alert(`Network error signing up: ${message}`)
 }
+}
+
+
+
 // -------------------------
 // Registro mediante Github
 // -------------------------

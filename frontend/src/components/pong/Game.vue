@@ -32,7 +32,6 @@ const handleCancel = () => {
 const startPostGameRoutine = () => {
   if (postWinTimer)
     return;
-  //console.log("Win signal received. Starting 5s interval...");
   postWinTimer = setTimeout(() => {
     router.push({name: 'home'});
   }, 5000);
@@ -117,24 +116,24 @@ socket = new WebSocket("wss://" + window.location.host + "/api/ws/play");
       }
       else if (data.type === "PLAY") {
         msgPong.value = "";
-        isMatchmaking = false; // bye bye Cancel button
+        isMatchmaking.value  = false; // bye bye Cancel button
       }
       else if (data.type === "INFO") {
         msgPong.value = data.msg;
       }
       else if (data.type === "DISCONNECTED") {
         msgPong.value = `${data.username} has left the game. What a coward!`;
-        isMatchmaking = false;
+        isMatchmaking.value = false;
         startPostGameRoutine();
       }
       else if (data.type === "ERROR_U_VS_U") {
         msgPong.value = "Stop playing with yourself!";
-        isMatchmaking = true;
+        isMatchmaking.value = true;
         startPostGameRoutine();
       }
       else if (data.type === "GAME_OVER") {
         msgPong.value = `${data.winnerName} wins!`;
-        isMatchmaking = false;
+        isMatchmaking.value = false;
         startPostGameRoutine();
       }
       else if (data.type === "ASSIGN_SIDE") {
@@ -193,54 +192,107 @@ onUnmounted(() => {
       :leftName="leftPlayerName" 
       :rightName="rightPlayerName"
     />
-  </div>
+
+  <div class="pc-controls-hint">
+      <div class="hint-group">
+        <span class="key-box">W</span>
+        <span class="key-box">S</span>
+        <span class="player-label">LEFT PLAYER</span>
+      </div>
+      <div class="hint-group">
+        <span class="player-label">RIGHT PLAYER</span>
+        <span class="key-box">▲</span>
+        <span class="key-box">▼</span>
+      </div>
+    </div>
+    </div>
 </template>
 
 <style scoped>
-/* PC VERSION */
+/* --- PC VERSION --- */
 .game-wrapper {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background-color: var(--color_background_1, #000);
   color: var(--color_accent_1);
   font-family: 'Oswald', sans-serif;
+  overflow: hidden;
 }
 
-@media (min-width: 1024px) {
-  .status-msg {
-    margin-bottom: 2rem;
-  }
+.status-msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 20px 30px;
+  border: 1px solid white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  pointer-events: auto;
+  white-space: nowrap;
 }
 
 .winner-announcement {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
   color: var(--color_accent_1); 
   text-shadow: 2px 2px 0px var(--color_background_1);
-  /*margin-bottom: 20px;*/
 }
 
-/*.overlay {
-  margin-top: 20px;
-  color: #888;
-}*/
+/* PC CONTROLS OVERLAY STYLES */
+.pc-controls-hint {
+  position: absolute;
+  bottom: 20px; 
+  /* moves buttons to edges */
+  z-index: 20; 
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px; /* Anchors them to the screen corners */
+  opacity: 0.4; 
+  pointer-events: none;
+}
 
-/* MOBILE VERSION */
+.hint-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Ensure the hints stay legible */
+.key-box {
+  border: 1px solid var(--color_accent_1);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.player-label {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+}
+
+/* --- MOBILE VERSION --- */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-wrapper {
     position: fixed;
     top: 0; left: 0;
     width: 100svw;
     height: 100svh;
-    background-color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    touch-action: none;
-    z-index: 9999;
   }
 
-  .game-wrapper > div:not(.status-msg) {
+  .game-wrapper > div:not(.status-msg):not(.pc-controls-hint) {
     transform: rotate(90deg);
     width: 100svh; 
     height: 75svh; 
@@ -252,17 +304,14 @@ onUnmounted(() => {
     align-items: center;
   }
 
-  /* This fixes the cropping: messages float OVER the canvas */
+  .pc-controls-hint {
+    display: none;
+  }
+
   .status-msg {
-    position: absolute;
-    z-index: 100;
-    transform: rotate(90deg); /* Rotate text to match game */
+    transform: translate(-50%, -50%) rotate(90deg);
     background: rgba(0, 0, 0, 0.7);
     padding: 15px 25px;
-    border: 1px solid white;
-    margin: 0;
-    pointer-events: auto; /*for cancel button to work but then block the screen */
-    border-radius: 8px; 
   }
 
   :deep(canvas) {
@@ -271,7 +320,5 @@ onUnmounted(() => {
     display: block;
     object-fit: contain;
   }
-
-  h2 { display: none; }
 }
 </style>

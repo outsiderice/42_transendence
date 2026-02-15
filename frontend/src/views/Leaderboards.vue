@@ -19,6 +19,7 @@ const users = reactive
 	{
 		id: number,
 		nick: string, 
+		name: string, 
 		points: number,
 		ranking: number, 
 		online: boolean, 
@@ -43,6 +44,7 @@ async function get_user_info(id: number, rank: number, wins: number)
 	user.rank = rank;
 	user.points = wins * 0.1;
 	user.nick = result.nickname;
+	user.name = result.username;
 	if (result.avatar === '') {
 		user.profilePic = undefined;
 	} else {
@@ -90,8 +92,6 @@ watch(onlineUsers.usersIds, () => {
 		}
 		i++;
 	}
-	console.log("users");
-	console.log(users);
 })
 
 </script>
@@ -104,6 +104,7 @@ watch(onlineUsers.usersIds, () => {
 		:profilePicture="user.profilePic" 
 		:online="user.online" 
 		:nickName="user.nick" 
+		:userName="user.name" 
 		:points="user.points" 
 		class=""
 	/>

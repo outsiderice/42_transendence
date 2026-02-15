@@ -42,13 +42,9 @@ const router = createRouter({
     },
     {
       path: '/users/:id',
+	  name: 'profile',
 	  component: () => import('../views/ProfileView.vue'),
     },
-    //{
-      //path: '/my_profile_design', // change the name and add id !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      //name: 'my-profile-design',
-      //component: () => import('../views/ProfileView.vue'),
-    //},
     {
       path: '/test_card',
       name: 'test-card',
@@ -59,16 +55,6 @@ const router = createRouter({
       name: 'user',
       component: () => import('../views/SettingsView.vue'),
     },
-    {
-      path: '/test',
-      name: 'test',
-      component: () => import('../views/TestView.vue'),
-    },
-    {
-      path: '/test_2',
-      name: 'test_2',
-      component: () => import('../views/TestView_2.vue'),
-    },
 	{
       path: '/:pathMatch(.*)*',
       name: '404',
@@ -78,7 +64,9 @@ const router = createRouter({
       path: '/game',
       name: 'game',
       component: () => import('../components/pong/Game.vue'),
-      meta: { hideFooter: true }
+      meta: {
+        hideHeader: true,
+        hideFooter: true }
     },
 	{
       path: '/friendship_requests',
