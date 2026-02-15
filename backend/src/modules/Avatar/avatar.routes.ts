@@ -12,7 +12,7 @@ export async function avatarRoutes(app: FastifyInstance) {
   app.post(
     "/avatar/:id",
     {
-    preHandler: app.authenticateApi,
+//    preHandler: app.authenticateApi,
       schema: {
         description: "Upload user avatar",
         tags: ["Avatar"],

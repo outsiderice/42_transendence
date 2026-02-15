@@ -21,7 +21,7 @@ export const FriendSchema = {
 };
 export const friendsRoutes = async (app: FastifyInstance) => {
     app.get<{ Querystring: { user_1: number } }>('/friends', {
-    preHandler: app.authenticateApi,
+   //preHandler: app.authenticateApi,
         schema: {
             tags: ['Friends'],
             querystring: {
@@ -35,7 +35,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
     }, getAllFriendsController);
 
     app.get<{ Querystring: { user_1: number } }>('/friendsPetitions', {
-    preHandler: app.authenticateApi,
+    //preHandler: app.authenticateApi,
         schema: {
             tags: ['Friends'],
             querystring: {
@@ -51,7 +51,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
     app.get<{ Querystring: { user1_id: number } }>(
       '/friendsNick',
       {
-    preHandler: app.authenticateApi,
+    //preHandler: app.authenticateApi,
         schema: {
           tags: ['Friends'],
           querystring: {
@@ -71,7 +71,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
    app.post<{ Body: Friends }>(
   '/friends',
   {
-    preHandler: app.authenticateApi,
+    //preHandler: app.authenticateApi,
     schema: {
       tags: ['Friends'],
       body: {
@@ -91,7 +91,7 @@ export const friendsRoutes = async (app: FastifyInstance) => {
 app.put<{ Querystring: { id: number } }>(
   '/friends/accept',
   {
-    preHandler: app.authenticateApi,
+    //preHandler: app.authenticateApi,
     schema: {
       tags: ['Friends'],
       querystring: {
@@ -110,7 +110,7 @@ app.put<{ Querystring: { id: number } }>(
 app.delete<{ Querystring: { id: number } }>(
   '/friends',
   {
-    preHandler: app.authenticateApi,
+    //preHandler: app.authenticateApi,
     schema: {
       tags: ['Friends'],
       querystring: {
