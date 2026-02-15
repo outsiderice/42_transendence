@@ -208,6 +208,7 @@ onUnmounted(() => {
     </div>
     </div>
 </template>
+
 <style scoped>
 /* --- PC VERSION --- */
 .game-wrapper {
@@ -253,12 +254,9 @@ onUnmounted(() => {
 .pc-controls-hint {
   position: absolute;
   bottom: 20px; 
-  /* --- REMOVED: z-index: 1; --- */
-  /* +++ ADDED: High z-index but moved to edges +++ */
+  /* moves buttons to edges */
   z-index: 20; 
   width: 100%;
-  /* --- REMOVED: max-width: 900px; --- */
-  /* +++ ADDED: Stretch to full width +++ */
   display: flex;
   justify-content: space-between;
   padding: 0 20px; /* Anchors them to the screen corners */
@@ -272,13 +270,13 @@ onUnmounted(() => {
   gap: 10px;
 }
 
-/* +++ ADDED: Ensure the hints stay legible +++ */
+/* Ensure the hints stay legible */
 .key-box {
   border: 1px solid var(--color_accent_1);
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 0.8rem;
-  background: rgba(0, 0, 0, 0.5); /* Darker background to pop against canvas if they touch */
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .player-label {
