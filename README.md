@@ -133,7 +133,7 @@ I had to revisit my geometry classes to calculate the angles for ball collisions
 
 ### tatahere
 
-responsible for the web page design, balancing a movile first accecible interface with an apealling design. Giving it the identity and ensuring consistensy across the web app. 
+Responsible for the web page design, balancing a mobile-first accessible interface with an appealing design. Giving it the identity and ensuring consistency across the web app. And implemented many of the pages and integrated with the backend infrastructure.
 
 
 ## Resources
