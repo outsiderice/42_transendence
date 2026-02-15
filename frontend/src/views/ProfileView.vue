@@ -23,6 +23,7 @@ const currentTab = ref<'friends' | 'game_history'>('friends');
 
 const load_status = ref<'loanding' | 'loaded' | 'fail'>('loanding');
 
+
 const user = reactive<
 {
 	id?: number,
@@ -422,7 +423,6 @@ watch(onlineUsers.usersIds, () => {
 </script>
 
 <template>
-
 <section class="max-w-[30rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
 	<!-- Contenido principal -->
 	<div v-if="load_status !== 'fail'" class="flex flex-col gap-[2rem]">
