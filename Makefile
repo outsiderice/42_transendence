@@ -11,6 +11,7 @@ watch:
 	docker compose watch
 
 up:
+	mkdir db/data
 	touch db/data/app.db
 	cp .env.example .env
 	cp frontend/.env.example frontend/.env
