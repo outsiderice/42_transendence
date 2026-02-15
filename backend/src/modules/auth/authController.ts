@@ -5,6 +5,11 @@ import { findOrCreateGithubUser } from './githubOauth';
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+import * as EmailValidator from "email-validator";
+
+console.log(EmailValidator.validate("hola@ejemplo.com")); // true o false
+
+
 
 export const registerUserController = async (
   request: FastifyRequest<{ Body: RegisterUserBody }>,
@@ -26,11 +31,18 @@ export const registerUserController = async (
       });
     }
 
+    if (!EmailValidator.validate(email)){
+      return reply.status(400).send({
+        error : "email incorrecto",
+      })
+    }
     if (password.length < 8) {
       return reply.status(400).send({
         error: 'password debe tener al menos 6 caracteres',
       });
     }
+
+
 
     // Verificar si el usuario ya existe
     const existingUsername = await DBClient.getUserByUsername(username);
