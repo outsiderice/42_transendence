@@ -53,7 +53,8 @@ export async function dashboardRoutes(app: FastifyInstance) {
 
           return {
             id: user.id,
-            nickname: user.nickname,
+            nickname: user.nickname === null ? user.username: user.nickname,
+            username : user.username,
             wins: stats.wins,
             winRate: stats.winRate
           }
