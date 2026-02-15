@@ -14,11 +14,12 @@ const route = useRoute();
 import { useOnlineUsersStore } from '@/state/online_users.ts'
 
 const onlineUsers = useOnlineUsersStore();
+
 </script>
 
 <template>
 	<div class="flex flex-col min-h-screen">
-		<HeaderComponent />
+		<HeaderComponent v-if="!route.meta?.hideHeader"/>
 		<main class="flex-grow">
 			<RouterView />
 		</main>

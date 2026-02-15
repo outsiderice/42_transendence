@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PongButton from '../components/PongButton.vue';
 import UserCard from '@/components/UserCard.vue'
@@ -11,6 +11,9 @@ import userIcon from '@/assets/user_icon.svg';
 import GameHistoricStatisticsCard from '@/components/GameHistoricStatisticsCard.vue';
 import GameStatisticsCard from '@/components/GameStatisticsCard.vue';
 
+import { useOnlineUsersStore } from '@/state/online_users.ts'
+
+const onlineUsers = useOnlineUsersStore();
 
 const session = useSessionStore();
 const route = useRoute();
@@ -19,6 +22,7 @@ const router = useRouter();
 const currentTab = ref<'friends' | 'game_history'>('friends');
 
 const load_status = ref<'loanding' | 'loaded' | 'fail'>('loanding');
+
 
 const user = reactive<
 {
@@ -84,16 +88,12 @@ async function load_user_info()
 	const result1 = await response1.json();
 	user.name = result1.username;
 	user.nick = result1.nickname;
-	user.nick = result1.username;
 	if (result1.avatar === '') {
 		user.profilePic = undefined;
 	} else {
-		user.profilePic = result1.avatar;
+		user.profilePic = 'https://' + window.location.host + "/" + result1.avatar;
 	}
 	user.id = result1.id;
-	console.log("user.");
-	console.log(user.id);
-	console.log(session.getUserId);
 	
 	//	know if the user is oneself.
 	if (user.id == session.getUserId)
@@ -103,6 +103,11 @@ async function load_user_info()
 		user.online = true;
 		load_status.value = 'loaded';
 		return ;
+	}
+	if (onlineUsers.getUsersIds.indexOf(user.id) !== -1) {
+		user.online = true;
+	} else {
+		user.online = false;
 	}
 	
 	//	know if the user is a friend.
@@ -120,6 +125,7 @@ async function load_user_info()
 			console.log("this is a friend");
 			user_kind.value = 'friend';
 			load_status.value = 'loaded';
+			
 			return ;
 		}
 	}
@@ -153,6 +159,7 @@ async function load_user_info()
 	);
 	const result4 = await response4.json();
 	console.log("result4");
+	console.log(session.getUserId);
 	console.log(result4.length);
 	console.log(result4[0]);
 	while (result4.length != 0)
@@ -161,7 +168,7 @@ async function load_user_info()
 		console.log('iteration');
 		console.log(item);
 		console.log(session.getUserId);
-		if (item.user_2 == session.getUserId)
+		if (item.user_1 == user.id)
 		{
 			console.log("is asquing to be a firend.");
 			user_kind.value = 'requesting_friendship';
@@ -286,7 +293,12 @@ function set_friends()
 			user_item.id = item.id;
 			user_item.nick = item.nickname;
 			user_item.name = item.username;
-			user_item.online = false;
+			if (onlineUsers.getUsersIds.indexOf(item.id) !== -1) {
+				console.log("really important stuff!!!");
+				user_item.online = true;
+			} else {
+				user_item.online = false;
+			}
 			if (item.avatar == '') {
 				user_item.profilePic = undefined;
 			} else {
@@ -307,14 +319,14 @@ load_user_info().then(() => {
 		set_friends();
 		});
 
-function send_friend_request()
+async function send_friend_request()
 {
 	console.log('sending a friend request.');
 	console.log('user_1');
 	console.log(session.getUserId);
 	console.log('user_2');
 	console.log(user.id);
-	fetch(
+	await fetch(
 		"https://" + window.location.host + "/api/friends", 
 		{
 			method: 'POST',
@@ -366,7 +378,7 @@ async function remove_friend()
 	return ;
 }
 
-function action()
+async function action()
 {
 	if (load_status.value === 'loanding')
 	{
@@ -376,24 +388,41 @@ function action()
 	if (user_kind.value === 'oneself')
 	{
 		router.push({path: '/edit_profile'});
+		console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!");
+		load_user_info().then(() => {set_button_label()});
 		return ;
 	}
 	if (user_kind.value === 'friend')
 	{
-		remove_friend();
+		await remove_friend();
+		load_user_info().then(() => {set_button_label()});
 		return ;
 	}
 	if (user_kind.value === 'stranger')
 	{
-		send_friend_request();
+		await send_friend_request();
+		load_user_info().then(() => {set_button_label()});
 		return ;
 	}
 }
 
+
+watch(onlineUsers.usersIds, () => {
+	let i = 0;
+	while (i < friends.length)
+	{
+		if (onlineUsers.getUsersIds.indexOf(Number (friends[i].id)) != -1) {
+			friends[i].online = true;
+		} else {
+			friends[i].online = false;
+		}
+		i++;
+	}
+})
+
 </script>
 
 <template>
-
 <section class="max-w-[30rem] p-[1rem] m-auto flex flex-col gap-[2rem]">
 	<!-- Contenido principal -->
 	<div v-if="load_status !== 'fail'" class="flex flex-col gap-[2rem]">
@@ -401,7 +430,7 @@ function action()
 			:nickName="user.nick" 
 			:userName="user.name" 
 			:online="user.online" 
-			:profilePicture="user.profilePic" 
+				:profilePicture="user.profilePic" 
 		/>
 		<DisabledButtonComponent 
 			v-if="
