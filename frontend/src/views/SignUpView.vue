@@ -57,7 +57,7 @@ const handleSubmit = async () => {
     if (response.ok) {
       const data = await response.json()
 
-      console.log('Sign up successful ✅', data)
+      //console.log('Sign up successful ✅', data)
 
       // Inicializar sesión igual que en Sign In
       session.setSession(data.safeUser.id, data.safeUser.username)
