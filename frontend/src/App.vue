@@ -15,11 +15,6 @@ import { useOnlineUsersStore } from '@/state/online_users.ts'
 
 const onlineUsers = useOnlineUsersStore();
 
-watch(onlineUsers.usersIds, () => {
-	console.log("REALLY IMPORTANT.");
-	console.log(onlineUsers.usersIds);
-});
-
 </script>
 
 <template>
