@@ -72,7 +72,7 @@ watch(onlineUsers.usersIds, () => {
 	let i = 0;
 	while (i < users.length)
 	{
-		if (onlineUsers.getUsersIds.indexOf(users[i].id.toString()) != -1) {
+		if (onlineUsers.getUsersIds.indexOf(Number (users[i].id)) != -1) {
 			users[i].online = true;
 		} else {
 			users[i].online = false;
