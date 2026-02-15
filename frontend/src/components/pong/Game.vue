@@ -193,9 +193,21 @@ onUnmounted(() => {
       :leftName="leftPlayerName" 
       :rightName="rightPlayerName"
     />
-  </div>
-</template>
 
+  <div class="pc-controls-hint">
+      <div class="hint-group">
+        <span class="key-box">W</span>
+        <span class="key-box">S</span>
+        <span class="player-label">LEFT PLAYER</span>
+      </div>
+      <div class="hint-group">
+        <span class="player-label">RIGHT PLAYER</span>
+        <span class="key-box">▲</span>
+        <span class="key-box">▼</span>
+      </div>
+    </div>
+    </div>
+</template>
 <style scoped>
 /* --- PC VERSION --- */
 .game-wrapper {
@@ -237,6 +249,43 @@ onUnmounted(() => {
   text-shadow: 2px 2px 0px var(--color_background_1);
 }
 
+/* PC CONTROLS OVERLAY STYLES */
+.pc-controls-hint {
+  position: absolute;
+  bottom: 20px; 
+  /* --- REMOVED: z-index: 1; --- */
+  /* +++ ADDED: High z-index but moved to edges +++ */
+  z-index: 20; 
+  width: 100%;
+  /* --- REMOVED: max-width: 900px; --- */
+  /* +++ ADDED: Stretch to full width +++ */
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px; /* Anchors them to the screen corners */
+  opacity: 0.4; 
+  pointer-events: none;
+}
+
+.hint-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* +++ ADDED: Ensure the hints stay legible +++ */
+.key-box {
+  border: 1px solid var(--color_accent_1);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.5); /* Darker background to pop against canvas if they touch */
+}
+
+.player-label {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+}
+
 /* --- MOBILE VERSION --- */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-wrapper {
@@ -246,7 +295,7 @@ onUnmounted(() => {
     height: 100svh;
   }
 
-  .game-wrapper > div:not(.status-msg) {
+  .game-wrapper > div:not(.status-msg):not(.pc-controls-hint) {
     transform: rotate(90deg);
     width: 100svh; 
     height: 75svh; 
@@ -256,6 +305,10 @@ onUnmounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .pc-controls-hint {
+    display: none;
   }
 
   .status-msg {
