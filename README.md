@@ -105,6 +105,18 @@ Github OAuth 2.0 has been implemented, there's an option to instead of registeri
 
 ## Individual Contributions
 
+### amagnell 
+
+### tathere 
+
+### andmart2 
+
+Development of reusable components using Vue.js.
+Implementation of Sign-Up and Edit Profile forms.
+Design and implementation of UX/UI layouts in collaboration with tathere and amagnell.
+Avatar upload and profile picture management.
+Coordination with the backend team to define and integrate data exchange requirements.
+
 ### josorteg
 
 Database design and creation.
@@ -115,6 +127,7 @@ Creation of services to support front-end integration.
 
 ### kkoval
 I had to revisit my geometry classes to calculate the angles for ball collisions (shoutout to Borja :D). While I was initially intimidated by WebSockets and transitioning from a local-only game to a remote multiplayer experience, the process turned out to be very logical and smooth. The biggest challenge was envisioning how my piece of work would fit into the team's workflow while balancing so many new frameworks and tools simultaneously.
+
 
 
 ## Resources

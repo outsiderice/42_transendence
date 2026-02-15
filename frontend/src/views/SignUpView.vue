@@ -117,7 +117,7 @@ function sign_out()
     </div>
 
     <!-- USUARIO NO AUTENTICADO -->
-    <div v-else>
+    <div v-else >
       <h2 class="text-3xl font-bold mb-8 text-center text-[var(--color_accent_1)]">
         Sign Up
       </h2>
@@ -160,6 +160,14 @@ function sign_out()
         :disabled="!name || !email || !password || !confirmPassword"
         @click="handleSubmit"
       />
+<<<<<<< HEAD
+      <div class="flex justify-center mt-6">
+        <LinkComponent
+        href="/sign_in"
+        label="sign in"
+        class=" text-[var(--color_accent_1)]"
+        />
+=======
       <div class="mt-2">
       <PongButton
         label="Sign up with Github"
@@ -174,6 +182,7 @@ function sign_out()
             label="sign in"
             class="text-(--color_accent_1)"
           />
+>>>>>>> d234f22980c93f05e27f7eee44da3bc6f3219513
       </div>
     </div>
   </div>

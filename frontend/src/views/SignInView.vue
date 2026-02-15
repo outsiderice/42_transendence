@@ -114,6 +114,14 @@ function sign_out()
         :disabled="!name || !password"
         @click="handleSubmit"
       />
+<<<<<<< HEAD
+      <div class="flex justify-center mt-6">
+        <LinkComponent
+          href="/sign_up"
+          label="sign up"
+          class="text-(--color_accent_1)"
+        />
+=======
       <div class="mt-2">
       <PongButton
         label="Sign in with Github"
@@ -132,6 +140,7 @@ function sign_out()
             class="text-(--color_accent_1)"
           />
      	</div>
+>>>>>>> d234f22980c93f05e27f7eee44da3bc6f3219513
       </div>
     </div>
   </div>
