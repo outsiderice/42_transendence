@@ -16,6 +16,8 @@ services:
     container_name: backend
     volumes:
       - ./backend/public/avatars:/app/public/avatars
+    ports:
+      - "3000:3000"
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
