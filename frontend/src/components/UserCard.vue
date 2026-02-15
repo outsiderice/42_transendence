@@ -17,10 +17,6 @@ const router = useRouter();
 const route = useRoute();
 const props = defineProps<userCardInfo>();
 
-console.log(props.profilePicture);
-
-//console.log(props.online);
-
 const profilePicture = computed(() => {
 	return props.profilePicture === undefined ? defaultProfilePicture : props.profilePicture;
 });

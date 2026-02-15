@@ -32,7 +32,6 @@ const handleCancel = () => {
 const startPostGameRoutine = () => {
   if (postWinTimer)
     return;
-  //console.log("Win signal received. Starting 5s interval...");
   postWinTimer = setTimeout(() => {
     router.push({name: 'home'});
   }, 5000);
