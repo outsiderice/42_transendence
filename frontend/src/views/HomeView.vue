@@ -14,8 +14,6 @@ const userName = ref<string | undefined >(undefined);
 const online = ref<boolean | undefined >(undefined);
 const profilePicture = ref<string | undefined>(undefined);
 
-console.log(userName);
-console.log(nickName);
 
 fetch("https://" + window.location.host + "/api/users/" + session.getUserId , {
 	method: 'GET',

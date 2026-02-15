@@ -98,7 +98,6 @@ async function load_user_info()
 	//	know if the user is oneself.
 	if (user.id == session.getUserId)
 	{
-		console.log("this is oneself");
 		user_kind.value = 'oneself';
 		user.online = true;
 		load_status.value = 'loaded';
@@ -116,13 +115,11 @@ async function load_user_info()
 		{ method: 'GET' }
 	);
 	const result2 = await response2.json();
-	console.log(result2);
 	while (result2.length != 0)
 	{
 		const friendship = result2.pop();
 		if (friendship.user_1 === session.getUserId || friendship.user_2 === session.getUserId)
 		{
-			console.log("this is a friend");
 			user_kind.value = 'friend';
 			load_status.value = 'loaded';
 			
@@ -135,18 +132,11 @@ async function load_user_info()
 		{ method: 'GET' }
 	);
 	const result3 = await response3.json();
-	console.log("result3");
-	console.log(result3.length);
-	console.log(result3[0]);
 	while (result3.length != 0)
 	{
 		const item = result3.pop();
-		console.log('iteration');
-		console.log(item);
-		console.log(session.getUserId);
 		if (item.user_1 == session.getUserId)
 		{
-			console.log("will be a friend in the way.");
 			user_kind.value = 'requested_friend';
 			load_status.value = 'loaded';
 			return ;
@@ -158,25 +148,16 @@ async function load_user_info()
 		{ method: 'GET' }
 	);
 	const result4 = await response4.json();
-	console.log("result4");
-	console.log(session.getUserId);
-	console.log(result4.length);
-	console.log(result4[0]);
 	while (result4.length != 0)
 	{
 		const item = result4.pop();
-		console.log('iteration');
-		console.log(item);
-		console.log(session.getUserId);
 		if (item.user_1 == user.id)
 		{
-			console.log("is asquing to be a firend.");
 			user_kind.value = 'requesting_friendship';
 			load_status.value = 'loaded';
 			return;
 		}
 	}
-	console.log("will be a stranger.");
 	user_kind.value = 'stranger';
 	load_status.value = 'loaded';
 	return ;
@@ -224,8 +205,6 @@ function set_achievements()
 
 async function set_game_history()
 {
-	console.log("REALLY IMPORTANT TEST!!!");
-	console.log(user.id);
 	const response = await fetch(
 		"https://" + window.location.host + "/api/games?user_1=" + user.id,
 		{
@@ -279,7 +258,6 @@ async function set_game_history()
 
 function set_friends()
 {
-	console.log('loanding friends.');
 	fetch(
 		"https://" + window.location.host + "/api/usersFriends/" + user.id, 
 		{ method: 'GET' }
@@ -294,7 +272,6 @@ function set_friends()
 			user_item.nick = item.nickname;
 			user_item.name = item.username;
 			if (onlineUsers.getUsersIds.indexOf(item.id) !== -1) {
-				console.log("really important stuff!!!");
 				user_item.online = true;
 			} else {
 				user_item.online = false;
@@ -312,7 +289,6 @@ function set_friends()
 }
 
 load_user_info().then(() => {
-		console.log(user_kind.value);
 		set_button_label();
 		set_achievements();
 		set_game_history();
@@ -321,11 +297,6 @@ load_user_info().then(() => {
 
 async function send_friend_request()
 {
-	console.log('sending a friend request.');
-	console.log('user_1');
-	console.log(session.getUserId);
-	console.log('user_2');
-	console.log(user.id);
 	await fetch(
 		"https://" + window.location.host + "/api/friends", 
 		{
@@ -348,28 +319,22 @@ async function send_friend_request()
 
 async function remove_friend()
 {
-	console.log('removing a friend.');
 	// get all the friendships for finding the friendship id.
 	const response1 = await fetch(
 		"https://" + window.location.host + "/api/friends?user_1=" + user.id, 
 		{ method: 'GET' }
 	);
 	const result1 = await response1.json();
-	console.log(result1);
-	console.log(user.id);
-	console.log(session.getUserId);
 	let	friendShipId;
 	while (result1.length != 0)
 	{
 		const item = result1.pop();
-		console.log(item);
 		if ((item.user_1 == session.getUserId && item.user_2 == user.id) || 
 				(item.user_2 == session.getUserId && item.user_1 == user.id))
 		{
 			friendShipId = item.id;
 		}
 	}
-	console.log(friendShipId);
 	//	send the fetch for deleting this friendship.
 	fetch(
 			"https://" + window.location.host + "/api/friends?id=" + friendShipId, 
@@ -382,13 +347,11 @@ async function action()
 {
 	if (load_status.value === 'loanding')
 	{
-		console.log("esperate a que carge la pagina.");
 		return ;
 	}
 	if (user_kind.value === 'oneself')
 	{
 		router.push({path: '/edit_profile'});
-		console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!");
 		load_user_info().then(() => {set_button_label()});
 		return ;
 	}
