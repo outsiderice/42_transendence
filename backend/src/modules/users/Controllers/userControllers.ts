@@ -6,13 +6,16 @@ import * as bcrypt from 'bcrypt';
 
 const AVATAR_PREFIX = 'api/public/avatars';
 
-function buildAvatarUrl(filename?: string): string {
+export function buildAvatarUrl(filename?: string): string {
 	if (!filename) { 
+	console.log( 'no file name: ', filename, "AHHHH\n");
     return ''; 
 	}
 	if (filename.startsWith('https://')){
+		console.log("\nfilename is: ", filename);
 		return filename;
 	}
+	console.log("needs prefix: ", filename);
   return `${AVATAR_PREFIX}/${filename}`;
 }
 
@@ -22,7 +25,11 @@ function buildAvatarUrl(filename?: string): string {
 export const getAllUsersController = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const users = await DBClient.getAllUsers();
-    reply.status(200).send(users);
+	const usersWithAvatarUrl = users.map( user => ({
+			...user,
+			avatar: buildAvatarUrl(user.avatar),
+		}));
+    reply.status(200).send(usersWithAvatarUrl);
   } catch (error) {
     console.error('Error in getAllUsersController:', error);
     reply.status(500).send({
@@ -53,8 +60,12 @@ export const getUserFriendsController = async (
   const users = (await Promise.all(
     friendIds.map(id => DBClient.getUserById(id))
   )).filter(Boolean);
-
-  return users;
+	const usersWithAvatarUrl = users.map( user => ({
+			...user,
+			avatar: buildAvatarUrl(user.avatar),
+		}));
+	
+  return usersWithAvatarUrl;
 };
 
 /**
