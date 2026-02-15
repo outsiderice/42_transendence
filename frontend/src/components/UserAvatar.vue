@@ -17,7 +17,6 @@ const onlineIndicatorColor = computed(() => {
 	return	props.online ? "var(--color_accent_success)" : "var(--color_accent_danger)";
 });
 
-console.log(profilePicture)
 
 </script>
 

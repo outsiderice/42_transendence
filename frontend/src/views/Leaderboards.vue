@@ -92,8 +92,6 @@ watch(onlineUsers.usersIds, () => {
 		}
 		i++;
 	}
-	console.log("users");
-	console.log(users);
 })
 
 </script>
