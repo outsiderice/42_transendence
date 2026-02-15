@@ -2,6 +2,9 @@
 import { computed } from 'vue';
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import  DefaultPic from "@/assets/defaultProfilePicture.svg"
+import { useRoute, useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // Re-using the Interface from UserCard
 interface UserRequestProps {
@@ -51,7 +54,7 @@ const onlineIndicatorColor = computed(() => {
 
 function redirectToUserProfilePage(): void {
     if (!props.nickName) return;
-    window.location.href = window.location.origin + "/users/" + props.nickName;
+	router.push({path: '/users/' + props.nickName});
 }
 </script>
 
