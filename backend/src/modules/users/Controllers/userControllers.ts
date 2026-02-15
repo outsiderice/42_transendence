@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 const AVATAR_PREFIX = 'api/public/avatars';
 
-function buildAvatarUrl(filename?: string): string {
+export function buildAvatarUrl(filename?: string): string {
 	if (!filename) { 
 	console.log( 'no file name: ', filename, "AHHHH\n");
     return ''; 
