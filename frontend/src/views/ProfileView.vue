@@ -304,14 +304,14 @@ load_user_info().then(() => {
 		set_friends();
 		});
 
-function send_friend_request()
+async function send_friend_request()
 {
 	console.log('sending a friend request.');
 	console.log('user_1');
 	console.log(session.getUserId);
 	console.log('user_2');
 	console.log(user.id);
-	fetch(
+	await fetch(
 		"https://" + window.location.host + "/api/friends", 
 		{
 			method: 'POST',
@@ -363,7 +363,7 @@ async function remove_friend()
 	return ;
 }
 
-function action()
+async function action()
 {
 	if (load_status.value === 'loanding')
 	{
@@ -377,12 +377,14 @@ function action()
 	}
 	if (user_kind.value === 'friend')
 	{
-		remove_friend();
+		await remove_friend();
+		load_user_info().then(() => {set_button_label()});
 		return ;
 	}
 	if (user_kind.value === 'stranger')
 	{
-		send_friend_request();
+		await send_friend_request();
+		load_user_info().then(() => {set_button_label()});
 		return ;
 	}
 }
