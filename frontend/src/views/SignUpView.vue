@@ -33,10 +33,10 @@ const {
 // Registro (Sign Up)
 // -------------------------
 const handleSubmit = async () => {
-  console.log('Submitting signup:', {
-    username: name.value,
-    email: email.value
-  })
+    //console.log('Submitting signup:', {
+    //username: name.value,
+    //email: email.value
+  //})
 
   // if (!validate()) return
 
