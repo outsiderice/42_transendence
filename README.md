@@ -13,6 +13,7 @@ Prerequisites:
 
 Clone the project then run `make up` in the root of the repository. This will create the .envs needed which you can modify as needed.
 ## Team Information
+We divided the work in different responsabilities. josorteg and amagnell were in charge of the backend, tathere and andmart2 were in charge of the frontend, and kkoval would own the pong game which was the main feature of our webapp.
 
 ## Project management
 We organized ourselves through a Whatsapp group chat where we shared our advancements and where we coordinated for meetings and tasks.
@@ -138,7 +139,24 @@ Responsible for the web page design, balancing a mobile-first accessible interfa
 
 ## Resources
 
+### General concepts
+[HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status) - A constant reference in a web project. HTTP responses in particular but loads of good articles in developer.mozilla.org
 
-### AI usage
+[What is the difference between JSON and schema](https://www.designgurus.io/answers/detail/what-is-the-difference-between-json-and-schema)
+
+[Should Logging Out Be a GET or POST?](https://www.baeldung.com/logout-get-vs-post)
+
+### Implementation references
+Most package documentation found at [npmjs.com](https://www.npmjs.com/). And if not their github repo or in this case in [particular](https://npm.io/package/@fastify/oauth2) npm.io.
+
+#### Tutorials and examples
+
+[Adding JWTs to a fastify server](https://kevincunningham.co.uk/posts/adding-jwts-to-a-fastify-server/)
+
+[How to integrate github sign in a four step guide](https://dev.to/lovestaco/how-to-integrate-github-sign-in-a-four-step-guide-1doj) - Clear steps to take to implement oauth2 even if we have different tech stacks.
+
+[References for uploading](https://betterstack.com/community/guides/scaling-nodejs/fastify-file-uploads/) [avatars to server](https://www.xjavascript.com/blog/fastify-multipart-typescript/)
+
+#### AI usage
 
 AI was an excellent resource for generating examples for specific edge cases. It’s particularly effective for learning new concepts because it uses a more accessible vocabulary for beginners and can adapt its explanations based on your current knowledge level. Beyond the logic, it was also a massive time-saver for handling tedious tasks like formatting syntax and managing curly brackets. And emotional support for some.
