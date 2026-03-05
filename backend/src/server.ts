@@ -58,7 +58,7 @@ app.register(oauthPlugin, {
     auth: oauthPlugin.GITHUB_CONFIGURATION,
   },
   startRedirectPath: '/login/github',
-  callbackUri: 'https://localhost:8443/api/auth/github/callback',
+  callbackUri: process.env.CALLBACK_URI,
   cookie: {
     secure: true,
 	path: '/api/auth/github/callback',
