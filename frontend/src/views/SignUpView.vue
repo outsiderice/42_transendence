@@ -38,7 +38,7 @@ const handleSubmit = async () => {
     //email: email.value
   //})
 
-  // if (!validate()) return
+   if (!validate()) return;
 
   try {
     const response = await fetch(
