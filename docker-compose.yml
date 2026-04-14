@@ -7,8 +7,6 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - DB_SERVICE_PORT=${DB_SERVICE_PORT}
-      - DB_SERVICE_HOST=${DB_SERVICE_HOST}
       - DB_PATH=/app/data/app.db
     networks:
       - ft-transcendence
@@ -34,8 +32,6 @@ services:
     volumes:
       - ./backend/public/avatars:/app/public/avatars
     environment:
-      - PORT=${BACKEND_PORT}
-      - HOST=${BACKEND_HOST}
       - DB_SERVICE_URL=http://db-service:3001
     depends_on:
       - db
@@ -58,10 +54,6 @@ services:
     container_name: frontend
     ports:
       - "5173:5173"
-    environment:
-      - PORT=${FRONTEND_PORT}
-      - HOST=${FRONTEND_HOST}
-      - PROXY=${PROXY_URL}
     develop:
       watch:
         - path: ./frontend
