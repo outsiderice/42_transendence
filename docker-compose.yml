@@ -6,8 +6,6 @@ services:
       - ./db/data:/app/data
     ports:
       - "3001:3001"
-    environment:
-      - DB_PATH=/app/data/app.db
     networks:
       - ft-transcendence
     develop:
@@ -31,8 +29,6 @@ services:
       - "3000:3000"   # change later?
     volumes:
       - ./backend/public/avatars:/app/public/avatars
-    environment:
-      - DB_SERVICE_URL=http://db-service:3001
     depends_on:
       - db
     networks:
